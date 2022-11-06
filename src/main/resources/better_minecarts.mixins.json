@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "hu.xannosz.betterminecarts.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "better_minecarts.refmap.json",
+  "mixins": [
+    "StorageMinecartEntityMixin",
+    "AbstractMinecartEntityMixin",
+    "FurnaceMinecartEntityMixin",
+    "AllMinecartEntityMixin"
+  ],
+  "client": [
+    "client.MinecartEntityRendererMixin"
+  ],
+  "minVersion": "0.8"
+}
