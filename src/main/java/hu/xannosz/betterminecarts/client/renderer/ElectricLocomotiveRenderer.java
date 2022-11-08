@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.client.models.ElectricLocomotiveModel;
+import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public class ElectricLocomotiveRenderer extends EntityRenderer<ElectricLocomotive> {
 	private static final ResourceLocation MINECART_LOCATION =
 			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/electric_locomotive.png");
-	protected final EntityModel<ElectricLocomotive> model;
+	protected final EntityModel<AbstractLocomotive> model;
 
 	public ElectricLocomotiveRenderer(EntityRendererProvider.Context context) {
 		super(context);

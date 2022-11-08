@@ -4,11 +4,11 @@
 - connect two trains
 - graphical bug in corners on locomotives
 - render chains on locomotives
+- render end chain
 
 //features
 - steam locomotive
 - lamp on locomotives
 - wisp on locomotives
-- send redstone signal
-- redstone signal rail
 - coloring locomotives
+- ram with locomotives

@@ -30,6 +30,9 @@ public class ElectricLocomotiveScreen extends AbstractContainerScreen<ElectricLo
 	private GraphicalButton forward;
 	private GraphicalButton fForward;
 	private GraphicalButton ffForward;
+	private GraphicalButton lamp;
+	private GraphicalButton whistle;
+	private GraphicalButton redstone;
 
 	public ElectricLocomotiveScreen(ElectricLocomotiveMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title);
@@ -48,12 +51,42 @@ public class ElectricLocomotiveScreen extends AbstractContainerScreen<ElectricLo
 		forward = new GraphicalButton(generateConfig(42, 14, 7, ButtonId.FORWARD));
 		fForward = new GraphicalButton(generateConfig(50, 21, 10, ButtonId.F_FORWARD));
 		ffForward = new GraphicalButton(generateConfig(61, 31, 13, ButtonId.FF_FORWARD));
+		lamp = new GraphicalButton(ButtonConfig.builder()
+				.buttonId(ButtonId.LAMP)
+				.hitBoxX(x + 155)
+				.hitBoxY(y + 7)
+				.hitBoxW(10)
+				.hitBoxH(11)
+				.hoveredX(177)
+				.hoveredY(1)
+				.build());
+		whistle = new GraphicalButton(ButtonConfig.builder()
+				.buttonId(ButtonId.WHISTLE)
+				.hitBoxX(x + 155)
+				.hitBoxY(y + 23)
+				.hitBoxW(10)
+				.hitBoxH(11)
+				.hoveredX(177)
+				.hoveredY(13)
+				.build());
+		redstone = new GraphicalButton(ButtonConfig.builder()
+				.buttonId(ButtonId.REDSTONE)
+				.hitBoxX(x + 139)
+				.hitBoxY(y + 23)
+				.hitBoxW(10)
+				.hitBoxH(11)
+				.hoveredX(177)
+				.hoveredY(25)
+				.build());
 
 		addRenderableWidget(back);
 		addRenderableWidget(stop);
 		addRenderableWidget(forward);
 		addRenderableWidget(fForward);
 		addRenderableWidget(ffForward);
+		addRenderableWidget(lamp);
+		addRenderableWidget(whistle);
+		addRenderableWidget(redstone);
 	}
 
 	@Override
@@ -69,6 +102,9 @@ public class ElectricLocomotiveScreen extends AbstractContainerScreen<ElectricLo
 		forward.setEntityId(menu.getElectricLocomotiveId());
 		fForward.setEntityId(menu.getElectricLocomotiveId());
 		ffForward.setEntityId(menu.getElectricLocomotiveId());
+		lamp.setEntityId(menu.getElectricLocomotiveId());
+		whistle.setEntityId(menu.getElectricLocomotiveId());
+		redstone.setEntityId(menu.getElectricLocomotiveId());
 
 		back.setSelected(false);
 		stop.setSelected(false);
@@ -84,12 +120,15 @@ public class ElectricLocomotiveScreen extends AbstractContainerScreen<ElectricLo
 			case FF_FORWARD -> ffForward.setSelected(true);
 		}
 
+		lamp.setSelected(menu.isLampOn());
+		redstone.setSelected(menu.isSignalActive());
+
 		int power = menu.getPower();
 		if (power > ElectricLocomotive.MAX_POWER) {
 			power = ElectricLocomotive.MAX_POWER;
 		}
 		int t = (power * 140) / ElectricLocomotive.MAX_POWER;
-		drawTexturedModalRect(poseStack, x+6, y+6 , 0, 43 , t, 12, partialTick);
+		drawTexturedModalRect(poseStack, x + 6, y + 6, 0, 43, t, 12, partialTick);
 	}
 
 	@Override

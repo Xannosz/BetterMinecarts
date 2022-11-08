@@ -2,17 +2,15 @@ package hu.xannosz.betterminecarts.entity;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.button.ButtonId;
-import hu.xannosz.betterminecarts.button.ButtonUser;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
+import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.vehicle.AbstractMinecartContainer;
-import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -25,12 +23,13 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j
-public class ElectricLocomotive extends AbstractMinecartContainer implements ButtonUser {//AbstractMinecartContainer
+public class ElectricLocomotive extends AbstractLocomotive {
 
 	public static final int ID_KEY = 0;
 	public static final int POWER_KEY = 1;
 	public static final int ACTIVE_BUTTON_KEY = 2;
-	public static final int DATA_SIZE = 3;
+	public static final int ACTIVE_FUNCTION_KEY = 3;
+	public static final int DATA_SIZE = 4;
 
 	public static final int MAX_POWER = 20;
 
@@ -39,12 +38,14 @@ public class ElectricLocomotive extends AbstractMinecartContainer implements But
 	private double xPush = 0;
 	private double zPush = 0;
 	private int speed = 0;
+	private boolean sendSignal = false;
+	private boolean lampOn = false;
 	private BlockPos lastBlockPos;
 
 	private final ContainerData data = new SimpleContainerData(DATA_SIZE);
 
-	public ElectricLocomotive(EntityType<?> p_38087_, Level p_38088_) {
-		super(p_38087_, p_38088_);
+	public ElectricLocomotive(EntityType<?> entityType, Level level) {
+		super(entityType, level);
 		updateData();
 	}
 
@@ -78,6 +79,7 @@ public class ElectricLocomotive extends AbstractMinecartContainer implements But
 		data.set(ID_KEY, this.getId());
 		data.set(POWER_KEY, power);
 		data.set(ACTIVE_BUTTON_KEY, activeButton.getId());
+		data.set(ACTIVE_FUNCTION_KEY, MinecartHelper.convertBitArrayToInt(new boolean[]{sendSignal, lampOn}));
 	}
 
 	@Override
@@ -153,6 +155,8 @@ public class ElectricLocomotive extends AbstractMinecartContainer implements But
 		compoundTag.putInt("Power", power);
 		compoundTag.putInt("ActiveButton", activeButton.getId());
 		compoundTag.putInt("Speed", speed);
+		compoundTag.putBoolean("SendSignal", sendSignal);
+		compoundTag.putBoolean("LampOn", lampOn);
 	}
 
 	@Override
@@ -163,34 +167,43 @@ public class ElectricLocomotive extends AbstractMinecartContainer implements But
 		power = compoundTag.getInt("Power");
 		activeButton = ButtonId.getButtonFromId(compoundTag.getInt("ActiveButton"));
 		speed = compoundTag.getInt("Speed");
+		sendSignal = compoundTag.getBoolean("SendSignal");
+		lampOn = compoundTag.getBoolean("LampOn");
 		updateData();
 	}
 
 	@Override
 	public void executeButtonClick(ButtonId buttonId) {
-		activeButton = buttonId;
 		switch (buttonId) {
 			case BACK -> {
 				setPush(getDirection().getCounterClockWise());
 				speed = 1;
+				activeButton = buttonId;
 			}
-			case STOP -> {
+			case STOP, PAUSE -> {
 				xPush = 0;
 				zPush = 0;
 				speed = 1;
+				activeButton = buttonId;
 			}
 			case FORWARD -> {
 				setPush(getDirection().getClockWise());
 				speed = 1;
+				activeButton = buttonId;
 			}
 			case F_FORWARD -> {
 				setPush(getDirection().getClockWise());
 				speed = 2;
+				activeButton = buttonId;
 			}
 			case FF_FORWARD -> {
 				setPush(getDirection().getClockWise());
 				speed = 4;
+				activeButton = buttonId;
 			}
+			case LAMP -> lampOn = !lampOn;
+			case WHISTLE -> log.info("WHISTLE");
+			case REDSTONE -> sendSignal = !sendSignal;
 		}
 		updateData();
 		setChanged();
@@ -225,11 +238,11 @@ public class ElectricLocomotive extends AbstractMinecartContainer implements But
 	}
 
 	public Vec3 getTopFilter() {
-		return MinecartColor.YELLOW.getFilter().scale(1/100f);
+		return MinecartColor.YELLOW.getFilter().scale(1 / 100f);
 	}
 
 	public Vec3 getBottomFilter() {
-		return MinecartColor.BROWN.getFilter().scale(1/100f);
+		return MinecartColor.BROWN.getFilter().scale(1 / 100f);
 	}
 
 	public float normalizeRotation(float yRotation) {
@@ -247,5 +260,14 @@ public class ElectricLocomotive extends AbstractMinecartContainer implements But
 			yRotation += 180;
 		}
 		return yRotation;
+	}
+
+	public boolean popSignal() {
+		if (sendSignal) {
+			sendSignal = false;
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

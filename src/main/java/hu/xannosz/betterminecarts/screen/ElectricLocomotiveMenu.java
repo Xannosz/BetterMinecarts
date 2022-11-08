@@ -3,6 +3,7 @@ package hu.xannosz.betterminecarts.screen;
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.button.ButtonId;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
+import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -68,5 +69,13 @@ public class ElectricLocomotiveMenu extends AbstractContainerMenu {
 
 	public ButtonId getActiveButton() {
 		return ButtonId.getButtonFromId(data.get(ACTIVE_BUTTON_KEY));
+	}
+
+	public boolean isSignalActive(){
+		return MinecartHelper.convertIntToBitArray(data.get(ACTIVE_FUNCTION_KEY),2)[0];
+	}
+
+	public boolean isLampOn(){
+		return MinecartHelper.convertIntToBitArray(data.get(ACTIVE_FUNCTION_KEY),2)[1];
 	}
 }

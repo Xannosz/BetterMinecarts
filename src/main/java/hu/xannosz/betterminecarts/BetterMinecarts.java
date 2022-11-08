@@ -1,6 +1,7 @@
 package hu.xannosz.betterminecarts;
 
 import hu.xannosz.betterminecarts.blocks.CrossedRailBlock;
+import hu.xannosz.betterminecarts.blocks.SignalRailBlock;
 import hu.xannosz.betterminecarts.client.models.ElectricLocomotiveModel;
 import hu.xannosz.betterminecarts.client.renderer.ElectricLocomotiveRenderer;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
@@ -56,6 +57,10 @@ public class BetterMinecarts {
 			CrossedRailBlock::new
 	);
 
+	public static final RegistryObject<Block> SIGNAL_RAIL = registerBlock("signal_rail",
+			SignalRailBlock::new
+	);
+
 	public static final RegistryObject<Item> ELECTRIC_LOCOMOTIVE_ITEM = ITEMS.register("electric_locomotive_item",
 			() -> new ElectricLocomotiveItem( new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)));
 
@@ -63,7 +68,7 @@ public class BetterMinecarts {
 			() -> EntityType.Builder.<ElectricLocomotive>of(ElectricLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":electric_locomotive"));
 
 	public static final RegistryObject<MenuType<ElectricLocomotiveMenu>> ELECTRIC_LOCOMOTIVE_MENU =
-			registerMenuType(ElectricLocomotiveMenu::new, "rune_menu");
+			registerMenuType(ElectricLocomotiveMenu::new, "electric_locomotive_menu");
 
 	public BetterMinecarts() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.RailShape;
+import org.jetbrains.annotations.NotNull;
 
 public class CrossedRailBlock extends BaseRailBlock {
 	public static final EnumProperty<RailShape> SHAPE = EnumProperty.create("shape", RailShape.class, shape -> shape != RailShape.ASCENDING_NORTH && shape != RailShape.ASCENDING_EAST && shape != RailShape.ASCENDING_SOUTH && shape != RailShape.ASCENDING_WEST && shape != RailShape.NORTH_EAST && shape != RailShape.NORTH_WEST && shape != RailShape.SOUTH_EAST && shape != RailShape.SOUTH_WEST);
@@ -19,7 +20,7 @@ public class CrossedRailBlock extends BaseRailBlock {
 	}
 
 	@Override
-	public Property<RailShape> getShapeProperty() {
+	public @NotNull Property<RailShape> getShapeProperty() {
 		return SHAPE;
 	}
 
