@@ -2,12 +2,13 @@
 - collusion with side carts
 - pull back
 - connect two trains
-- graphical bug in corners on locomotives
 - render chains on locomotives
 - render end chain
+- smoke steam locomotive
+
+- graphical bug in corners on locomotives
 
 //features
-- steam locomotive
 - lamp on locomotives
 - wisp on locomotives
 - coloring locomotives

@@ -3,14 +3,19 @@ package hu.xannosz.betterminecarts;
 import hu.xannosz.betterminecarts.blocks.CrossedRailBlock;
 import hu.xannosz.betterminecarts.blocks.SignalRailBlock;
 import hu.xannosz.betterminecarts.client.models.ElectricLocomotiveModel;
-import hu.xannosz.betterminecarts.client.renderer.ElectricLocomotiveRenderer;
+import hu.xannosz.betterminecarts.client.models.SteamLocomotiveModel;
+import hu.xannosz.betterminecarts.client.renderer.LocomotiveRenderer;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
+import hu.xannosz.betterminecarts.entity.SteamLocomotive;
 import hu.xannosz.betterminecarts.integration.MinecartTweaksConfig;
 import hu.xannosz.betterminecarts.item.ElectricLocomotiveItem;
+import hu.xannosz.betterminecarts.item.SteamLocomotiveItem;
 import hu.xannosz.betterminecarts.network.ButtonClickedPacket;
 import hu.xannosz.betterminecarts.network.SyncChainedMinecartPacket;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
+import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
+import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
@@ -53,22 +58,29 @@ public class BetterMinecarts {
 	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, BetterMinecarts.MOD_ID);
 	public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, BetterMinecarts.MOD_ID);
 
+	@SuppressWarnings("unused")
 	public static final RegistryObject<Block> CROSSED_RAIL = registerBlock("crossed_rail",
 			CrossedRailBlock::new
 	);
-
+	@SuppressWarnings("unused")
 	public static final RegistryObject<Block> SIGNAL_RAIL = registerBlock("signal_rail",
 			SignalRailBlock::new
 	);
 
 	public static final RegistryObject<Item> ELECTRIC_LOCOMOTIVE_ITEM = ITEMS.register("electric_locomotive_item",
-			() -> new ElectricLocomotiveItem( new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)));
+			() -> new ElectricLocomotiveItem(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)));
+	public static final RegistryObject<Item> STEAM_LOCOMOTIVE_ITEM = ITEMS.register("steam_locomotive_item",
+			() -> new SteamLocomotiveItem(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)));
 
 	public static final RegistryObject<EntityType<ElectricLocomotive>> ELECTRIC_LOCOMOTIVE = ENTITIES.register("electric_locomotive",
 			() -> EntityType.Builder.<ElectricLocomotive>of(ElectricLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":electric_locomotive"));
+	public static final RegistryObject<EntityType<SteamLocomotive>> STEAM_LOCOMOTIVE = ENTITIES.register("steam_locomotive",
+			() -> EntityType.Builder.<SteamLocomotive>of(SteamLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":steam_locomotive"));
 
 	public static final RegistryObject<MenuType<ElectricLocomotiveMenu>> ELECTRIC_LOCOMOTIVE_MENU =
 			registerMenuType(ElectricLocomotiveMenu::new, "electric_locomotive_menu");
+	public static final RegistryObject<MenuType<SteamLocomotiveMenu>> STEAM_LOCOMOTIVE_MENU =
+			registerMenuType(SteamLocomotiveMenu::new, "steam_locomotive_menu");
 
 	public BetterMinecarts() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -122,22 +134,34 @@ public class BetterMinecarts {
 		return MENUS.register(name, () -> IForgeMenuType.create(factory));
 	}
 
+	@SuppressWarnings("unused")
 	@Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 	public static class ClientModEvents {
 		@SubscribeEvent
+		@SuppressWarnings("unused")
 		public static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-			event.registerEntityRenderer(ELECTRIC_LOCOMOTIVE.get(), ElectricLocomotiveRenderer::new);
+			event.registerEntityRenderer(ELECTRIC_LOCOMOTIVE.get(), context ->
+					new LocomotiveRenderer(context,
+							new ElectricLocomotiveModel(context.bakeLayer(ElectricLocomotiveModel.LAYER_LOCATION))));
+			event.registerEntityRenderer(STEAM_LOCOMOTIVE.get(), context ->
+					new LocomotiveRenderer(context,
+							new SteamLocomotiveModel(context.bakeLayer(SteamLocomotiveModel.LAYER_LOCATION))));
 		}
 
 		@SubscribeEvent
+		@SuppressWarnings("unused")
 		public static void onClientSetup(FMLClientSetupEvent event) {
 			MenuScreens.register(ELECTRIC_LOCOMOTIVE_MENU.get(), ElectricLocomotiveScreen::new);
+			MenuScreens.register(STEAM_LOCOMOTIVE_MENU.get(), SteamLocomotiveScreen::new);
 		}
 
 		@SubscribeEvent
+		@SuppressWarnings("unused")
 		public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
 			event.registerLayerDefinition(ElectricLocomotiveModel.LAYER_LOCATION,
 					ElectricLocomotiveModel::createBodyLayer);
+			event.registerLayerDefinition(SteamLocomotiveModel.LAYER_LOCATION,
+					SteamLocomotiveModel::createBodyLayer);
 		}
 	}
 }
