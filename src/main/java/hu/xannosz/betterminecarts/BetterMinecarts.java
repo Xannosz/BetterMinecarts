@@ -10,7 +10,9 @@ import hu.xannosz.betterminecarts.entity.SteamLocomotive;
 import hu.xannosz.betterminecarts.integration.MinecartTweaksConfig;
 import hu.xannosz.betterminecarts.item.ElectricLocomotiveItem;
 import hu.xannosz.betterminecarts.item.SteamLocomotiveItem;
+import hu.xannosz.betterminecarts.network.BurnTimePacket;
 import hu.xannosz.betterminecarts.network.ButtonClickedPacket;
+import hu.xannosz.betterminecarts.network.LampSetPacket;
 import hu.xannosz.betterminecarts.network.SyncChainedMinecartPacket;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
@@ -116,6 +118,16 @@ public class BetterMinecarts {
 				.decoder(ButtonClickedPacket::new)
 				.encoder(ButtonClickedPacket::toBytes)
 				.consumerMainThread(ButtonClickedPacket::handler)
+				.add();
+		INSTANCE.messageBuilder(LampSetPacket.class, 2, NetworkDirection.PLAY_TO_CLIENT)
+				.decoder(LampSetPacket::new)
+				.encoder(LampSetPacket::toBytes)
+				.consumerMainThread(LampSetPacket::handler)
+				.add();
+		INSTANCE.messageBuilder(BurnTimePacket.class, 3, NetworkDirection.PLAY_TO_CLIENT)
+				.decoder(BurnTimePacket::new)
+				.encoder(BurnTimePacket::toBytes)
+				.consumerMainThread(BurnTimePacket::handler)
 				.add();
 	}
 

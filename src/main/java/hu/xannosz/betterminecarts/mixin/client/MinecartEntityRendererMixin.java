@@ -33,7 +33,6 @@ public abstract class MinecartEntityRendererMixin<T extends AbstractMinecart> ex
 		super(ctx);
 	}
 
-	//@Inject(method = "render(Lnet/minecraft/world/entity/vehicle/AbstractMinecart;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/render/MultiBufferSource;I)V", at = @At("TAIL"))
 	@Inject(method = "render", at = @At("TAIL"))
 	public void betterminecarts$render(T child, float yaw, float tickDelta, PoseStack stack, MultiBufferSource provider, int light, CallbackInfo info) {
 		if (child instanceof Linkable linkable) {
@@ -56,7 +55,7 @@ public abstract class MinecartEntityRendererMixin<T extends AbstractMinecart> ex
 
 				double vAngle = Math.asin(distanceY / distance);
 
-				renderChain(distanceX, distanceY, distanceZ, (float) hAngle, (float) vAngle, stack, provider, light);
+				renderChain(distanceX, distanceY, distanceZ, (float) hAngle, (float) vAngle, stack, provider, 15728880);
 			}
 		}
 	}

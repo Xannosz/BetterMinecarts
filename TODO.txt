@@ -2,14 +2,19 @@
 - collusion with side carts
 - pull back
 - connect two trains
-- render chains on locomotives
-- render end chain
+- invert train?
 - smoke steam locomotive
 
 - graphical bug in corners on locomotives
+- graphical bug in downstairs on locomotives
 
 //features
-- lamp on locomotives
 - wisp on locomotives
 - coloring locomotives
 - ram with locomotives
+- spawn items on destroy
+- recipes
+- wisp on activation rails
+
+- lamp on locomotives
+- hoppers work with steam locomotive

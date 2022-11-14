@@ -2,28 +2,43 @@ package hu.xannosz.betterminecarts.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
 import hu.xannosz.betterminecarts.entity.SteamLocomotive;
+import hu.xannosz.betterminecarts.utils.Linkable;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Unique;
 
 public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 	private static final ResourceLocation ELECTRIC_LOCOMOTIVE =
 			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/electric_locomotive.png");
 	private static final ResourceLocation STEAM_LOCOMOTIVE =
 			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive.png");
+	private static final ResourceLocation ELECTRIC_LOCOMOTIVE_ON =
+			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/electric_locomotive_on.png");
+	private static final ResourceLocation STEAM_LOCOMOTIVE_ON =
+			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_on.png");
+	private static final ResourceLocation STEAM_LOCOMOTIVE_BURN =
+			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_burn.png");
+	private static final ResourceLocation STEAM_LOCOMOTIVE_ON_BURN =
+			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_on_burn.png");
+
 	protected final EntityModel<AbstractLocomotive> model;
 
 	public LocomotiveRenderer(EntityRendererProvider.Context context, EntityModel<AbstractLocomotive> model) {
@@ -100,15 +115,105 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 		this.model.renderToBuffer(poseStack, vertexconsumer, packedLight,
 				OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 		poseStack.popPose();
+
+		//copy of mixin
+		if (locomotive instanceof Linkable linkable) {
+			AbstractMinecart parent = linkable.getLinkedParent();
+			if (parent != null) {
+				double startX = parent.getX();
+				double startY = parent.getY();
+				double startZ = parent.getZ();
+				double endX = locomotive.getX();
+				double endY = locomotive.getY();
+				double endZ = locomotive.getZ();
+
+				float distanceX = (float) (startX - endX);
+				float distanceY = (float) (startY - endY);
+				float distanceZ = (float) (startZ - endZ);
+				float distance = locomotive.distanceTo(parent);
+
+				double hAngle = Math.toDegrees(Math.atan2(endZ - startZ, endX - startX));
+				hAngle += Math.ceil(-hAngle / 360) * 360;
+
+				double vAngle = Math.asin(distanceY / distance);
+
+				renderChain(distanceX, distanceY, distanceZ, (float) hAngle, (float) vAngle, poseStack, multiBufferSource, 15728880);
+			}
+		}
 	}
 
 	public @NotNull ResourceLocation getTextureLocation(@NotNull AbstractLocomotive locomotive) {
-		if(locomotive instanceof ElectricLocomotive){
-			return ELECTRIC_LOCOMOTIVE;
+		if (locomotive instanceof ElectricLocomotive) {
+			if (locomotive.isLampOn()) {
+				return ELECTRIC_LOCOMOTIVE_ON;
+			} else {
+				return ELECTRIC_LOCOMOTIVE;
+			}
 		}
-		if(locomotive instanceof SteamLocomotive steamLocomotive){
-			return STEAM_LOCOMOTIVE;
+		if (locomotive instanceof SteamLocomotive steamLocomotive) {
+			if(steamLocomotive.isBurn()){
+				if (locomotive.isLampOn()) {
+					return STEAM_LOCOMOTIVE_ON_BURN;
+				} else {
+					return STEAM_LOCOMOTIVE_BURN;
+				}
+			}else{
+				if (locomotive.isLampOn()) {
+					return STEAM_LOCOMOTIVE_ON;
+				} else {
+					return STEAM_LOCOMOTIVE;
+				}
+			}
 		}
 		return ELECTRIC_LOCOMOTIVE;
+	}
+
+	//copy mixin
+	private static final ResourceLocation CHAIN_TEXTURE = new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/chain.png");
+	private static final RenderType CHAIN_LAYER = RenderType.entityCutoutNoCull(CHAIN_TEXTURE);
+
+	@Unique
+	public void renderChain(float x, float y, float z, float hAngle, float vAngle, PoseStack stack, MultiBufferSource provider, int light) {
+		float squaredLength = x * x + y * y + z * z;
+		float length = Mth.sqrt(squaredLength) - 1F;
+
+		stack.pushPose();
+		stack.mulPose(Vector3f.YP.rotationDegrees(-hAngle - 90));
+		stack.mulPose(Vector3f.XP.rotation(-vAngle));
+		stack.translate(0, 0, 0.5);
+		stack.pushPose();
+
+		VertexConsumer vertexConsumer = provider.getBuffer(CHAIN_LAYER);
+		float vertX1 = 0F;
+		float vertY1 = 0.25F;
+		float vertX2 = Mth.sin(6.2831855F) * 0.125F;
+		float vertY2 = Mth.cos(6.2831855F) * 0.125F;
+		float minU = 0F;
+		float maxU = 0.1875F;
+		float minV = 0F;
+		float maxV = length / 10;
+		PoseStack.Pose entry = stack.last();
+		Matrix4f matrix4f = entry.pose();
+		Matrix3f matrix3f = entry.normal();
+
+		vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(0, 0, 0, 255).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(0, 0, 0, 255).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+
+		stack.popPose();
+		stack.translate(0.19, 0.19, 0);
+		stack.mulPose(Vector3f.ZP.rotationDegrees(90));
+
+		entry = stack.last();
+		matrix4f = entry.pose();
+		matrix3f = entry.normal();
+
+		vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(0, 0, 0, 255).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(0, 0, 0, 255).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+
+		stack.popPose();
 	}
 }

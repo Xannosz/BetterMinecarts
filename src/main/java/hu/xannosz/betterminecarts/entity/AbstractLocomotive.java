@@ -1,14 +1,18 @@
 package hu.xannosz.betterminecarts.entity;
 
+import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.button.ButtonId;
 import hu.xannosz.betterminecarts.button.ButtonUser;
+import hu.xannosz.betterminecarts.network.LampSetPacket;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.AbstractMinecartContainer;
 import net.minecraft.world.inventory.ContainerData;
@@ -16,6 +20,7 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 @Slf4j
@@ -32,6 +37,8 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 	protected int speed = 0;
 
 	private boolean sendSignal = false;
+	@Setter
+	@Getter
 	private boolean lampOn = false;
 
 	@Getter
@@ -159,6 +166,13 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 		data.set(ID_KEY, this.getId());
 		data.set(ACTIVE_BUTTON_KEY, activeButton.getId());
 		data.set(ACTIVE_FUNCTION_KEY, MinecartHelper.convertBitArrayToInt(new boolean[]{sendSignal, lampOn}));
+		if (level.isClientSide()) {
+			return;
+		}
+		level.players().forEach(player ->
+				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+						new LampSetPacket(lampOn, getId()))
+		);
 	}
 
 	// minecart functions

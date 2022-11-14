@@ -2,11 +2,13 @@ package hu.xannosz.betterminecarts.entity;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.button.ButtonId;
+import hu.xannosz.betterminecarts.network.BurnTimePacket;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.world.item.crafting.RecipeType.SMELTING;
@@ -99,6 +102,13 @@ public class SteamLocomotive extends AbstractLocomotive {
 		data.set(BURN_KEY, burn);
 		data.set(MAX_BURN_KEY, maxBurn);
 		super.updateData();
+		if (level.isClientSide()) {
+			return;
+		}
+		level.players().forEach(player ->
+				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+						new BurnTimePacket(burn > 0, getId()))
+		);
 	}
 
 	@Override
@@ -128,7 +138,7 @@ public class SteamLocomotive extends AbstractLocomotive {
 	public void tick() {
 		super.tick();
 
-		if(level.isClientSide()){
+		if (level.isClientSide()) {
 			return;
 		}
 
@@ -162,7 +172,7 @@ public class SteamLocomotive extends AbstractLocomotive {
 			heat--;
 		}
 		if (heat < 100) {
-			if(steam>2){
+			if (steam > 2) {
 				water++;
 			}
 			steam -= 3;
@@ -180,7 +190,7 @@ public class SteamLocomotive extends AbstractLocomotive {
 	}
 
 	private void consumeFuel() {
-		if(itemHandler.getStackInSlot(3).getItem().equals(Items.AIR)){
+		if (itemHandler.getStackInSlot(3).getItem().equals(Items.AIR)) {
 			return;
 		}
 		if (itemHandler.getStackInSlot(3).getItem().equals(Items.LAVA_BUCKET)) {
@@ -236,5 +246,14 @@ public class SteamLocomotive extends AbstractLocomotive {
 	public void invalidateCaps() {
 		super.invalidateCaps();
 		lazyItemHandler.invalidate();
+	}
+
+	// CLIENT SIDE
+	public boolean isBurn() {
+		return burn > 0;
+	}
+
+	public void setBurn(boolean burn) {
+		this.burn = burn ? 20 : 0;
 	}
 }
