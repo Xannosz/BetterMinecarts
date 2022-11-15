@@ -7,8 +7,11 @@ import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -16,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -80,6 +84,12 @@ public class SteamLocomotive extends AbstractLocomotive {
 
 	@Override
 	protected @NotNull Item getDropItem() {
+		SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
+		for (int i = 0; i < itemHandler.getSlots(); i++) {
+			inventory.setItem(i, itemHandler.getStackInSlot(i));
+		}
+		Containers.dropContents(level, blockPosition(), inventory);
+
 		return BetterMinecarts.STEAM_LOCOMOTIVE_ITEM.get();
 	}
 
@@ -138,6 +148,15 @@ public class SteamLocomotive extends AbstractLocomotive {
 	public void tick() {
 		super.tick();
 
+		if (burn > 0 && this.random.nextInt(2) == 0) {
+			final Vec3 smokeCoordinates = getSmokeCoordinates();
+			this.level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+					smokeCoordinates.x() + (random.nextFloat() - 0.5) * 0.1,
+					smokeCoordinates.y(),
+					smokeCoordinates.z() + (random.nextFloat() - 0.5) * 0.1,
+					0.0D, 0.2D, 0.0D);
+		}
+
 		if (level.isClientSide()) {
 			return;
 		}
@@ -187,6 +206,33 @@ public class SteamLocomotive extends AbstractLocomotive {
 		if (water <= MAX_WATER - 1000) {
 			loadWater();
 		}
+
+		if (steam <= 0) {
+			xPush = 0;
+			zPush = 0;
+			activeButton = ButtonId.STOP;
+		}
+
+		updateData();
+		setChanged();
+	}
+
+	private Vec3 getSmokeCoordinates() {
+		switch (getMotionDirection()) {
+			case NORTH -> {
+				return new Vec3(this.getX(), this.getY() + 1.23, this.getZ() - 0.45);
+			}
+			case SOUTH -> {
+				return new Vec3(this.getX(), this.getY() + 1.23, this.getZ() + 0.45);
+			}
+			case WEST -> {
+				return new Vec3(this.getX() - 0.45, this.getY() + 1.23, this.getZ());
+			}
+			case EAST -> {
+				return new Vec3(this.getX() + 0.45, this.getY() + 1.23, this.getZ());
+			}
+		}
+		return new Vec3(this.getX(), this.getY() + 1.23, this.getZ());
 	}
 
 	private void consumeFuel() {

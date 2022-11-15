@@ -4,6 +4,8 @@ import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.button.ButtonId;
 import hu.xannosz.betterminecarts.button.ButtonUser;
 import hu.xannosz.betterminecarts.network.LampSetPacket;
+import hu.xannosz.betterminecarts.network.PlaySoundPacket;
+import hu.xannosz.betterminecarts.utils.Linkable;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import lombok.Getter;
@@ -13,8 +15,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.AbstractMinecartContainer;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
@@ -22,6 +28,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ConcurrentModificationException;
 
 @Slf4j
 public abstract class AbstractLocomotive extends AbstractMinecartContainer implements ButtonUser {
@@ -127,7 +135,7 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 				activeButton = buttonId;
 			}
 			case LAMP -> lampOn = !lampOn;
-			case WHISTLE -> log.info("WHISTLE");
+			case WHISTLE -> whistle();
 			case REDSTONE -> sendSignal = !sendSignal;
 		}
 		updateData();
@@ -175,6 +183,13 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 		);
 	}
 
+	private void whistle() {
+		level.players().forEach(player ->
+				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+						new PlaySoundPacket(blockPosition()))
+		);
+	}
+
 	// minecart functions
 	@Override
 	public @NotNull Type getMinecartType() {
@@ -185,7 +200,11 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 	protected void moveAlongTrack(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
 		double d0 = 1.0E-4D;
 		double d1 = 0.001D;
-		super.moveAlongTrack(blockPos, blockState);
+		try {
+			super.moveAlongTrack(blockPos, blockState);
+		} catch (ConcurrentModificationException ex) {
+			//catch double collusion handling
+		}
 		Vec3 vec3 = this.getDeltaMovement();
 		double d2 = vec3.horizontalDistanceSqr();
 		double d3 = this.xPush * this.xPush + this.zPush * this.zPush;
@@ -236,6 +255,32 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 				getNormalizedSpeed(dMovement.z));
 
 		super.applyNaturalSlowdown();
+	}
+
+	@Override
+	public void activateMinecart(int p_38659_, int p_38660_, int p_38661_, boolean p_38662_) {
+		if (p_38662_) {
+			whistle();
+		}
+	}
+
+	@Override
+	public boolean canCollideWith(@NotNull Entity other) {
+		Linkable self = (Linkable) this;
+		if (other instanceof AbstractMinecart minecart && self.getLinkedParent() != null && !self.getLinkedParent().equals(minecart))
+			minecart.setDeltaMovement(getDeltaMovement());
+
+		float damage = BetterMinecarts.getConfig().serverTweaks.minecartDamage;
+
+		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && speed > 1) {
+			living.hurt(BetterMinecarts.minecart(this), damage);
+
+			Vec3 knockback = living.getDeltaMovement().add(getDeltaMovement().x() * speed, getDeltaMovement().length() * 0.5 * speed, getDeltaMovement().z() * speed);
+			living.setDeltaMovement(knockback);
+			living.hasImpulse = true;
+			return false;
+		}
+		return Boat.canVehicleCollide(this, other);
 	}
 
 	// entity functions

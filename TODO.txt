@@ -2,19 +2,18 @@
 - collusion with side carts
 - pull back
 - connect two trains
+- disconnect
 - invert train?
-- smoke steam locomotive
 
+- slow destruction with pickaxe
 - graphical bug in corners on locomotives
 - graphical bug in downstairs on locomotives
 
 //features
-- wisp on locomotives
 - coloring locomotives
-- ram with locomotives
-- spawn items on destroy
+- locomotive items
 - recipes
-- wisp on activation rails
 
+- locomotive sounds
 - lamp on locomotives
 - hoppers work with steam locomotive

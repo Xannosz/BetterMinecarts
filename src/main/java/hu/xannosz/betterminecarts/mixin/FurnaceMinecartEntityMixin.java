@@ -177,20 +177,7 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 	public int betterminecarts$maxBurnTime(int maxBurnTime) {
 		return BetterMinecarts.getConfig().serverTweaks.furnaceMaxBurnTime;
 	}
-/*
-	@ModifyArgs(method = "tick", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"
-	))
-	public void betterminecarts$changeSmokeParticle(Args args) {
-		if (betterminecarts.getConfig().clientTweaks.useCampfireSmoke)  //TODO
-			args.set(0, ParticleTypes.CAMPFIRE_COSY_SMOKE);
 
-		args.set(1, getX() + (random.nextFloat() - 0.5));
-		args.set(2, getY() + 1);
-		args.set(3, getZ() + (random.nextFloat() - 0.5));
-		args.set(5, 0.2);
-	}
-*/
 	@ModifyArg(method = "tick", at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/util/RandomSource;nextInt(I)I"
 	))
