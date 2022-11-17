@@ -9,6 +9,7 @@ import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
 import hu.xannosz.betterminecarts.entity.SteamLocomotive;
 import hu.xannosz.betterminecarts.integration.MinecartTweaksConfig;
 import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
+import hu.xannosz.betterminecarts.item.Crowbar;
 import hu.xannosz.betterminecarts.network.*;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
@@ -69,6 +70,9 @@ public class BetterMinecarts {
 	);
 
 	public static final Map<String, RegistryObject<AbstractLocomotiveItem>> LOCOMOTIVE_ITEMS = createLocomotiveItems();
+	@SuppressWarnings("unused")
+	public static final RegistryObject<Item> CROWBAR = ITEMS.register("crowbar",
+			() -> new Crowbar(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1)));
 
 	public static final RegistryObject<EntityType<ElectricLocomotive>> ELECTRIC_LOCOMOTIVE = ENTITIES.register("electric_locomotive",
 			() -> EntityType.Builder.<ElectricLocomotive>of(ElectricLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":electric_locomotive"));
@@ -194,10 +198,10 @@ public class BetterMinecarts {
 			for (MinecartColor bottomColor : MinecartColor.values()) {
 				result.put(generateNameFromData(topColor, bottomColor, true),
 						ITEMS.register(generateNameFromData(topColor, bottomColor, true),
-						() -> new AbstractLocomotiveItem(topColor, bottomColor, true)));
+								() -> new AbstractLocomotiveItem(topColor, bottomColor, true)));
 				result.put(generateNameFromData(topColor, bottomColor, false),
 						ITEMS.register(generateNameFromData(topColor, bottomColor, false),
-						() -> new AbstractLocomotiveItem(topColor, bottomColor, false)));
+								() -> new AbstractLocomotiveItem(topColor, bottomColor, false)));
 			}
 		}
 

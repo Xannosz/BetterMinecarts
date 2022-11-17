@@ -1,17 +1,13 @@
 // bugs / optimization
-- collusion with side carts
-- pull back
-- connect two trains
-- disconnect
-- invert train?
-
-- slow destruction with pickaxe
+- collusion with player on side carts (similar to move back?)
 - graphical bug in corners on locomotives
-- graphical bug in downstairs on locomotives
 
 //features
-- locomotive sounds
+- slow destruction with pickaxe
+- graphical bug in downstairs on locomotives
+- change gray to light_gray, dark_gray to gray (main recipe)
 - all locomotive color
-- lamp on locomotives
 - hoppers work with steam locomotive
-- change gray to light_gray, dark_gray to gray
+- locomotive sounds
+
+- lamp on locomotives

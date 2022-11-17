@@ -4,25 +4,20 @@ import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.network.SyncChainedMinecartPacket;
 import hu.xannosz.betterminecarts.utils.Linkable;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
-import net.minecraft.ChatFormatting;
+import hu.xannosz.betterminecarts.utils.TrainUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
@@ -35,8 +30,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Mixin(AbstractMinecart.class)
@@ -87,24 +80,27 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 
 				if (distance <= 4) {
 					Vec3 direction = getLinkedParent().position().subtract(position()).normalize();
+					Vec3 parentVelocity = getLinkedParent().getDeltaMovement();
 
 					if (distance > 1) {
-						Vec3 parentVelocity = getLinkedParent().getDeltaMovement();
-
 						if (parentVelocity.length() == 0) {
 							setDeltaMovement(direction.scale(0.05));
 						} else {
 							setDeltaMovement(direction.scale(parentVelocity.length()));
 							setDeltaMovement(getDeltaMovement().scale(distance));
 						}
-					} else if (distance < 0.8)
-						setDeltaMovement(direction.scale(-0.05));
-					else
+					} else if (distance < 0.8) {
+						if (parentVelocity.length() == 0) {
+							setDeltaMovement(direction.scale(-0.05));
+						} else {
+							setDeltaMovement(direction.scale(parentVelocity.length()));
+							setDeltaMovement(getDeltaMovement().scale(-1.2));
+						}
+					} else
 						setDeltaMovement(Vec3.ZERO);
 				} else {
 					((Linkable) getLinkedParent()).setLinkedChild(null);
 					setLinkedParent(null);
-					spawnAtLocation(new ItemStack(Items.CHAIN));
 					return;
 				}
 
@@ -137,12 +133,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 		}
 	}
 
-	@Inject(method = "destroy", at = @At("HEAD"))
-	public void betterminecarts$dropChain(DamageSource damageSource, CallbackInfo info) {
-		if (getLinkedParent() != null || getLinkedChild() != null)
-			spawnAtLocation(new ItemStack(Items.CHAIN));
-	}
-
 	@Inject(method = "canCollideWith", at = @At("HEAD"))
 	public void betterminecarts$damageEntities(Entity other, CallbackInfoReturnable<Boolean> info) {
 		if (other instanceof AbstractMinecart minecart && getLinkedParent() != null && !getLinkedParent().equals(minecart))
@@ -153,8 +143,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && getDeltaMovement().length() > 1.5) {
 			living.hurt(BetterMinecarts.minecart(this), damage);
 
-			Vec3 knockback = living.getDeltaMovement().add(getDeltaMovement().x() * 0.9, getDeltaMovement().length() * 0.2, getDeltaMovement().z() * 0.9);
-			living.setDeltaMovement(knockback);
+			Vec3 knockBack = living.getDeltaMovement().add(getDeltaMovement().x() * 0.9, getDeltaMovement().length() * 0.2, getDeltaMovement().z() * 0.9);
+			living.setDeltaMovement(knockBack);
 			living.hasImpulse = true;
 		}
 	}
@@ -184,53 +174,11 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	public InteractionResult interact(Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 
-		if (player.isShiftKeyDown() && stack.is(Items.CHAIN)) {
+		if (stack.is(BetterMinecarts.CROWBAR.get())) {
 			if (level instanceof ServerLevel server) {
-				CompoundTag nbt = stack.getOrCreateTag();
-
-				if (nbt.contains("ParentEntity") && !getUUID().equals(nbt.getUUID("ParentEntity"))) {
-					if (server.getEntity(nbt.getUUID("ParentEntity")) instanceof AbstractMinecart parent) {
-						Linkable linkable = (Linkable) parent;
-						Set<Linkable> train = new HashSet<>();
-						train.add(linkable);
-
-						while ((linkable = (Linkable) linkable.getLinkedParent()) instanceof Linkable && !train.contains(linkable)) {
-							train.add(linkable);
-						}
-
-						if (train.contains(this) || ((Linkable) parent).getLinkedChild() != null) {
-							player.displayClientMessage(Component.translatable(BetterMinecarts.MOD_ID + ".cant_link_to_engine").withStyle(ChatFormatting.RED), true);
-						} else {
-							if (getLinkedParent() != null)
-								((Linkable) getLinkedParent()).setLinkedChild(null);
-
-
-							setLinkedParent(parent);
-							((Linkable) parent).setLinkedChild((AbstractMinecart) (Object) this);
-						}
-					} else {
-						nbt.remove("ParentEntity");
-
-						if (nbt.isEmpty())
-							stack.setTag(null);
-					}
-
-					level.playSound(null, getX(), getY(), getZ(), SoundEvents.CHAIN_PLACE, SoundSource.NEUTRAL, 1F, 1F);
-
-					if (!player.isCreative())
-						stack.shrink(1);
-
-					nbt.remove("ParentEntity");
-
-					if (nbt.isEmpty())
-						stack.setTag(null);
-				} else {
-					nbt.putUUID("ParentEntity", getUUID());
-					level.playSound(null, getX(), getY(), getZ(), SoundEvents.CHAIN_HIT, SoundSource.NEUTRAL, 1F, 1F);
-				}
+				TrainUtil.clickedByCrowbar(stack, this, server);
 			}
-
-			return InteractionResult.sidedSuccess(true);
+			return InteractionResult.SUCCESS;
 		}
 
 		return super.interact(player, hand);
