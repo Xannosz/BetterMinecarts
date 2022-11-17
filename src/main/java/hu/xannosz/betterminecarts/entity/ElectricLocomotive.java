@@ -31,14 +31,14 @@ public class ElectricLocomotive extends AbstractLocomotive {
 		super(entityType, level, MinecartColor.YELLOW, MinecartColor.BROWN, DATA_SIZE);
 	}
 
-	public ElectricLocomotive(Level level, double x, double y, double z) {
-		super(BetterMinecarts.ELECTRIC_LOCOMOTIVE.get(), x, y, z, level,
-				MinecartColor.YELLOW, MinecartColor.BROWN, DATA_SIZE);
+	public ElectricLocomotive(Level level, double x, double y, double z, MinecartColor top, MinecartColor bottom) {
+		super(BetterMinecarts.ELECTRIC_LOCOMOTIVE.get(), x, y, z, level, top, bottom, DATA_SIZE);
 	}
 
 	@Override
 	protected @NotNull Item getDropItem() {
-		return BetterMinecarts.ELECTRIC_LOCOMOTIVE_ITEM.get();
+		return BetterMinecarts.LOCOMOTIVE_ITEMS.get(
+				BetterMinecarts.generateNameFromData(getTopFilter(), getBottomFilter(), false)).get();
 	}
 
 	@Override

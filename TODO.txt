@@ -10,10 +10,8 @@
 - graphical bug in downstairs on locomotives
 
 //features
-- coloring locomotives
-- locomotive items
-- recipes
-
 - locomotive sounds
+- all locomotive color
 - lamp on locomotives
 - hoppers work with steam locomotive
+- change gray to light_gray, dark_gray to gray

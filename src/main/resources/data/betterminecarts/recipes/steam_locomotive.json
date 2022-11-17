@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "H W",
+    "FII",
+    "CHC"
+  ],
+  "key": {
+    "H": {
+      "item": "minecraft:cobblestone_slab"
+    },
+    "W": {
+      "item": "minecraft:cobblestone_wall"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "C": {
+      "item": "minecraft:minecart"
+    }
+  },
+  "result": {
+    "item": "betterminecarts:steam_locomotive_item_gray_dark_gray"
+  }
+}

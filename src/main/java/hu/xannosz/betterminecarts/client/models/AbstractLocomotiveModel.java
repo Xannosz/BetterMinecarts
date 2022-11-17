@@ -19,8 +19,8 @@ public abstract class AbstractLocomotiveModel extends EntityModel<AbstractLocomo
 
 	@Override
 	public void setupAnim(@NotNull AbstractLocomotive entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		topFilter = entity.getTopFilter();
-		bottomFilter = entity.getBottomFilter();
+		topFilter = entity.getTopFilter().getFormattedFilter();
+		bottomFilter = entity.getBottomFilter().getFormattedFilter();
 	}
 
 	@Override

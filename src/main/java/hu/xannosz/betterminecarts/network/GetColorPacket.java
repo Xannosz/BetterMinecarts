@@ -1,31 +1,27 @@
 package hu.xannosz.betterminecarts.network;
 
-import hu.xannosz.betterminecarts.button.ButtonId;
-import hu.xannosz.betterminecarts.button.ButtonUser;
+import hu.xannosz.betterminecarts.BetterMinecarts;
+import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class ButtonClickedPacket {
-
-	private final ButtonId buttonId;
+public class GetColorPacket {
 	private final int entityId;
 
-	public ButtonClickedPacket(ButtonId buttonId, int entityId) {
-		this.buttonId = buttonId;
+	public GetColorPacket(int entityId) {
 		this.entityId = entityId;
 	}
 
-	public ButtonClickedPacket(FriendlyByteBuf buf) {
-		buttonId = buf.readEnum(ButtonId.class);
+	public GetColorPacket(FriendlyByteBuf buf) {
 		entityId = buf.readInt();
 	}
 
 	public void toBytes(FriendlyByteBuf buf) {
-		buf.writeEnum(buttonId);
 		buf.writeInt(entityId);
 	}
 
@@ -34,8 +30,9 @@ public class ButtonClickedPacket {
 		context.enqueueWork(() -> {
 			// SERVER SITE
 			Entity entity = Objects.requireNonNull(context.getSender()).getLevel().getEntity(entityId);
-			if (entity instanceof ButtonUser) {
-				((ButtonUser) entity).executeButtonClick(buttonId);
+			if (entity instanceof AbstractLocomotive abstractLocomotive) {
+				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(context::getSender),
+						new ColorPacket(abstractLocomotive.getTopFilter(), abstractLocomotive.getBottomFilter(), abstractLocomotive.getId()));
 			}
 		});
 	}

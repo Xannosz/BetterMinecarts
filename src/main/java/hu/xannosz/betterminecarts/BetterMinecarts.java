@@ -8,13 +8,13 @@ import hu.xannosz.betterminecarts.client.renderer.LocomotiveRenderer;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
 import hu.xannosz.betterminecarts.entity.SteamLocomotive;
 import hu.xannosz.betterminecarts.integration.MinecartTweaksConfig;
-import hu.xannosz.betterminecarts.item.ElectricLocomotiveItem;
-import hu.xannosz.betterminecarts.item.SteamLocomotiveItem;
+import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
 import hu.xannosz.betterminecarts.network.*;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
+import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
@@ -45,6 +45,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @Mod(BetterMinecarts.MOD_ID)
@@ -66,10 +68,7 @@ public class BetterMinecarts {
 			SignalRailBlock::new
 	);
 
-	public static final RegistryObject<Item> ELECTRIC_LOCOMOTIVE_ITEM = ITEMS.register("electric_locomotive_item",
-			() -> new ElectricLocomotiveItem(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)));
-	public static final RegistryObject<Item> STEAM_LOCOMOTIVE_ITEM = ITEMS.register("steam_locomotive_item",
-			() -> new SteamLocomotiveItem(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)));
+	public static final Map<String, RegistryObject<AbstractLocomotiveItem>> LOCOMOTIVE_ITEMS = createLocomotiveItems();
 
 	public static final RegistryObject<EntityType<ElectricLocomotive>> ELECTRIC_LOCOMOTIVE = ENTITIES.register("electric_locomotive",
 			() -> EntityType.Builder.<ElectricLocomotive>of(ElectricLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":electric_locomotive"));
@@ -131,6 +130,16 @@ public class BetterMinecarts {
 				.encoder(PlaySoundPacket::toBytes)
 				.consumerMainThread(PlaySoundPacket::handler)
 				.add();
+		INSTANCE.messageBuilder(ColorPacket.class, 5, NetworkDirection.PLAY_TO_CLIENT)
+				.decoder(ColorPacket::new)
+				.encoder(ColorPacket::toBytes)
+				.consumerMainThread(ColorPacket::handler)
+				.add();
+		INSTANCE.messageBuilder(GetColorPacket.class, 6, NetworkDirection.PLAY_TO_SERVER)
+				.decoder(GetColorPacket::new)
+				.encoder(GetColorPacket::toBytes)
+				.consumerMainThread(GetColorPacket::handler)
+				.add();
 	}
 
 	private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> blockCreator) {
@@ -176,6 +185,30 @@ public class BetterMinecarts {
 					ElectricLocomotiveModel::createBodyLayer);
 			event.registerLayerDefinition(SteamLocomotiveModel.LAYER_LOCATION,
 					SteamLocomotiveModel::createBodyLayer);
+		}
+	}
+
+	private static Map<String, RegistryObject<AbstractLocomotiveItem>> createLocomotiveItems() {
+		Map<String, RegistryObject<AbstractLocomotiveItem>> result = new HashMap<>();
+		for (MinecartColor topColor : MinecartColor.values()) {
+			for (MinecartColor bottomColor : MinecartColor.values()) {
+				result.put(generateNameFromData(topColor, bottomColor, true),
+						ITEMS.register(generateNameFromData(topColor, bottomColor, true),
+						() -> new AbstractLocomotiveItem(topColor, bottomColor, true)));
+				result.put(generateNameFromData(topColor, bottomColor, false),
+						ITEMS.register(generateNameFromData(topColor, bottomColor, false),
+						() -> new AbstractLocomotiveItem(topColor, bottomColor, false)));
+			}
+		}
+
+		return result;
+	}
+
+	public static String generateNameFromData(MinecartColor topColor, MinecartColor bottomColor, boolean isSteam) {
+		if (isSteam) {
+			return "steam_locomotive_item_" + topColor.getLabel() + "_" + bottomColor.getLabel();
+		} else {
+			return "electric_locomotive_item_" + topColor.getLabel() + "_" + bottomColor.getLabel();
 		}
 	}
 }

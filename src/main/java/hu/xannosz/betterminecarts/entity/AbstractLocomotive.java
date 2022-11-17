@@ -48,18 +48,23 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 	@Setter
 	@Getter
 	private boolean lampOn = false;
+	@Setter
+	@Getter
+	private MinecartColor topFilter;
+	@Setter
+	@Getter
+	private MinecartColor bottomFilter;
+	@Setter
+	@Getter
+	private boolean filterUpdateDone = false;
 
-	@Getter
-	private final Vec3 topFilter;
-	@Getter
-	private final Vec3 bottomFilter;
 	private final int dataSize;
 
 	protected AbstractLocomotive(EntityType<?> entityType, Level level,
 								 MinecartColor topFilter, MinecartColor bottomFilter, int dataSize) {
 		super(entityType, level);
-		this.topFilter = topFilter.getFilter().scale(1 / 100f);
-		this.bottomFilter = bottomFilter.getFilter().scale(1 / 100f);
+		this.topFilter = topFilter;
+		this.bottomFilter = bottomFilter;
 		this.dataSize = dataSize;
 		data = new SimpleContainerData(dataSize);
 		updateData();
@@ -68,8 +73,8 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 	protected AbstractLocomotive(EntityType<?> entityType, double x, double y, double z, Level level,
 								 MinecartColor topFilter, MinecartColor bottomFilter, int dataSize) {
 		super(entityType, x, y, z, level);
-		this.topFilter = topFilter.getFilter().scale(1 / 100f);
-		this.bottomFilter = bottomFilter.getFilter().scale(1 / 100f);
+		this.topFilter = topFilter;
+		this.bottomFilter = bottomFilter;
 		this.dataSize = dataSize;
 		data = new SimpleContainerData(dataSize);
 		updateData();
@@ -275,8 +280,8 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && speed > 1) {
 			living.hurt(BetterMinecarts.minecart(this), damage);
 
-			Vec3 knockback = living.getDeltaMovement().add(getDeltaMovement().x() * speed, getDeltaMovement().length() * 0.5 * speed, getDeltaMovement().z() * speed);
-			living.setDeltaMovement(knockback);
+			Vec3 knockBack = living.getDeltaMovement().add(getDeltaMovement().x() * speed, getDeltaMovement().length() * 0.5 * speed, getDeltaMovement().z() * speed);
+			living.setDeltaMovement(knockBack);
 			living.hasImpulse = true;
 			return false;
 		}
@@ -294,6 +299,8 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 		compoundTag.putInt("Speed", speed);
 		compoundTag.putBoolean("SendSignal", sendSignal);
 		compoundTag.putBoolean("LampOn", lampOn);
+		compoundTag.putString("TopFilter", topFilter.getLabel());
+		compoundTag.putString("BottomFilter", bottomFilter.getLabel());
 	}
 
 	@Override
@@ -305,6 +312,8 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 		speed = compoundTag.getInt("Speed");
 		sendSignal = compoundTag.getBoolean("SendSignal");
 		lampOn = compoundTag.getBoolean("LampOn");
+		topFilter = MinecartColor.getFromLabel(compoundTag.getString("TopFilter"));
+		bottomFilter = MinecartColor.getFromLabel(compoundTag.getString("BottomFilter"));
 		updateData();
 	}
 }

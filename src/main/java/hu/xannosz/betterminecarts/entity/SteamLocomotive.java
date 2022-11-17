@@ -77,9 +77,8 @@ public class SteamLocomotive extends AbstractLocomotive {
 		super(entityType, level, MinecartColor.GRAY, MinecartColor.DARK_GRAY, DATA_SIZE);
 	}
 
-	public SteamLocomotive(Level level, double x, double y, double z) {
-		super(BetterMinecarts.STEAM_LOCOMOTIVE.get(), x, y, z, level,
-				MinecartColor.GRAY, MinecartColor.DARK_GRAY, DATA_SIZE);
+	public SteamLocomotive(Level level, double x, double y, double z, MinecartColor top, MinecartColor bottom) {
+		super(BetterMinecarts.STEAM_LOCOMOTIVE.get(), x, y, z, level, top, bottom, DATA_SIZE);
 	}
 
 	@Override
@@ -90,7 +89,8 @@ public class SteamLocomotive extends AbstractLocomotive {
 		}
 		Containers.dropContents(level, blockPosition(), inventory);
 
-		return BetterMinecarts.STEAM_LOCOMOTIVE_ITEM.get();
+		return BetterMinecarts.LOCOMOTIVE_ITEMS.get(
+				BetterMinecarts.generateNameFromData(getTopFilter(), getBottomFilter(), true)).get();
 	}
 
 	@Override
@@ -207,7 +207,7 @@ public class SteamLocomotive extends AbstractLocomotive {
 			loadWater();
 		}
 
-		if (steam <= 0) {
+		if (steam < MINIMUM_STEAM && activeButton != ButtonId.PAUSE) {
 			xPush = 0;
 			zPush = 0;
 			activeButton = ButtonId.STOP;

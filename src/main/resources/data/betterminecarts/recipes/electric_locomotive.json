@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " H ",
+    "IPI",
+    "CHC"
+  ],
+  "key": {
+    "H": {
+      "item": "minecraft:cobblestone_slab"
+    },
+    "P": {
+      "item": "minecraft:copper_block"
+    },
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "C": {
+      "item": "minecraft:minecart"
+    }
+  },
+  "result": {
+    "item": "betterminecarts:electric_locomotive_item_yellow_brown"
+  }
+}

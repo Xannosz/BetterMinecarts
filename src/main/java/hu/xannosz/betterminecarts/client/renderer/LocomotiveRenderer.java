@@ -9,6 +9,7 @@ import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
 import hu.xannosz.betterminecarts.entity.SteamLocomotive;
+import hu.xannosz.betterminecarts.network.GetColorPacket;
 import hu.xannosz.betterminecarts.utils.Linkable;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -143,6 +144,9 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 	}
 
 	public @NotNull ResourceLocation getTextureLocation(@NotNull AbstractLocomotive locomotive) {
+		if(!locomotive.isFilterUpdateDone()) {
+			BetterMinecarts.INSTANCE.sendToServer(new GetColorPacket(locomotive.getId()));
+		}
 		if (locomotive instanceof ElectricLocomotive) {
 			if (locomotive.isLampOn()) {
 				return ELECTRIC_LOCOMOTIVE_ON;
