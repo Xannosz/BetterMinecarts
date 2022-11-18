@@ -165,11 +165,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 			nbt.putUUID("ChildUuid", getLinkedChild().getUUID());
 	}
 
-	//@Redirect(method = "setCurrentCartSpeedCapOnRail", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(DD)D"))
-	private double betterminecarts$uncapSpeed(double garbo, double uncappedSpeed) {
-		return uncappedSpeed; //TODO unused
-	}
-
 	@Override
 	public InteractionResult interact(Player player, InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);

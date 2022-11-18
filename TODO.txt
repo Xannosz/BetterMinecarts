@@ -1,10 +1,7 @@
-// bugs / optimization
+- graphical bug in downstairs on locomotives
 - collusion with player on side carts (similar to move back?)
+
 - graphical bug in corners on locomotives
 
-//features
-- hoppers work with steam locomotive
-- graphical bug in downstairs on locomotives
 - locomotive sounds
-
 - lamp on locomotives

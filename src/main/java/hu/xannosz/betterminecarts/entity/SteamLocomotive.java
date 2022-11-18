@@ -10,15 +10,18 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -30,7 +33,7 @@ import static net.minecraft.world.item.crafting.RecipeType.SMELTING;
 import static net.minecraftforge.common.ForgeHooks.getBurnTime;
 
 @Slf4j
-public class SteamLocomotive extends AbstractLocomotive {
+public class SteamLocomotive extends AbstractLocomotive implements Container {
 
 	public static final int STEAM_KEY = 3;
 	public static final int WATER_KEY = 4;
@@ -63,9 +66,9 @@ public class SteamLocomotive extends AbstractLocomotive {
 		@Override
 		public boolean isItemValid(int slot, @NotNull ItemStack stack) {
 			return switch (slot) {
-				case 0, 1, 2 -> stack.getItem() == Items.WATER_BUCKET;
-				case 3, 4, 5, 6 -> getBurnTime(stack, SMELTING) > 0;
-				case 7 -> false;
+				case 1, 2, 3 -> stack.getItem() == Items.WATER_BUCKET;
+				case 4, 5, 6, 7 -> getBurnTime(stack, SMELTING) > 0;
+				case 0 -> false;
 				default -> super.isItemValid(slot, stack);
 			};
 		}
@@ -94,7 +97,7 @@ public class SteamLocomotive extends AbstractLocomotive {
 	}
 
 	@Override
-	protected @NotNull AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory) {
+	public @NotNull AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player player) {
 		updateData();
 		return new SteamLocomotiveMenu(id, inventory, this, data);
 	}
@@ -176,11 +179,11 @@ public class SteamLocomotive extends AbstractLocomotive {
 			if (!activeButton.equals(ButtonId.PAUSE)) {
 				steam -= speed;
 			}
-			moveStack(1, 0);
 			moveStack(2, 1);
-			moveStack(4, 3);
+			moveStack(3, 2);
 			moveStack(5, 4);
 			moveStack(6, 5);
+			moveStack(7, 6);
 		} else {
 			clock++;
 		}
@@ -236,33 +239,33 @@ public class SteamLocomotive extends AbstractLocomotive {
 	}
 
 	private void consumeFuel() {
-		if (itemHandler.getStackInSlot(3).getItem().equals(Items.AIR)) {
+		if (itemHandler.getStackInSlot(4).getItem().equals(Items.AIR)) {
 			return;
 		}
-		if (itemHandler.getStackInSlot(3).getItem().equals(Items.LAVA_BUCKET)) {
-			if (itemHandler.getStackInSlot(7).isEmpty()) {
-				itemHandler.setStackInSlot(7, new ItemStack(Items.BUCKET, 1));
-			} else if (itemHandler.getStackInSlot(7).getCount() < 16) {
-				itemHandler.getStackInSlot(7).grow(1);
+		if (itemHandler.getStackInSlot(4).getItem().equals(Items.LAVA_BUCKET)) {
+			if (itemHandler.getStackInSlot(0).isEmpty()) {
+				itemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET, 1));
+			} else if (itemHandler.getStackInSlot(0).getCount() < 16) {
+				itemHandler.getStackInSlot(0).grow(1);
 			} else {
 				return;
 			}
 		}
-		maxBurn = getBurnTime(itemHandler.getStackInSlot(3), SMELTING);
+		maxBurn = getBurnTime(itemHandler.getStackInSlot(4), SMELTING);
 		burn = maxBurn;
-		itemHandler.getStackInSlot(3).shrink(1);
+		itemHandler.getStackInSlot(4).shrink(1);
 	}
 
 	private void loadWater() {
-		if (itemHandler.getStackInSlot(0).getItem().equals(Items.WATER_BUCKET)) {
-			if (itemHandler.getStackInSlot(7).isEmpty()) {
-				itemHandler.setStackInSlot(7, new ItemStack(Items.BUCKET, 1));
-			} else if (itemHandler.getStackInSlot(7).getCount() < 16) {
-				itemHandler.getStackInSlot(7).grow(1);
+		if (itemHandler.getStackInSlot(1).getItem().equals(Items.WATER_BUCKET)) {
+			if (itemHandler.getStackInSlot(0).isEmpty()) {
+				itemHandler.setStackInSlot(0, new ItemStack(Items.BUCKET, 1));
+			} else if (itemHandler.getStackInSlot(0).getCount() < 16) {
+				itemHandler.getStackInSlot(0).grow(1);
 			} else {
 				return;
 			}
-			itemHandler.getStackInSlot(0).shrink(1);
+			itemHandler.getStackInSlot(1).shrink(1);
 			water += 1000;
 		}
 	}
@@ -301,5 +304,66 @@ public class SteamLocomotive extends AbstractLocomotive {
 
 	public void setBurn(boolean burn) {
 		this.burn = burn ? 20 : 0;
+	}
+
+	@Override
+	public int getContainerSize() {
+		return 8;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		for (int i = 0; i < itemHandler.getSlots(); i++) {
+			ItemStack itemstack = itemHandler.getStackInSlot(i);
+			if (!itemstack.isEmpty()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public @NotNull ItemStack getItem(int slot) {
+		return itemHandler.getStackInSlot(slot);
+	}
+
+	@Override
+	public @NotNull ItemStack removeItem(int slot, int count) {
+		if (slot == 0) {
+			return count > 0 ? itemHandler.getStackInSlot(slot).split(count) : ItemStack.EMPTY;
+		}
+		return new ItemStack(Blocks.AIR, 0);
+	}
+
+	@Override
+	public @NotNull ItemStack removeItemNoUpdate(int slot) {
+		return getItem(slot);
+	}
+
+	@Override
+	public void setItem(int slot, @NotNull ItemStack itemStack) {
+		itemHandler.setStackInSlot(slot, itemStack);
+	}
+
+	@Override
+	public void setChanged() {
+	}
+
+	@Override
+	public boolean stillValid(@NotNull Player player) {
+		return false;
+	}
+
+	@Override
+	public void clearContent() {
+		for (int i = 0; i < itemHandler.getSlots(); i++) {
+			itemHandler.setStackInSlot(i, new ItemStack(Blocks.AIR, 0));
+		}
+	}
+
+	@Override
+	public boolean canPlaceItem(int slot, @NotNull ItemStack itemStack) {
+		return itemHandler.isItemValid(slot, itemStack);
 	}
 }

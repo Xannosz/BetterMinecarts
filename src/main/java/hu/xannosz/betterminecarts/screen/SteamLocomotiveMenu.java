@@ -79,14 +79,14 @@ public class SteamLocomotiveMenu extends AbstractContainerMenu {
 
 	private void createSlotsInternal(SteamLocomotive steamLocomotive) {
 		ItemStackHandler handler = steamLocomotive.getItemHandler();
-		SlotItemHandler waterIn1 = new SlotItemHandler(handler, 0, 71, 29);
-		SlotItemHandler waterIn2 = new SlotItemHandler(handler, 1, 81, 9);
-		SlotItemHandler waterIn3 = new SlotItemHandler(handler, 2, 61, 9);
-		SlotItemHandler fuelIn1 = new SlotItemHandler(handler, 3, 130, 29);
-		SlotItemHandler fuelIn2 = new SlotItemHandler(handler, 4, 130, 9);
-		SlotItemHandler fuelIn3 = new SlotItemHandler(handler, 5, 150, 9);
-		SlotItemHandler fuelIn4 = new SlotItemHandler(handler, 6, 110, 9);
-		out = new SlotItemHandler(handler, 7, 71, 58);
+		SlotItemHandler waterIn1 = new SlotItemHandler(handler, 1, 71, 29);
+		SlotItemHandler waterIn2 = new SlotItemHandler(handler, 2, 81, 9);
+		SlotItemHandler waterIn3 = new SlotItemHandler(handler, 3, 61, 9);
+		SlotItemHandler fuelIn1 = new SlotItemHandler(handler, 4, 130, 29);
+		SlotItemHandler fuelIn2 = new SlotItemHandler(handler, 5, 130, 9);
+		SlotItemHandler fuelIn3 = new SlotItemHandler(handler, 6, 150, 9);
+		SlotItemHandler fuelIn4 = new SlotItemHandler(handler, 7, 110, 9);
+		out = new SlotItemHandler(handler, 0, 71, 58);
 		this.addSlot(waterIn1);
 		this.addSlot(waterIn2);
 		this.addSlot(waterIn3);

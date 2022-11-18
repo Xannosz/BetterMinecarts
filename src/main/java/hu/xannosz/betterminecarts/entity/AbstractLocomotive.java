@@ -15,14 +15,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.minecraft.world.entity.vehicle.AbstractMinecartContainer;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -32,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ConcurrentModificationException;
 
 @Slf4j
-public abstract class AbstractLocomotive extends AbstractMinecartContainer implements ButtonUser {
+public abstract class AbstractLocomotive extends AbstractMinecart implements ButtonUser, MenuProvider {
 
 	public static final int ID_KEY = 0;
 	public static final int ACTIVE_BUTTON_KEY = 1;
@@ -58,24 +62,20 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 	@Getter
 	private boolean filterUpdateDone = false;
 
-	private final int dataSize;
-
 	protected AbstractLocomotive(EntityType<?> entityType, Level level,
 								 MinecartColor topFilter, MinecartColor bottomFilter, int dataSize) {
 		super(entityType, level);
 		this.topFilter = topFilter;
 		this.bottomFilter = bottomFilter;
-		this.dataSize = dataSize;
 		data = new SimpleContainerData(dataSize);
 		updateData();
 	}
 
 	protected AbstractLocomotive(EntityType<?> entityType, double x, double y, double z, Level level,
 								 MinecartColor topFilter, MinecartColor bottomFilter, int dataSize) {
-		super(entityType, x, y, z, level);
+		super(entityType, level, x, y, z);
 		this.topFilter = topFilter;
 		this.bottomFilter = bottomFilter;
-		this.dataSize = dataSize;
 		data = new SimpleContainerData(dataSize);
 		updateData();
 	}
@@ -144,7 +144,6 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 			case REDSTONE -> sendSignal = !sendSignal;
 		}
 		updateData();
-		setChanged();
 	}
 
 	private void setPush(Direction direction) {
@@ -197,6 +196,20 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 
 	// minecart functions
 	@Override
+	public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
+
+		if (stack.is(BetterMinecarts.CROWBAR.get())) {
+			return super.interact(player, hand);
+		}
+		if (player.isShiftKeyDown()) {
+			return InteractionResult.PASS;
+		}
+		player.openMenu(this);
+		return InteractionResult.SUCCESS;
+	}
+
+	@Override
 	public @NotNull Type getMinecartType() {
 		return Type.FURNACE;
 	}
@@ -220,11 +233,6 @@ public abstract class AbstractLocomotive extends AbstractMinecartContainer imple
 			this.zPush = vec3.z / d4 * d5;
 		}
 		updateData();
-	}
-
-	@Override
-	public int getContainerSize() {
-		return dataSize;
 	}
 
 	@Override
