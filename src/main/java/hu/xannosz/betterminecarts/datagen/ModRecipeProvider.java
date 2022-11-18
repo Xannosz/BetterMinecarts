@@ -8,6 +8,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -21,18 +22,18 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
 	@Override
 	protected void buildCraftingRecipes(@NotNull Consumer<FinishedRecipe> finishedRecipeConsumer) {
-		for (MinecartColor top : MinecartColor.values()) {
-			for (MinecartColor bottom : MinecartColor.values()) {
-				for (MinecartColor additional1 : MinecartColor.values()) {
-					topColorize(finishedRecipeConsumer, bottom, top, false, additional1);
-					topColorize(finishedRecipeConsumer, bottom, top, true, additional1);
-					bottomColorize(finishedRecipeConsumer, bottom, top, false, additional1);
-					bottomColorize(finishedRecipeConsumer, bottom, top, true, additional1);
-					for (MinecartColor additional2 : MinecartColor.values()) {
-						bothColorize(finishedRecipeConsumer, bottom, top, false, additional1, additional2);
-						bothColorize(finishedRecipeConsumer, bottom, top, true, additional1, additional2);
-					}
-				}
+		createRecipes(finishedRecipeConsumer, MinecartColor.LIGHT_GRAY, MinecartColor.GRAY, true);
+		createRecipes(finishedRecipeConsumer, MinecartColor.YELLOW, MinecartColor.BROWN, false);
+	}
+
+	private void createRecipes(@NotNull Consumer<FinishedRecipe> finishedRecipeConsumer, MinecartColor top,
+							   MinecartColor bottom, boolean isSteam) {
+		for (MinecartColor additional1 : MinecartColor.values()) {
+			topColorize(finishedRecipeConsumer, bottom, top, isSteam, additional1);
+			bottomColorize(finishedRecipeConsumer, bottom, top, isSteam, additional1);
+			for (MinecartColor additional2 : MinecartColor.values()) {
+				bothColorize(finishedRecipeConsumer, bottom, top, isSteam, additional1, additional2);
+				deColorize(finishedRecipeConsumer, bottom, top, isSteam, additional1, additional2);
 			}
 		}
 	}
@@ -106,5 +107,24 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 						inventoryTrigger(ItemPredicate.Builder.item().of(target).build()))
 				.save(finishedRecipeConsumer, new ResourceLocation(BetterMinecarts.MOD_ID,
 						sourceId + "_" + targetId + "_bottom"));
+	}
+
+	private void deColorize(@NotNull Consumer<FinishedRecipe> finishedRecipeConsumer,
+							MinecartColor sourceBottom, MinecartColor sourceTop, boolean isSteam,
+							MinecartColor targetBottom, MinecartColor targetTop) {
+		if (sourceTop.equals(targetTop) && sourceBottom.equals(targetBottom)) {
+			return;
+		}
+		final String sourceId = BetterMinecarts.generateNameFromData(sourceTop, sourceBottom, isSteam);
+		final String targetId = BetterMinecarts.generateNameFromData(targetTop, targetBottom, isSteam);
+		final AbstractLocomotiveItem source = BetterMinecarts.LOCOMOTIVE_ITEMS.get(sourceId).get();
+		final AbstractLocomotiveItem target = BetterMinecarts.LOCOMOTIVE_ITEMS.get(targetId).get();
+		ShapelessRecipeBuilder.shapeless(source).requires(target)
+				.unlockedBy("sourceTrigger",
+						inventoryTrigger(ItemPredicate.Builder.item().of(source).build()))
+				.unlockedBy("targetTrigger",
+						inventoryTrigger(ItemPredicate.Builder.item().of(target).build()))
+				.save(finishedRecipeConsumer, new ResourceLocation(BetterMinecarts.MOD_ID,
+						sourceId + "_" + targetId + "_revert"));
 	}
 }

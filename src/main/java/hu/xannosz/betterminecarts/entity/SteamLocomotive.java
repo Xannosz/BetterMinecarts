@@ -74,7 +74,7 @@ public class SteamLocomotive extends AbstractLocomotive {
 	private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
 	public SteamLocomotive(EntityType<?> entityType, Level level) {
-		super(entityType, level, MinecartColor.GRAY, MinecartColor.DARK_GRAY, DATA_SIZE);
+		super(entityType, level, MinecartColor.LIGHT_GRAY, MinecartColor.GRAY, DATA_SIZE);
 	}
 
 	public SteamLocomotive(Level level, double x, double y, double z, MinecartColor top, MinecartColor bottom) {

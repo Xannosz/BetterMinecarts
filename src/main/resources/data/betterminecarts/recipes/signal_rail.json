@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"X#X",
+		"XRX",
+		"X#X"
+	],
+	"key": {
+		"#": {
+			"item": "minecraft:stone_pressure_plate"
+		},
+		"R": {
+			"item": "minecraft:redstone"
+		},
+		"X": {
+			"item": "minecraft:iron_ingot"
+		}
+	},
+	"result": {
+		"item": "betterminecarts:signal_rail",
+		"count": 6
+	}
+}

@@ -96,7 +96,7 @@ public class AbstractLocomotiveItem extends Item {
 		if (topColor.equals(MinecartColor.YELLOW) && bottomColor.equals(MinecartColor.BROWN) && !isSteam) {
 			return new Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1);
 		}
-		if (topColor.equals(MinecartColor.GRAY) && bottomColor.equals(MinecartColor.DARK_GRAY) && isSteam) {
+		if (topColor.equals(MinecartColor.LIGHT_GRAY) && bottomColor.equals(MinecartColor.GRAY) && isSteam) {
 			return new Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1);
 		}
 		return new Properties().tab(CreativeModeTab.TAB_SEARCH).stacksTo(1);

@@ -3,11 +3,8 @@
 - graphical bug in corners on locomotives
 
 //features
-- slow destruction with pickaxe
-- graphical bug in downstairs on locomotives
-- change gray to light_gray, dark_gray to gray (main recipe)
-- all locomotive color
 - hoppers work with steam locomotive
+- graphical bug in downstairs on locomotives
 - locomotive sounds
 
 - lamp on locomotives
