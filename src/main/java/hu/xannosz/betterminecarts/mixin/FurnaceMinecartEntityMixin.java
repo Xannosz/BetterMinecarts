@@ -81,14 +81,14 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 	@Inject(method = "getMaxSpeed", at = @At("RETURN"), cancellable = true)
 	public void betterminecarts$increaseSpeed(CallbackInfoReturnable<Double> info) {
 		if (hasFuel())
-			info.setReturnValue(BetterMinecarts.getConfig().getFurnaceMinecartSpeed());
+			info.setReturnValue(2D);
 		else
 			info.setReturnValue(super.getMaxSpeed());
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void betterminecarts$loadChunks(CallbackInfo info) {
-		if (BetterMinecarts.getConfig().serverTweaks.furnaceMinecartsLoadChunks && level instanceof ServerLevel server) {
+		if (BetterMinecarts.getConfig().furnaceMinecartsLoadChunks && level instanceof ServerLevel server) {
 			ChunkPos currentChunkPos = SectionPos.of(this).chunk();
 
 
@@ -103,20 +103,18 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 
 	@Inject(method = "moveAlongTrack", at = @At("TAIL"))
 	public void betterminecarts$slowDown(BlockPos pos, BlockState state, CallbackInfo info) {
-		if (BetterMinecarts.getConfig().serverTweaks.shouldPoweredRailsStopFurnace) {
-			if (altFuel <= 0 && fuel > 0) {
-				if (state.is(Blocks.POWERED_RAIL) && !state.getValue(PoweredRailBlock.POWERED)) {
-					altPushX = xPush;
-					altPushZ = zPush;
-					altFuel += fuel;
-					fuel = 0;
-				}
-			} else if (!state.is(Blocks.POWERED_RAIL) || (state.is(Blocks.POWERED_RAIL) && state.getValue(PoweredRailBlock.POWERED))) {
-				fuel += altFuel;
-				altFuel = 0;
-				xPush = altPushX;
-				zPush = altPushZ;
+		if (altFuel <= 0 && fuel > 0) {
+			if (state.is(Blocks.POWERED_RAIL) && !state.getValue(PoweredRailBlock.POWERED)) {
+				altPushX = xPush;
+				altPushZ = zPush;
+				altFuel += fuel;
+				fuel = 0;
 			}
+		} else if (!state.is(Blocks.POWERED_RAIL) || (state.is(Blocks.POWERED_RAIL) && state.getValue(PoweredRailBlock.POWERED))) {
+			fuel += altFuel;
+			altFuel = 0;
+			xPush = altPushX;
+			zPush = altPushZ;
 		}
 
 		AtomicBoolean shouldSlowDown = new AtomicBoolean(MinecartHelper.shouldSlowDown(this, level));
@@ -134,48 +132,44 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 		}
 
 
-		if (shouldSlowDown.get() && getDeltaMovement().length() > BetterMinecarts.getConfig().getMaxSpeedAroundTurns())
-			setDeltaMovement(getDeltaMovement().normalize().scale(BetterMinecarts.getConfig().getMaxSpeedAroundTurns()));
+		if (shouldSlowDown.get() && getDeltaMovement().length() > 0.4)
+			setDeltaMovement(getDeltaMovement().normalize().scale(0.4));
 	}
 
 	@Inject(method = "interact", at = @At("HEAD"), cancellable = true)
 	public void betterminecarts$addOtherFuels(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> info) {
-		if (BetterMinecarts.getConfig().serverTweaks.furnacesCanUseAllFuels) {
-			ItemStack stack = player.getItemInHand(hand);
+		ItemStack stack = player.getItemInHand(hand);
 
-			if (!stack.isEmpty() && getBurnTime(stack, SMELTING) > 0) {
-				int fuelTime = getBurnTime(stack, SMELTING);
+		if (!stack.isEmpty() && getBurnTime(stack, SMELTING) > 0) {
+			int fuelTime = getBurnTime(stack, SMELTING);
 
-				if (!player.isCreative() && fuelTime > 0) {
-					if (stack.getItem() instanceof BucketItem)
-						player.getInventory().setItem(player.getInventory().selected, BucketItem.getEmptySuccessItem(stack, player));
-					else
-						stack.shrink(1);
-				}
-
-				if (stack.getItem() instanceof BucketItem) {
-					SoundEvent soundEvent = SoundEvents.BUCKET_EMPTY_LAVA;
-					level.playSound(player, player.blockPosition(), soundEvent, SoundSource.BLOCKS, 1.0f, 1.0f);
-				}
-
-				fuel = (int) Math.min(BetterMinecarts.getConfig().serverTweaks.furnaceMaxBurnTime, fuel + (fuelTime * 2.25));
+			if (!player.isCreative() && fuelTime > 0) {
+				if (stack.getItem() instanceof BucketItem)
+					player.getInventory().setItem(player.getInventory().selected, BucketItem.getEmptySuccessItem(stack, player));
+				else
+					stack.shrink(1);
 			}
 
-			if (fuel > 0) {
-				xPush = getX() - player.getX();
-				zPush = getZ() - player.getZ();
+			if (stack.getItem() instanceof BucketItem) {
+				SoundEvent soundEvent = SoundEvents.BUCKET_EMPTY_LAVA;
+				level.playSound(player, player.blockPosition(), soundEvent, SoundSource.BLOCKS, 1.0f, 1.0f);
 			}
 
-			INGREDIENT = Ingredient.of();
-			info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide()));
-		} else {
-			INGREDIENT = OLD_ACCEPTABLE_FUEL;
+			fuel = (int) Math.min(72000, fuel + (fuelTime * 2.25));
 		}
+
+		if (fuel > 0) {
+			xPush = getX() - player.getX();
+			zPush = getZ() - player.getZ();
+		}
+
+		INGREDIENT = Ingredient.of();
+		info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide()));
 	}
 
 	@ModifyConstant(method = "interact", constant = @Constant(intValue = 32000))
 	public int betterminecarts$maxBurnTime(int maxBurnTime) {
-		return BetterMinecarts.getConfig().serverTweaks.furnaceMaxBurnTime;
+		return 72000;
 	}
 
 	@ModifyArg(method = "tick", at = @At(value = "INVOKE",

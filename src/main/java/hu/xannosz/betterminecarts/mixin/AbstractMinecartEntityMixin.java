@@ -65,7 +65,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 				info.setReturnValue(0D);
 			}
 		} else
-			info.setReturnValue(BetterMinecarts.getConfig().getOtherMinecartSpeed());
+			info.setReturnValue(0.5);
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
@@ -96,8 +96,9 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 							setDeltaMovement(direction.scale(parentVelocity.length()));
 							setDeltaMovement(getDeltaMovement().scale(-1.2));
 						}
-					} else
-						setDeltaMovement(Vec3.ZERO);
+					} else {
+						setDeltaMovement(getDeltaMovement().scale(0.6));
+					}
 				} else {
 					((Linkable) getLinkedParent()).setLinkedChild(null);
 					setLinkedParent(null);
@@ -112,24 +113,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 
 			if (getLinkedChild() != null && getLinkedChild().isRemoved())
 				setLinkedChild(null);
-		} else {
-			if (BetterMinecarts.getConfig().clientTweaks.playerViewIsLocked) {
-				Vec3 directionVec = getDeltaMovement().normalize();
-
-				if (getDeltaMovement().length() > BetterMinecarts.getConfig().getOtherMinecartSpeed() * 0.5) {
-					float yaw = (float) Mth.wrapDegrees(Math.toDegrees(Math.atan2(directionVec.z(), directionVec.x())) - 90);
-
-					for (Entity passenger : getPassengers()) {
-						float wantedYaw = Mth.wrapDegrees(Mth.rotateIfNecessary(passenger.getYRot(), yaw, BetterMinecarts.getConfig().clientTweaks.maxViewAngle) - passenger.getYRot());
-						float steps = Math.abs(wantedYaw) / 5F;
-
-						if (wantedYaw >= steps)
-							passenger.setYRot(passenger.getYRot() + steps);
-						if (wantedYaw <= -steps)
-							passenger.setYRot(passenger.getYRot() - steps);
-					}
-				}
-			}
 		}
 	}
 
@@ -138,7 +121,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 		if (other instanceof AbstractMinecart minecart && getLinkedParent() != null && !getLinkedParent().equals(minecart))
 			minecart.setDeltaMovement(getDeltaMovement());
 
-		float damage = BetterMinecarts.getConfig().serverTweaks.minecartDamage;
+		float damage = BetterMinecarts.getConfig().minecartDamage;
 
 		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && getDeltaMovement().length() > 1.5) {
 			living.hurt(BetterMinecarts.minecart(this), damage);

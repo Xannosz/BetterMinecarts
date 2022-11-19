@@ -81,6 +81,7 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 				yRotation = (float) (Math.atan2(vec33.z, vec33.x) * 180.0D / Math.PI);
 				yRotation = locomotive.normalizeRotation(yRotation); //flip
 				f3 = (float) (Math.atan(vec33.y) * 73.0D);
+				f3 = locomotive.normalizePitch(f3); //flip
 			}
 		}
 
@@ -144,7 +145,7 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 	}
 
 	public @NotNull ResourceLocation getTextureLocation(@NotNull AbstractLocomotive locomotive) {
-		if(!locomotive.isFilterUpdateDone()) {
+		if (!locomotive.isFilterUpdateDone()) {
 			BetterMinecarts.INSTANCE.sendToServer(new GetColorPacket(locomotive.getId()));
 		}
 		if (locomotive instanceof ElectricLocomotive) {
@@ -155,13 +156,13 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 			}
 		}
 		if (locomotive instanceof SteamLocomotive steamLocomotive) {
-			if(steamLocomotive.isBurn()){
+			if (steamLocomotive.isBurn()) {
 				if (locomotive.isLampOn()) {
 					return STEAM_LOCOMOTIVE_ON_BURN;
 				} else {
 					return STEAM_LOCOMOTIVE_BURN;
 				}
-			}else{
+			} else {
 				if (locomotive.isLampOn()) {
 					return STEAM_LOCOMOTIVE_ON;
 				} else {

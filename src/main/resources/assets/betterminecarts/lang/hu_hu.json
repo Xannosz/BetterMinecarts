@@ -1,0 +1,33 @@
+{
+  "death.attack.betterminecarts.minecart": "%s nem nézett körbe a vasúti átjáróban",
+
+  "block.betterminecarts.crossed_rail": "Keresztsín",
+  "block.betterminecarts.signal_rail": "Jelvevősín",
+
+  "item.betterminecarts.crowbar": "Feszítővas",
+  "item.betterminecarts.steam_locomotive": "Gőzmozdony",
+  "item.betterminecarts.electric_locomotive": "Villanymozdony",
+
+  "text.crowbar.firstCartIdTag":"Első entitás Id: %s",
+  "text.crowbar.deleteFirstCartId": "Első entitás Id törölve",
+  "text.crowbar.mode.connect": "Összekapcsolás",
+  "text.crowbar.mode.disconnect": "Lekapcsolás",
+  "text.crowbar.mode.revert": "Visszafordítás",
+
+  "text.locomotive.color.yellow": "Sárga",
+  "text.locomotive.color.brown": "Barna",
+  "text.locomotive.color.light_gray": "Világos szürke",
+  "text.locomotive.color.gray": "Szürke",
+  "text.locomotive.color.red": "Piros",
+  "text.locomotive.color.light_blue": "Világos kék",
+  "text.locomotive.color.lime": "Lime",
+  "text.locomotive.color.orange": "Narancssárga",
+  "text.locomotive.color.magenta": "Magenta",
+  "text.locomotive.color.white": "Fehér",
+  "text.locomotive.color.purple": "Lila",
+  "text.locomotive.color.pink": "Rózsaszín",
+  "text.locomotive.color.green": "Zöld",
+  "text.locomotive.color.cyan": "Türkiz",
+  "text.locomotive.color.blue": "Kék",
+  "text.locomotive.color.black": "Fekete"
+}

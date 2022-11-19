@@ -101,6 +101,15 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		return yRotation;
 	}
 
+	public float normalizePitch(float pitch) {
+		switch (getMotionDirection()) {
+			case NORTH, WEST -> {
+				return (-1) * pitch;
+			}
+		}
+		return pitch;
+	}
+
 	public boolean popSignal() {
 		if (sendSignal) {
 			sendSignal = false;
@@ -283,7 +292,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		if (other instanceof AbstractMinecart minecart && self.getLinkedParent() != null && !self.getLinkedParent().equals(minecart))
 			minecart.setDeltaMovement(getDeltaMovement());
 
-		float damage = BetterMinecarts.getConfig().serverTweaks.minecartDamage;
+		float damage = BetterMinecarts.getConfig().minecartDamage;
 
 		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && speed > 1) {
 			living.hurt(BetterMinecarts.minecart(this), damage);
