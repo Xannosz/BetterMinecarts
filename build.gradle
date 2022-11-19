@@ -95,7 +95,7 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:1.19.2-43.1.1"
+    minecraft "net.minecraftforge:forge:1.19.2-43.1.3"
     // Apply Mixin AP
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
@@ -109,12 +109,12 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "examplemod",
-                "Specification-Vendor"    : "examplemodsareus",
+                "Specification-Title"     : "betterminecarts",
+                "Specification-Vendor"    : "betterminecartssareus",
                 "Specification-Version"   : "1",
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "examplemodsareus",
+                "Implementation-Vendor"   : "betterminecartssareus",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
