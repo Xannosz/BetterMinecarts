@@ -1,4 +1,2 @@
-- graphical bug in corners on locomotives
-
 - locomotive sounds
 - lamp on locomotives
