@@ -86,17 +86,14 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	public float normalizeRotation(float yRotation) {
 		float expectedAngle = 0;
-		int border = 120;
 
 		switch (getMotionDirection()) {
 			case NORTH -> expectedAngle = 90;
 			case SOUTH -> expectedAngle = 270;
-			//case SOUTH -> expectedAngle = -90;
 			case WEST -> expectedAngle = 0;
 			case EAST -> expectedAngle = 180;
 		}
 
-		//if (yRotation < expectedAngle - border || expectedAngle + border < yRotation) {
 		if (!isInRange(yRotation, expectedAngle)) {
 			yRotation += 180;
 		}
@@ -212,7 +209,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	private void whistle() {
 		level.players().forEach(player ->
 				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-						new PlaySoundPacket(blockPosition()))
+						new PlaySoundPacket(blockPosition(), this instanceof SteamLocomotive))
 		);
 	}
 

@@ -1,2 +1,0 @@
-- locomotive sounds
-- lamp on locomotives

@@ -18,6 +18,7 @@ import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
@@ -59,6 +60,7 @@ public class BetterMinecarts {
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BetterMinecarts.MOD_ID);
 	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, BetterMinecarts.MOD_ID);
 	public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, BetterMinecarts.MOD_ID);
+	public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, BetterMinecarts.MOD_ID);
 
 	@SuppressWarnings("unused")
 	public static final RegistryObject<Block> CROSSED_RAIL = registerBlock("crossed_rail",
@@ -83,6 +85,7 @@ public class BetterMinecarts {
 			registerMenuType(ElectricLocomotiveMenu::new, "electric_locomotive_menu");
 	public static final RegistryObject<MenuType<SteamLocomotiveMenu>> STEAM_LOCOMOTIVE_MENU =
 			registerMenuType(SteamLocomotiveMenu::new, "steam_locomotive_menu");
+	public static RegistryObject<SoundEvent> STEAM_WHISTLE = registerSoundEvent("steam_whistle");
 
 	public BetterMinecarts() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -91,6 +94,7 @@ public class BetterMinecarts {
 		ITEMS.register(modEventBus);
 		ENTITIES.register(modEventBus);
 		MENUS.register(modEventBus);
+		SOUND_EVENTS.register(modEventBus);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -159,6 +163,10 @@ public class BetterMinecarts {
 	private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory,
 																								  String name) {
 		return MENUS.register(name, () -> IForgeMenuType.create(factory));
+	}
+
+	private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
+		return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(BetterMinecarts.MOD_ID, name)));
 	}
 
 	@SuppressWarnings("unused")

@@ -31,6 +31,8 @@
   "text.locomotive.color.blue": "Blue",
   "text.locomotive.color.black": "Black",
 
+  "betterminecarts.steam_whistle": "Steam whistle",
+
   "text.autoConfig.betterminecarts.option.serverTweaks.minecartDamage": "Damage Dealt by Minecarts",
   "text.autoConfig.betterminecarts.option.serverTweaks.furnaceMinecartsLoadChunks": "Should Furnace Minecarts be able to load chunks?"
 }

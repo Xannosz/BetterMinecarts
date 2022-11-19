@@ -29,5 +29,7 @@
   "text.locomotive.color.green": "Zöld",
   "text.locomotive.color.cyan": "Türkiz",
   "text.locomotive.color.blue": "Kék",
-  "text.locomotive.color.black": "Fekete"
+  "text.locomotive.color.black": "Fekete",
+
+  "betterminecarts.steam_whistle": "Gőz síp"
 }
