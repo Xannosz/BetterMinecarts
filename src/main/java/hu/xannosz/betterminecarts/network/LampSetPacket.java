@@ -1,14 +1,14 @@
 package hu.xannosz.betterminecarts.network;
 
-import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
+import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+@Getter
 public class LampSetPacket {
 	private final boolean lampStatus;
 	private final int entityId;
@@ -30,18 +30,10 @@ public class LampSetPacket {
 
 	public void handler(Supplier<NetworkEvent.Context> supplier) {
 		NetworkEvent.Context context = supplier.get();
-		context.enqueueWork(() -> {
-			// CLIENT SITE
-			ClientLevel world = Minecraft.getInstance().level;
-
-			if (world == null) {
-				return;
-			}
-
-			Entity entity = world.getEntity(entityId);
-			if (entity instanceof AbstractLocomotive abstractLocomotive) {
-				abstractLocomotive.setLampOn(lampStatus);
-			}
-		});
+		context.enqueueWork(() ->
+				// CLIENT SITE
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+						ClientPacketHandlerClass.handleLampSetPacket(this, supplier))
+		);
 	}
 }

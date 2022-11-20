@@ -1,16 +1,15 @@
 package hu.xannosz.betterminecarts.network;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
-import net.minecraft.client.Minecraft;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
+@Getter
 public class PlaySoundPacket {
 	private final BlockPos position;
 	private final boolean isSteam;
@@ -32,12 +31,10 @@ public class PlaySoundPacket {
 
 	public void handler(Supplier<NetworkEvent.Context> supplier) {
 		NetworkEvent.Context context = supplier.get();
-		context.enqueueWork(() -> {
-			// CLIENT SITE
-			Objects.requireNonNull(Minecraft.getInstance().level).playLocalSound(
-					(double) position.getX() + 0.5D, (double) position.getY() + 0.5D, (double) position.getZ() + 0.5D,
-					isSteam ? BetterMinecarts.STEAM_WHISTLE.get() : SoundEvents.BELL_BLOCK,
-					SoundSource.BLOCKS, 5F, 5F, false);
-		});
+		context.enqueueWork(() ->
+				// CLIENT SITE
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+						ClientPacketHandlerClass.handlePlaySoundPacket(this, supplier))
+		);
 	}
 }

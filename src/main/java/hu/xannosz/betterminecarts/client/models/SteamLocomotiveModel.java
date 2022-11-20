@@ -7,7 +7,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 
-public class SteamLocomotiveModel extends AbstractLocomotiveModel{
+public class SteamLocomotiveModel extends AbstractLocomotiveModel {
 	public static final ModelLayerLocation LAYER_LOCATION =
 			new ModelLayerLocation(new ResourceLocation(BetterMinecarts.MOD_ID, "steam_locomotive"),
 					"main");

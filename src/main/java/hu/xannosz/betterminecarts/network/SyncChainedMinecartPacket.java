@@ -1,14 +1,15 @@
 package hu.xannosz.betterminecarts.network;
 
-import hu.xannosz.betterminecarts.utils.Linkable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
+import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+@Getter
 public class SyncChainedMinecartPacket {
 	private final int parentId;
 	private final int childId;
@@ -38,20 +39,10 @@ public class SyncChainedMinecartPacket {
 
 	public void handler(Supplier<NetworkEvent.Context> supplier) {
 		NetworkEvent.Context context = supplier.get();
-		context.enqueueWork(() -> {
-			// CLIENT SITE
-			ClientLevel world = Minecraft.getInstance().level;
-
-			if (world == null) {
-				return;
-			}
-
-			if (world.getEntity(childId) instanceof Linkable linkable) {
-				if (parentExists && world.getEntity(parentId) instanceof AbstractMinecart parent)
-					linkable.setLinkedParent(parent);
-				else
-					linkable.setLinkedParent(null);
-			}
-		});
+		context.enqueueWork(() ->
+				// CLIENT SITE
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+						ClientPacketHandlerClass.handleSyncChainedMinecartPacket(this, supplier))
+		);
 	}
 }

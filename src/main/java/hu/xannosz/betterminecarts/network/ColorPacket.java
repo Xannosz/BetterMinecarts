@@ -1,15 +1,15 @@
 package hu.xannosz.betterminecarts.network;
 
-import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
+import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+@Getter
 public class ColorPacket {
 	private final MinecartColor top;
 	private final MinecartColor bottom;
@@ -35,20 +35,10 @@ public class ColorPacket {
 
 	public void handler(Supplier<NetworkEvent.Context> supplier) {
 		NetworkEvent.Context context = supplier.get();
-		context.enqueueWork(() -> {
-			// CLIENT SITE
-			ClientLevel world = Minecraft.getInstance().level;
-
-			if (world == null) {
-				return;
-			}
-
-			Entity entity = world.getEntity(entityId);
-			if (entity instanceof AbstractLocomotive abstractLocomotive) {
-				abstractLocomotive.setTopFilter(top);
-				abstractLocomotive.setBottomFilter(bottom);
-				abstractLocomotive.setFilterUpdateDone(true);
-			}
-		});
+		context.enqueueWork(() ->
+				// CLIENT SITE
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+						ClientPacketHandlerClass.handleColorPacket(this, supplier))
+		);
 	}
 }

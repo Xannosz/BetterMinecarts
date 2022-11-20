@@ -1,14 +1,14 @@
 package hu.xannosz.betterminecarts.network;
 
-import hu.xannosz.betterminecarts.entity.SteamLocomotive;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
+import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+@Getter
 public class BurnTimePacket {
 	private final boolean burnTime;
 	private final int entityId;
@@ -30,18 +30,10 @@ public class BurnTimePacket {
 
 	public void handler(Supplier<NetworkEvent.Context> supplier) {
 		NetworkEvent.Context context = supplier.get();
-		context.enqueueWork(() -> {
-			// CLIENT SITE
-			ClientLevel world = Minecraft.getInstance().level;
-
-			if (world == null) {
-				return;
-			}
-
-			Entity entity = world.getEntity(entityId);
-			if (entity instanceof SteamLocomotive steamLocomotive) {
-				steamLocomotive.setBurn(burnTime);
-			}
-		});
+		context.enqueueWork(() ->
+				// CLIENT SITE
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () ->
+						ClientPacketHandlerClass.handleBurnTimePacket(this, supplier))
+		);
 	}
 }
