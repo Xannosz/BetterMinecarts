@@ -1,6 +1,6 @@
 package hu.xannosz.betterminecarts.blocks;
 
-import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
+import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -56,7 +56,7 @@ public class SignalRailBlock extends DetectorRailBlock {
 			List<AbstractMinecart> list = this.getInteractingMinecartOfType(level,
 					blockPos, AbstractMinecart.class, (entity) -> true);
 			for (AbstractMinecart locomotive : list) {
-				if (locomotive instanceof ElectricLocomotive && ((ElectricLocomotive) locomotive).popSignal()) {
+				if (locomotive instanceof AbstractLocomotive && ((AbstractLocomotive) locomotive).popSignal()) {
 					flag1 = true;
 				}
 			}
