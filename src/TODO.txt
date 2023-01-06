@@ -1,2 +1,2 @@
 - lamp
-- toggle chunk loading
+- update version

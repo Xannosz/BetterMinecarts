@@ -13,8 +13,11 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -27,6 +30,7 @@ import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -61,6 +65,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	@Setter
 	@Getter
 	private boolean filterUpdateDone = false;
+	private ChunkPos prevChunkPos;
 
 	protected AbstractLocomotive(EntityType<?> entityType, Level level,
 								 MinecartColor topFilter, MinecartColor bottomFilter, int dataSize) {
@@ -68,6 +73,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		this.topFilter = topFilter;
 		this.bottomFilter = bottomFilter;
 		data = new SimpleContainerData(dataSize);
+		prevChunkPos = chunkPosition();
 		updateData();
 	}
 
@@ -77,6 +83,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		this.topFilter = topFilter;
 		this.bottomFilter = bottomFilter;
 		data = new SimpleContainerData(dataSize);
+		prevChunkPos = chunkPosition();
 		updateData();
 	}
 
@@ -213,6 +220,21 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		);
 	}
 
+	@Override
+	public void tick() {
+		super.tick();
+		if (BetterMinecarts.getConfig().furnaceMinecartsLoadChunks && level instanceof ServerLevel server) {
+			ChunkPos currentChunkPos = SectionPos.of(this).chunk();
+
+			if (!activeButton.equals(ButtonId.STOP) && !activeButton.equals(ButtonId.PAUSE))
+				server.getChunkSource().addRegionTicket(TicketType.PLAYER, currentChunkPos, 3, chunkPosition());
+			if (!currentChunkPos.equals(prevChunkPos) || activeButton.equals(ButtonId.STOP) || activeButton.equals(ButtonId.PAUSE))
+				server.getChunkSource().removeRegionTicket(TicketType.PLAYER, prevChunkPos, 3, chunkPosition());
+
+			prevChunkPos = currentChunkPos;
+		}
+	}
+
 	// minecart functions
 	@Override
 	public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
@@ -328,6 +350,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		compoundTag.putBoolean("LampOn", lampOn);
 		compoundTag.putString("TopFilter", topFilter.getLabel());
 		compoundTag.putString("BottomFilter", bottomFilter.getLabel());
+		compoundTag.putLong("PrevChunkPos", prevChunkPos.toLong());
 	}
 
 	@Override
@@ -341,6 +364,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		lampOn = compoundTag.getBoolean("LampOn");
 		topFilter = MinecartColor.getFromLabel(compoundTag.getString("TopFilter"));
 		bottomFilter = MinecartColor.getFromLabel(compoundTag.getString("BottomFilter"));
+		prevChunkPos = new ChunkPos(compoundTag.getLong("PrevChunkPos"));
 		updateData();
 	}
 }

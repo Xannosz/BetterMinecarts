@@ -91,7 +91,6 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 		if (BetterMinecarts.getConfig().furnaceMinecartsLoadChunks && level instanceof ServerLevel server) {
 			ChunkPos currentChunkPos = SectionPos.of(this).chunk();
 
-
 			if (fuel > 0)
 				server.getChunkSource().addRegionTicket(TicketType.PLAYER, currentChunkPos, 3, chunkPosition());
 			if (!currentChunkPos.equals(prevChunkPos) || fuel <= 0)
