@@ -79,6 +79,7 @@ public class TrainUtil {
 					final AbstractMinecart c = cart.getLinkedChild();
 					cart.setLinkedParent(c);
 					cart.setLinkedChild(p);
+					cart.updateChains();
 				}
 
 				server.playSound(null, position.getX(), position.getY(), position.getZ(),

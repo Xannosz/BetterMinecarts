@@ -149,6 +149,11 @@ public class BetterMinecarts {
 				.encoder(GetColorPacket::toBytes)
 				.consumerMainThread(GetColorPacket::handler)
 				.add();
+		INSTANCE.messageBuilder(GetChainSyncPacket.class, 7, NetworkDirection.PLAY_TO_SERVER)
+				.decoder(GetChainSyncPacket::new)
+				.encoder(GetChainSyncPacket::toBytes)
+				.consumerMainThread(GetChainSyncPacket::handler)
+				.add();
 	}
 
 	private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> blockCreator) {

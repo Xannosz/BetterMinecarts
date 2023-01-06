@@ -9,7 +9,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -21,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -45,6 +45,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	private UUID parentUuid;
 	@Unique
 	private UUID childUuid;
+	@Unique
+	private boolean isUpdated = false;
 
 	@Shadow
 	public abstract double getMaxSpeed();
@@ -68,13 +70,10 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 			info.setReturnValue(0.5);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void betterminecarts$tick(CallbackInfo info) {
 		if (!level.isClientSide()) {
-			for (Player player : level.players()) {
-				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new SyncChainedMinecartPacket(linkedParent, (AbstractMinecart) (Object) this));
-			}
-
 			if (getLinkedParent() != null) {
 				double distance = getLinkedParent().distanceTo(this) - 1;
 
@@ -94,7 +93,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 							setDeltaMovement(direction.scale(-0.05));
 						} else {
 							setDeltaMovement(direction.scale(parentVelocity.length()));
-							setDeltaMovement(getDeltaMovement().scale(-1.2));
+							setDeltaMovement(getDeltaMovement().scale(-1.5));
 						}
 					} else {
 						setDeltaMovement(getDeltaMovement().scale(0.6));
@@ -102,17 +101,22 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 				} else {
 					((Linkable) getLinkedParent()).setLinkedChild(null);
 					setLinkedParent(null);
+					updateChains();
 					return;
 				}
 
-				if (getLinkedParent().isRemoved())
+				if (getLinkedParent().isRemoved()) {
 					setLinkedParent(null);
+					updateChains();
+				}
 			} else {
 				MinecartHelper.shouldSlowDown((AbstractMinecart) (Object) this, level);
 			}
 
-			if (getLinkedChild() != null && getLinkedChild().isRemoved())
+			if (getLinkedChild() != null && getLinkedChild().isRemoved()) {
 				setLinkedChild(null);
+				updateChains();
+			}
 		}
 	}
 
@@ -149,12 +153,13 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	}
 
 	@Override
-	public InteractionResult interact(Player player, InteractionHand hand) {
+	public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 
 		if (stack.is(BetterMinecarts.CROWBAR.get())) {
 			if (level instanceof ServerLevel server) {
 				TrainUtil.clickedByCrowbar(stack, this, server);
+				updateChains();
 			}
 			return InteractionResult.SUCCESS;
 		}
@@ -192,5 +197,25 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 
 		if (child == null)
 			childUuid = null;
+	}
+
+	@Override
+	@SuppressWarnings("ConstantConditions")
+	public void updateChains() {
+		if (!level.isClientSide()) {
+			for (Player player : level.players()) {
+				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new SyncChainedMinecartPacket(linkedParent, (AbstractMinecart) (Object) this));
+			}
+		}
+	}
+
+	@Override
+	public boolean isUpdated() {
+		return isUpdated;
+	}
+
+	@Override
+	public void setUpdated() {
+		isUpdated = true;
 	}
 }

@@ -78,6 +78,7 @@ public class ClientPacketHandlerClass {
 				linkable.setLinkedParent(parent);
 			else
 				linkable.setLinkedParent(null);
+			linkable.setUpdated();
 		}
 	}
 }

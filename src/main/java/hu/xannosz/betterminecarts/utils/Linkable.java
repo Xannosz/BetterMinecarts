@@ -8,4 +8,7 @@ public interface Linkable {
 
 	AbstractMinecart getLinkedChild();
 	void setLinkedChild(AbstractMinecart child);
+	 void updateChains();
+	 boolean isUpdated();
+	 void setUpdated();
 }
