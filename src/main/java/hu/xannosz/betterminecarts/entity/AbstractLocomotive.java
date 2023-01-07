@@ -1,6 +1,7 @@
 package hu.xannosz.betterminecarts.entity;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
+import hu.xannosz.betterminecarts.blockentity.GlowingRailBlockEntity;
 import hu.xannosz.betterminecarts.button.ButtonId;
 import hu.xannosz.betterminecarts.button.ButtonUser;
 import hu.xannosz.betterminecarts.network.LampSetPacket;
@@ -32,12 +33,18 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ConcurrentModificationException;
+import java.util.HashSet;
+import java.util.Set;
+
+import static net.minecraft.world.level.block.BaseRailBlock.WATERLOGGED;
+import static net.minecraft.world.level.block.RailBlock.SHAPE;
 
 @Slf4j
 public abstract class AbstractLocomotive extends AbstractMinecart implements ButtonUser, MenuProvider {
@@ -223,6 +230,8 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	@Override
 	public void tick() {
 		super.tick();
+
+		// load chunk
 		if (BetterMinecarts.getConfig().furnaceMinecartsLoadChunks && level instanceof ServerLevel server) {
 			ChunkPos currentChunkPos = SectionPos.of(this).chunk();
 
@@ -232,6 +241,35 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 				server.getChunkSource().removeRegionTicket(TicketType.PLAYER, prevChunkPos, 3, chunkPosition());
 
 			prevChunkPos = currentChunkPos;
+		}
+
+		// set lamp
+		if (lampOn && !level.isClientSide()) {
+			Set<BlockPos> positions = new HashSet<>();
+			positions.add(getOnPos());
+			positions.add(getOnPos().offset(1, 0, 1));
+			positions.add(getOnPos().offset(1, 0, 0));
+			positions.add(getOnPos().offset(1, 0, -1));
+			positions.add(getOnPos().offset(0, 0, -1));
+			positions.add(getOnPos().offset(-1, 0, -1));
+			positions.add(getOnPos().offset(-1, 0, 0));
+			positions.add(getOnPos().offset(-1, 0, 1));
+			positions.add(getOnPos().offset(0, 0, 1));
+
+			for (BlockPos position : positions) {
+				BlockState state = level.getBlockState(position);
+				if (state.getBlock().equals(BetterMinecarts.GLOWING_RAIL.get())) {
+					if (level.getBlockEntity(position) instanceof GlowingRailBlockEntity glowingRailBlockEntity) {
+						glowingRailBlockEntity.setCount(0);
+					}
+				}
+				if (state.getBlock().equals(Blocks.RAIL)) {
+					level.setBlock(position, BetterMinecarts.GLOWING_RAIL.get().defaultBlockState()
+									.setValue(SHAPE, state.getValue(SHAPE))
+									.setValue(WATERLOGGED, state.getValue(WATERLOGGED)),
+							2, 0);
+				}
+			}
 		}
 	}
 

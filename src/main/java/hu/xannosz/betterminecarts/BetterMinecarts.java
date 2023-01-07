@@ -1,6 +1,8 @@
 package hu.xannosz.betterminecarts;
 
+import hu.xannosz.betterminecarts.blockentity.GlowingRailBlockEntity;
 import hu.xannosz.betterminecarts.blocks.CrossedRailBlock;
+import hu.xannosz.betterminecarts.blocks.GlowingRailBlock;
 import hu.xannosz.betterminecarts.blocks.SignalRailBlock;
 import hu.xannosz.betterminecarts.client.models.ElectricLocomotiveModel;
 import hu.xannosz.betterminecarts.client.models.SteamLocomotiveModel;
@@ -30,6 +32,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -58,6 +61,7 @@ public class BetterMinecarts {
 
 	public static SimpleChannel INSTANCE;
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BetterMinecarts.MOD_ID);
+	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, BetterMinecarts.MOD_ID);
 	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BetterMinecarts.MOD_ID);
 	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, BetterMinecarts.MOD_ID);
 	public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, BetterMinecarts.MOD_ID);
@@ -71,6 +75,15 @@ public class BetterMinecarts {
 	public static final RegistryObject<Block> SIGNAL_RAIL = registerBlock("signal_rail",
 			SignalRailBlock::new
 	);
+	public static final RegistryObject<Block> GLOWING_RAIL = registerBlock("glowing_rail",
+			GlowingRailBlock::new
+	);
+
+	public static final RegistryObject<BlockEntityType<GlowingRailBlockEntity>> GLOWING_RAIL_BLOCK_ENTITY =
+			BLOCK_ENTITIES.register("glowing_rail_block_entity", () ->
+					BlockEntityType.Builder.of(
+							GlowingRailBlockEntity::new,
+							GLOWING_RAIL.get()).build(null));
 
 	public static final Map<String, RegistryObject<AbstractLocomotiveItem>> LOCOMOTIVE_ITEMS = createLocomotiveItems();
 	@SuppressWarnings("unused")
@@ -92,6 +105,7 @@ public class BetterMinecarts {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(this::setupMessages);
 		BLOCKS.register(modEventBus);
+		BLOCK_ENTITIES.register(modEventBus);
 		ITEMS.register(modEventBus);
 		ENTITIES.register(modEventBus);
 		MENUS.register(modEventBus);

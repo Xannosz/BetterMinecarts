@@ -5,6 +5,7 @@
 		"minecraft:detector_rail",
 		"minecraft:activator_rail",
 		"betterminecarts:crossed_rail",
-		"betterminecarts:signal_rail"
+		"betterminecarts:signal_rail",
+		"betterminecarts:glowing_rail"
 	]
 }
