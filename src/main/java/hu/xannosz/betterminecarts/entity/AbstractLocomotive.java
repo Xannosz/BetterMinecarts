@@ -25,6 +25,8 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -35,6 +37,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
@@ -225,6 +228,24 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
 						new PlaySoundPacket(blockPosition(), this instanceof SteamLocomotive))
 		);
+		if (BetterMinecarts.getConfig().mobsPanicAfterWhistle) {
+			level.getEntities(this,
+					new AABB(this.getOnPos().offset(-55, -10, -55),
+							this.getOnPos().offset(55, 25, 55))).forEach(
+					entity -> {
+						if (entity instanceof Mob cow) {
+							cow.goalSelector.getAvailableGoals().forEach(
+									wrappedGoal -> {
+										if (wrappedGoal.getGoal() instanceof PanicGoal) {
+											wrappedGoal.stop();
+											wrappedGoal.start();
+										}
+									}
+							);
+						}
+					}
+			);
+		}
 	}
 
 	@Override
@@ -364,7 +385,8 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 		float damage = BetterMinecarts.getConfig().minecartDamage;
 
-		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && speed > 1) {
+		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living &&
+				living.isAlive() && !living.isPassenger() && speed > 1) {
 			living.hurt(BetterMinecarts.minecart(this), damage);
 
 			Vec3 knockBack = living.getDeltaMovement().add(getDeltaMovement().x() * speed, getDeltaMovement().length() * 0.5 * speed, getDeltaMovement().z() * speed);

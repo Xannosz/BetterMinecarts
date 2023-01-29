@@ -9,7 +9,9 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,10 +57,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 				.pattern("T")
 				.pattern("L")
 				.pattern("B")
-				.unlockedBy("sourceTrigger",
-						inventoryTrigger(ItemPredicate.Builder.item().of(source).build()))
-				.unlockedBy("targetTrigger",
-						inventoryTrigger(ItemPredicate.Builder.item().of(target).build()))
+				.unlockedBy("never", inventoryTrigger(getItemPredicate()))
 				.save(finishedRecipeConsumer, new ResourceLocation(BetterMinecarts.MOD_ID,
 						sourceId + "_" + targetId + "_both"));
 	}
@@ -78,10 +77,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 				.define('L', source)
 				.pattern("T")
 				.pattern("L")
-				.unlockedBy("sourceTrigger",
-						inventoryTrigger(ItemPredicate.Builder.item().of(source).build()))
-				.unlockedBy("targetTrigger",
-						inventoryTrigger(ItemPredicate.Builder.item().of(target).build()))
+				.unlockedBy("never", inventoryTrigger(getItemPredicate()))
 				.save(finishedRecipeConsumer, new ResourceLocation(BetterMinecarts.MOD_ID,
 						sourceId + "_" + targetId + "_top"));
 	}
@@ -101,10 +97,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 				.define('B', targetBottom.getDye())
 				.pattern("L")
 				.pattern("B")
-				.unlockedBy("sourceTrigger",
-						inventoryTrigger(ItemPredicate.Builder.item().of(source).build()))
-				.unlockedBy("targetTrigger",
-						inventoryTrigger(ItemPredicate.Builder.item().of(target).build()))
+				.unlockedBy("never", inventoryTrigger(getItemPredicate()))
 				.save(finishedRecipeConsumer, new ResourceLocation(BetterMinecarts.MOD_ID,
 						sourceId + "_" + targetId + "_bottom"));
 	}
@@ -120,11 +113,14 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 		final AbstractLocomotiveItem source = BetterMinecarts.LOCOMOTIVE_ITEMS.get(sourceId).get();
 		final AbstractLocomotiveItem target = BetterMinecarts.LOCOMOTIVE_ITEMS.get(targetId).get();
 		ShapelessRecipeBuilder.shapeless(source).requires(target)
-				.unlockedBy("sourceTrigger",
-						inventoryTrigger(ItemPredicate.Builder.item().of(source).build()))
-				.unlockedBy("targetTrigger",
-						inventoryTrigger(ItemPredicate.Builder.item().of(target).build()))
+				.unlockedBy("never", inventoryTrigger(getItemPredicate()))
 				.save(finishedRecipeConsumer, new ResourceLocation(BetterMinecarts.MOD_ID,
 						sourceId + "_" + targetId + "_revert"));
+	}
+
+	private ItemPredicate getItemPredicate() {
+		CompoundTag tag = new CompoundTag();
+		tag.putInt("never", 0);
+		return ItemPredicate.Builder.item().of(Items.BARRIER).hasNbt(tag).build();
 	}
 }

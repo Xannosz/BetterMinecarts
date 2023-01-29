@@ -1,2 +1,4 @@
 - configuration
 - pre release actions
+- explosion when too engine collide
+- bug after long-running
