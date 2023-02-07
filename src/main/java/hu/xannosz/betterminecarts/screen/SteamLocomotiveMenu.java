@@ -171,7 +171,7 @@ public class SteamLocomotiveMenu extends AbstractContainerMenu {
 	}
 
 	public int getSteamLocomotiveId() {
-		return data.get(ID_KEY);
+		return MinecartHelper.shortsToInt(new short[]{(short) data.get(ID_KEY_1), (short) data.get(ID_KEY_2)});
 	}
 
 	public SteamLocomotive getEntity() {

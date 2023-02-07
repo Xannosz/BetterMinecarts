@@ -129,4 +129,42 @@ public class MinecartHelper {
 		}
 		return booleans;
 	}
+
+	public static short convertBitArrayToShort(boolean[] booleans) {
+		short value = 0;
+		for (int i = 0; i < booleans.length; ++i) {
+			if (booleans[i]) value |= (1 << i);
+		}
+		return value;
+	}
+
+	public static boolean[] convertShortToBitArray(short value, int size) {
+		boolean[] booleans = new boolean[size];
+		for (int i = 0; i < size; ++i) {
+			booleans[i] = (value & (1 << i)) != 0;
+		}
+		return booleans;
+	}
+
+	public static short[] intToShorts(int in) {
+		boolean[] arr = convertIntToBitArray(in, 8 * 4);
+		boolean[] arr1 = new boolean[8 * 2];
+		boolean[] arr2 = new boolean[8 * 2];
+		for (int i = 0; i < 8 * 4; i += 2) {
+			arr1[i / 2] = arr[i];
+			arr2[i / 2] = arr[i + 1];
+		}
+		return new short[]{convertBitArrayToShort(arr1), convertBitArrayToShort(arr2)};
+	}
+
+	public static int shortsToInt(short[] in) {
+		boolean[] arr = new boolean[8 * 4];
+		boolean[] arr1 = convertShortToBitArray(in[0], 8 * 2);
+		boolean[] arr2 = convertShortToBitArray(in[1], 8 * 2);
+		for (int i = 0; i < 8 * 4; i += 2) {
+			arr[i] = arr1[i / 2];
+			arr[i + 1] = arr2[i / 2];
+		}
+		return convertBitArrayToInt(arr);
+	}
 }

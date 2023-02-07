@@ -52,9 +52,10 @@ import static net.minecraft.world.level.block.RailBlock.SHAPE;
 @Slf4j
 public abstract class AbstractLocomotive extends AbstractMinecart implements ButtonUser, MenuProvider {
 
-	public static final int ID_KEY = 0;
-	public static final int ACTIVE_BUTTON_KEY = 1;
-	public static final int ACTIVE_FUNCTION_KEY = 2;
+	public static final int ID_KEY_1 = 0;
+	public static final int ID_KEY_2 = 1;
+	public static final int ACTIVE_BUTTON_KEY = 2;
+	public static final int ACTIVE_FUNCTION_KEY = 3;
 
 	private static final EntityDataAccessor<String> TOP_FILTER = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.STRING);
 	private static final EntityDataAccessor<String> BOTTOM_FILTER = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.STRING);
@@ -206,7 +207,9 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	}
 
 	public void updateData() {
-		data.set(ID_KEY, this.getId());
+		short[] ids = MinecartHelper.intToShorts(this.getId());
+		data.set(ID_KEY_1, ids[0]);
+		data.set(ID_KEY_2, ids[1]);
 		data.set(ACTIVE_BUTTON_KEY, activeButton.getId());
 		data.set(ACTIVE_FUNCTION_KEY, MinecartHelper.convertBitArrayToInt(new boolean[]{sendSignal, lampOn}));
 		if (level.isClientSide()) {

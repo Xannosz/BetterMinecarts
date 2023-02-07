@@ -21,9 +21,9 @@ import org.jetbrains.annotations.NotNull;
 @Slf4j
 public class ElectricLocomotive extends AbstractLocomotive {
 
-	public static final int POWER_KEY = 3;
+	public static final int POWER_KEY = 4;
 	public static final int MAX_POWER = 20;
-	public static final int DATA_SIZE = 4;
+	public static final int DATA_SIZE = 5;
 
 	private int power = 0;
 	private BlockPos lastBlockPos;

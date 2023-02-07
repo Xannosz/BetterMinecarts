@@ -36,12 +36,12 @@ import static net.minecraftforge.common.ForgeHooks.getBurnTime;
 @Slf4j
 public class SteamLocomotive extends AbstractLocomotive implements Container {
 
-	public static final int STEAM_KEY = 3;
-	public static final int WATER_KEY = 4;
-	public static final int HEAT_KEY = 5;
-	public static final int BURN_KEY = 6;
-	public static final int MAX_BURN_KEY = 7;
-	public static final int DATA_SIZE = 8;
+	public static final int STEAM_KEY = 4;
+	public static final int WATER_KEY = 5;
+	public static final int HEAT_KEY = 6;
+	public static final int BURN_KEY = 7;
+	public static final int MAX_BURN_KEY = 8;
+	public static final int DATA_SIZE = 9;
 
 	public static final int MAX_STEAM = 2000;
 	public static final int MAX_WATER = 2000;

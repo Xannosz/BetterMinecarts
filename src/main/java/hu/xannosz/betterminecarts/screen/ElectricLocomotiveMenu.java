@@ -56,7 +56,7 @@ public class ElectricLocomotiveMenu extends AbstractContainerMenu {
 	}
 
 	public int getElectricLocomotiveId() {
-		return data.get(ID_KEY);
+		return MinecartHelper.shortsToInt(new short[]{(short) data.get(ID_KEY_1), (short) data.get(ID_KEY_2)});
 	}
 
 	public ElectricLocomotive getEntity() {
