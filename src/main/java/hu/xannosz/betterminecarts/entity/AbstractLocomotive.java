@@ -4,18 +4,18 @@ import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.blockentity.GlowingRailBlockEntity;
 import hu.xannosz.betterminecarts.button.ButtonId;
 import hu.xannosz.betterminecarts.button.ButtonUser;
-import hu.xannosz.betterminecarts.network.LampSetPacket;
 import hu.xannosz.betterminecarts.network.PlaySoundPacket;
 import hu.xannosz.betterminecarts.utils.Linkable;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.TicketType;
@@ -56,6 +56,10 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	public static final int ACTIVE_BUTTON_KEY = 1;
 	public static final int ACTIVE_FUNCTION_KEY = 2;
 
+	private static final EntityDataAccessor<String> TOP_FILTER = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.STRING);
+	private static final EntityDataAccessor<String> BOTTOM_FILTER = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.STRING);
+	private static final EntityDataAccessor<Boolean> IS_LAMP_ON = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.BOOLEAN);
+
 	protected ButtonId activeButton = ButtonId.STOP;
 	protected double xPush = 0;
 	protected double zPush = 0;
@@ -63,18 +67,9 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	protected int speed = 0;
 
 	private boolean sendSignal = false;
-	@Setter
-	@Getter
 	private boolean lampOn = false;
-	@Setter
-	@Getter
 	private MinecartColor topFilter;
-	@Setter
-	@Getter
 	private MinecartColor bottomFilter;
-	@Setter
-	@Getter
-	private boolean filterUpdateDone = false;
 	private ChunkPos prevChunkPos;
 
 	protected AbstractLocomotive(EntityType<?> entityType, Level level,
@@ -217,10 +212,9 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		if (level.isClientSide()) {
 			return;
 		}
-		level.players().forEach(player ->
-				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-						new LampSetPacket(lampOn, getId()))
-		);
+		entityData.set(TOP_FILTER, topFilter.getLabel());
+		entityData.set(BOTTOM_FILTER, bottomFilter.getLabel());
+		entityData.set(IS_LAMP_ON, lampOn);
 	}
 
 	private void whistle() {
@@ -230,8 +224,8 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		);
 		if (BetterMinecarts.getConfig().mobsPanicAfterWhistle) {
 			level.getEntities(this,
-					new AABB(this.getOnPos().offset(-55, -10, -55),
-							this.getOnPos().offset(55, 25, 55))).forEach(
+					new AABB(this.getOnPos().offset(-BetterMinecarts.getConfig().mobsPanicAfterWhistleRange, -10, -BetterMinecarts.getConfig().mobsPanicAfterWhistleRange),
+							this.getOnPos().offset(BetterMinecarts.getConfig().mobsPanicAfterWhistleRange, 25, BetterMinecarts.getConfig().mobsPanicAfterWhistleRange))).forEach(
 					entity -> {
 						if (entity instanceof Mob cow) {
 							cow.goalSelector.getAvailableGoals().forEach(
@@ -398,6 +392,25 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	}
 
 	// entity functions
+	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		entityData.define(TOP_FILTER, MinecartColor.MAGENTA.getLabel());
+		entityData.define(BOTTOM_FILTER, MinecartColor.BLACK.getLabel());
+		entityData.define(IS_LAMP_ON, false);
+	}
+
+	public MinecartColor getTopFilter() {
+		return MinecartColor.getFromLabel(entityData.get(TOP_FILTER));
+	}
+
+	public MinecartColor getBottomFilter() {
+		return MinecartColor.getFromLabel(entityData.get(BOTTOM_FILTER));
+	}
+
+	public boolean isLampOn() {
+		return entityData.get(IS_LAMP_ON);
+	}
 
 	@Override
 	protected void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {

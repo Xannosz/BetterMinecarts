@@ -1,4 +1,10 @@
 - configuration
 - pre release actions
-- explosion when too engine collide
+- explosion when too engine collide (configurable)
 - bug after long-running
+
+- concurrent modification from Abstract minecart
+- locomotive direction from placer
+- locomotive pulling (furnace cart)
+- keyboard control
+- graphical response on model, when redstone signal activated

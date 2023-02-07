@@ -2,20 +2,22 @@ package hu.xannosz.betterminecarts.entity;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.button.ButtonId;
-import hu.xannosz.betterminecarts.network.BurnTimePacket;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +28,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.world.item.crafting.RecipeType.SMELTING;
@@ -47,6 +48,8 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 	public static final int MAX_HEAT = 520;
 	public static final int MINIMUM_HEAT = 32;
 	public static final int MINIMUM_STEAM = 10;
+
+	private static final EntityDataAccessor<Boolean> IS_BURN = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.BOOLEAN);
 
 	private int steam = 0;
 	private int water = 0;
@@ -118,10 +121,7 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 		if (level.isClientSide()) {
 			return;
 		}
-		level.players().forEach(player ->
-				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-						new BurnTimePacket(burn > 0, getId()))
-		);
+		entityData.set(IS_BURN, burn > 0);
 	}
 
 	@Override
@@ -297,13 +297,14 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 		lazyItemHandler.invalidate();
 	}
 
-	// CLIENT SIDE
-	public boolean isBurn() {
-		return burn > 0;
+	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		entityData.define(IS_BURN, false);
 	}
 
-	public void setBurn(boolean burn) {
-		this.burn = burn ? 20 : 0;
+	public boolean isBurn() {
+		return entityData.get(IS_BURN);
 	}
 
 	@Override

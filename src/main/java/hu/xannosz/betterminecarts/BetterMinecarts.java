@@ -138,30 +138,10 @@ public class BetterMinecarts {
 				.encoder(ButtonClickedPacket::toBytes)
 				.consumerMainThread(ButtonClickedPacket::handler)
 				.add();
-		INSTANCE.messageBuilder(LampSetPacket.class, 2, NetworkDirection.PLAY_TO_CLIENT)
-				.decoder(LampSetPacket::new)
-				.encoder(LampSetPacket::toBytes)
-				.consumerMainThread(LampSetPacket::handler)
-				.add();
-		INSTANCE.messageBuilder(BurnTimePacket.class, 3, NetworkDirection.PLAY_TO_CLIENT)
-				.decoder(BurnTimePacket::new)
-				.encoder(BurnTimePacket::toBytes)
-				.consumerMainThread(BurnTimePacket::handler)
-				.add();
 		INSTANCE.messageBuilder(PlaySoundPacket.class, 4, NetworkDirection.PLAY_TO_CLIENT)
 				.decoder(PlaySoundPacket::new)
 				.encoder(PlaySoundPacket::toBytes)
 				.consumerMainThread(PlaySoundPacket::handler)
-				.add();
-		INSTANCE.messageBuilder(ColorPacket.class, 5, NetworkDirection.PLAY_TO_CLIENT)
-				.decoder(ColorPacket::new)
-				.encoder(ColorPacket::toBytes)
-				.consumerMainThread(ColorPacket::handler)
-				.add();
-		INSTANCE.messageBuilder(GetColorPacket.class, 6, NetworkDirection.PLAY_TO_SERVER)
-				.decoder(GetColorPacket::new)
-				.encoder(GetColorPacket::toBytes)
-				.consumerMainThread(GetColorPacket::handler)
 				.add();
 		INSTANCE.messageBuilder(GetChainSyncPacket.class, 7, NetworkDirection.PLAY_TO_SERVER)
 				.decoder(GetChainSyncPacket::new)
