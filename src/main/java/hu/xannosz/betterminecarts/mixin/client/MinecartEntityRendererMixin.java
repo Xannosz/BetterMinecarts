@@ -6,7 +6,6 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import hu.xannosz.betterminecarts.BetterMinecarts;
-import hu.xannosz.betterminecarts.network.GetChainSyncPacket;
 import hu.xannosz.betterminecarts.utils.Linkable;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -37,12 +36,7 @@ public abstract class MinecartEntityRendererMixin<T extends AbstractMinecart> ex
 	@Inject(method = "render", at = @At("TAIL"))
 	public void betterminecarts$render(T child, float yaw, float tickDelta, PoseStack stack, MultiBufferSource provider, int light, CallbackInfo info) {
 		if (child instanceof Linkable linkable) {
-
-			if (!linkable.isUpdated()) {
-				BetterMinecarts.INSTANCE.sendToServer(new GetChainSyncPacket(child.getId()));
-			}
-
-			AbstractMinecart parent = linkable.getLinkedParent();
+			AbstractMinecart parent = linkable.getLinkedParentForRender();
 			if (parent != null) {
 				double startX = parent.getX();
 				double startY = parent.getY();

@@ -13,9 +13,7 @@ import hu.xannosz.betterminecarts.integration.MinecartTweaksConfig;
 import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
 import hu.xannosz.betterminecarts.item.Crowbar;
 import hu.xannosz.betterminecarts.network.ButtonClickedPacket;
-import hu.xannosz.betterminecarts.network.GetChainSyncPacket;
 import hu.xannosz.betterminecarts.network.PlaySoundPacket;
-import hu.xannosz.betterminecarts.network.SyncChainedMinecartPacket;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
@@ -131,25 +129,15 @@ public class BetterMinecarts {
 				.clientAcceptedVersions(s -> true)
 				.serverAcceptedVersions(s -> true)
 				.simpleChannel();
-		INSTANCE.messageBuilder(SyncChainedMinecartPacket.class, 0, NetworkDirection.PLAY_TO_CLIENT)
-				.decoder(SyncChainedMinecartPacket::new)
-				.encoder(SyncChainedMinecartPacket::toBytes)
-				.consumerMainThread(SyncChainedMinecartPacket::handler)
-				.add();
-		INSTANCE.messageBuilder(ButtonClickedPacket.class, 1, NetworkDirection.PLAY_TO_SERVER)
+		INSTANCE.messageBuilder(ButtonClickedPacket.class, 0, NetworkDirection.PLAY_TO_SERVER)
 				.decoder(ButtonClickedPacket::new)
 				.encoder(ButtonClickedPacket::toBytes)
 				.consumerMainThread(ButtonClickedPacket::handler)
 				.add();
-		INSTANCE.messageBuilder(PlaySoundPacket.class, 4, NetworkDirection.PLAY_TO_CLIENT)
+		INSTANCE.messageBuilder(PlaySoundPacket.class, 1, NetworkDirection.PLAY_TO_CLIENT)
 				.decoder(PlaySoundPacket::new)
 				.encoder(PlaySoundPacket::toBytes)
 				.consumerMainThread(PlaySoundPacket::handler)
-				.add();
-		INSTANCE.messageBuilder(GetChainSyncPacket.class, 7, NetworkDirection.PLAY_TO_SERVER)
-				.decoder(GetChainSyncPacket::new)
-				.encoder(GetChainSyncPacket::toBytes)
-				.consumerMainThread(GetChainSyncPacket::handler)
 				.add();
 	}
 

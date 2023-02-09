@@ -7,6 +7,9 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
@@ -20,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MinecartHelper {
+
+	public static final EntityDataAccessor<Integer> LINKED_PARENT = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.INT);
 
 	private static final Map<RailShape, Pair<Vec3i, Vec3i>> EXITS = Util.make(Maps.newEnumMap(RailShape.class), (p_38135_) -> {
 		Vec3i vec3i = Direction.WEST.getNormal();

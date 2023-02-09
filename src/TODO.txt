@@ -14,5 +14,3 @@
 - dead end block
 - crafting minecart
 - furnace minecart? - locomotive pulling (furnace cart)
-
-- remove sync chain logic
