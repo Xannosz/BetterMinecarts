@@ -1,10 +1,18 @@
 - configuration
 - pre release actions
-- explosion when too engine collide (configurable)
+
 - bug after long-running
 
-- concurrent modification from Abstract minecart
-- locomotive direction from placer
-- locomotive pulling (furnace cart)
+- explosion when too engine collide (configurable)
+- fly over the bridge (configurable)
+- drift (configurable)
+
 - keyboard control
 - graphical response on model, when redstone signal activated
+
+- show custom locomotive name
+- dead end block
+- crafting minecart
+- furnace minecart? - locomotive pulling (furnace cart)
+
+- remove sync chain logic

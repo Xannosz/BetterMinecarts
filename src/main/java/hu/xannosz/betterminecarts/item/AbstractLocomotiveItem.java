@@ -1,6 +1,7 @@
 package hu.xannosz.betterminecarts.item;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
+import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
 import hu.xannosz.betterminecarts.entity.SteamLocomotive;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
@@ -8,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -51,14 +51,16 @@ public class AbstractLocomotiveItem extends Item {
 					d0 = 0.5D;
 				}
 
-				AbstractMinecart abstractminecart = isSteam ?
+				AbstractLocomotive abstractLocomotive = isSteam ?
 						createSteamLocomotive(bottomColor, topColor, level, blockpos, d0) :
 						createElectricLocomotive(bottomColor, topColor, level, blockpos, d0);
 				if (itemstack.hasCustomHoverName()) {
-					abstractminecart.setCustomName(itemstack.getHoverName());
+					abstractLocomotive.setCustomName(itemstack.getHoverName());
 				}
 
-				level.addFreshEntity(abstractminecart);
+				abstractLocomotive.setStartDirection(useOnContext.getHorizontalDirection());
+
+				level.addFreshEntity(abstractLocomotive);
 				level.gameEvent(GameEvent.ENTITY_PLACE, blockpos, GameEvent.Context.of(useOnContext.getPlayer(), level.getBlockState(blockpos.below())));
 			}
 
@@ -77,14 +79,14 @@ public class AbstractLocomotiveItem extends Item {
 		super.appendHoverText(itemStack, level, components, tooltipFlag);
 	}
 
-	private AbstractMinecart createElectricLocomotive(MinecartColor bottom, MinecartColor top, Level level, BlockPos blockpos, double d0) {
+	private AbstractLocomotive createElectricLocomotive(MinecartColor bottom, MinecartColor top, Level level, BlockPos blockpos, double d0) {
 		return new ElectricLocomotive(level,
 				(double) blockpos.getX() + 0.5D,
 				(double) blockpos.getY() + 0.0625D + d0,
 				(double) blockpos.getZ() + 0.5D, top, bottom);
 	}
 
-	private AbstractMinecart createSteamLocomotive(MinecartColor bottom, MinecartColor top, Level level, BlockPos blockpos, double d0) {
+	private AbstractLocomotive createSteamLocomotive(MinecartColor bottom, MinecartColor top, Level level, BlockPos blockpos, double d0) {
 		return new SteamLocomotive(level,
 				(double) blockpos.getX() + 0.5D,
 				(double) blockpos.getY() + 0.0625D + d0,

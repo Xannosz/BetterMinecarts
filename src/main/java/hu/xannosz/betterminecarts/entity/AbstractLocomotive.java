@@ -97,6 +97,13 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	protected abstract boolean canPush();
 
+	public void setStartDirection(Direction direction){
+		switch (direction){
+			case EAST -> setYRot(180f);
+			case SOUTH -> setYRot(-90f);
+		}
+	}
+
 	public float normalizeRotation(float yRotation) {
 		float expectedAngle = 0;
 

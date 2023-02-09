@@ -133,6 +133,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 			Vec3 knockBack = living.getDeltaMovement().add(getDeltaMovement().x() * 0.9, getDeltaMovement().length() * 0.2, getDeltaMovement().z() * 0.9);
 			living.setDeltaMovement(knockBack);
 			living.hasImpulse = true;
+			info.setReturnValue(false);
 		}
 	}
 

@@ -12,7 +12,10 @@ import hu.xannosz.betterminecarts.entity.SteamLocomotive;
 import hu.xannosz.betterminecarts.integration.MinecartTweaksConfig;
 import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
 import hu.xannosz.betterminecarts.item.Crowbar;
-import hu.xannosz.betterminecarts.network.*;
+import hu.xannosz.betterminecarts.network.ButtonClickedPacket;
+import hu.xannosz.betterminecarts.network.GetChainSyncPacket;
+import hu.xannosz.betterminecarts.network.PlaySoundPacket;
+import hu.xannosz.betterminecarts.network.SyncChainedMinecartPacket;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
@@ -75,7 +78,7 @@ public class BetterMinecarts {
 	public static final RegistryObject<Block> SIGNAL_RAIL = registerBlock("signal_rail",
 			SignalRailBlock::new
 	);
-	public static final RegistryObject<Block> GLOWING_RAIL = registerBlock("glowing_rail",
+	public static final RegistryObject<Block> GLOWING_RAIL = BLOCKS.register("glowing_rail",
 			GlowingRailBlock::new
 	);
 
