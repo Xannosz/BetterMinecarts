@@ -1,7 +1,7 @@
 package hu.xannosz.betterminecarts.network;
 
-import hu.xannosz.betterminecarts.button.ButtonId;
-import hu.xannosz.betterminecarts.button.ButtonUser;
+import hu.xannosz.betterminecarts.utils.ButtonId;
+import hu.xannosz.betterminecarts.utils.ButtonUser;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;

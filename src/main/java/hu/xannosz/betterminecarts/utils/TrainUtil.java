@@ -21,6 +21,15 @@ import static hu.xannosz.betterminecarts.item.Crowbar.MODE_TAG;
 @Slf4j
 @UtilityClass
 public class TrainUtil {
+
+	public static Linkable getHeadOfTrain(Linkable cart) {
+		if (cart.getLinkedParent() == null) {
+			return cart;
+		} else {
+			return getHeadOfTrain((Linkable) cart.getLinkedParent());
+		}
+	}
+
 	public static void clickedByCrowbar(ItemStack itemStack, Entity minecart, ServerLevel server) {
 		final CrowbarMode mode = CrowbarMode.getFromLabel(itemStack.getOrCreateTag().getString(MODE_TAG));
 		final int firstCartIdTag = itemStack.getOrCreateTag().getInt(FIRST_CART_ID_TAG);

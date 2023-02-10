@@ -1,16 +1,18 @@
 - configuration
-- pre release actions
+- pre-release actions
+- remove slf
 
-- bug after long-running
+- bug after long-running remove debug log
+- sound hearable everywhere
 
 - explosion when too engine collide (configurable)
 - fly over the bridge (configurable)
 - drift (configurable)
 
-- keyboard control
-- graphical response on model, when redstone signal activated
-
-- show custom locomotive name
 - dead end block
 - crafting minecart
 - furnace minecart? - locomotive pulling (furnace cart)
+
+- signal rail send signal during the train
+- non-parallel stations
+- whistle use steam (conf)

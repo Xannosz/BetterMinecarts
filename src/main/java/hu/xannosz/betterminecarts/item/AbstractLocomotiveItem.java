@@ -56,6 +56,7 @@ public class AbstractLocomotiveItem extends Item {
 						createElectricLocomotive(bottomColor, topColor, level, blockpos, d0);
 				if (itemstack.hasCustomHoverName()) {
 					abstractLocomotive.setCustomName(itemstack.getHoverName());
+					abstractLocomotive.setCustomNameVisible(true);
 				}
 
 				abstractLocomotive.setStartDirection(useOnContext.getHorizontalDirection());

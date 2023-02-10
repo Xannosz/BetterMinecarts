@@ -1,12 +1,14 @@
 package hu.xannosz.betterminecarts.entity;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
-import hu.xannosz.betterminecarts.button.ButtonId;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
+import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -17,6 +19,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PoweredRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 @Slf4j
 public class ElectricLocomotive extends AbstractLocomotive {
@@ -51,6 +55,15 @@ public class ElectricLocomotive extends AbstractLocomotive {
 	@Override
 	protected boolean canPush() {
 		return power > 0;
+	}
+
+	@Override
+	protected List<Component> getEngineData() {
+		return List.of(
+				Component.translatable("text.betterminecarts.data.energy").append(
+						Component.literal(power + "/" + MAX_POWER)
+								.withStyle(ChatFormatting.DARK_GREEN)
+				));
 	}
 
 	@Override

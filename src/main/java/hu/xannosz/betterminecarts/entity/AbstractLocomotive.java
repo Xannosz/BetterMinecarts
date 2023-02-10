@@ -2,17 +2,15 @@ package hu.xannosz.betterminecarts.entity;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.blockentity.GlowingRailBlockEntity;
-import hu.xannosz.betterminecarts.button.ButtonId;
-import hu.xannosz.betterminecarts.button.ButtonUser;
 import hu.xannosz.betterminecarts.network.PlaySoundPacket;
-import hu.xannosz.betterminecarts.utils.Linkable;
-import hu.xannosz.betterminecarts.utils.MinecartColor;
-import hu.xannosz.betterminecarts.utils.MinecartHelper;
+import hu.xannosz.betterminecarts.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -44,13 +42,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ConcurrentModificationException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static net.minecraft.world.level.block.BaseRailBlock.WATERLOGGED;
 import static net.minecraft.world.level.block.RailBlock.SHAPE;
 
 @Slf4j
-public abstract class AbstractLocomotive extends AbstractMinecart implements ButtonUser, MenuProvider {
+public abstract class AbstractLocomotive extends AbstractMinecart implements ButtonUser, MenuProvider, KeyUser {
 
 	public static final int ID_KEY_1 = 0;
 	public static final int ID_KEY_2 = 1;
@@ -97,8 +96,8 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	protected abstract boolean canPush();
 
-	public void setStartDirection(Direction direction){
-		switch (direction){
+	public void setStartDirection(Direction direction) {
+		switch (direction) {
 			case EAST -> setYRot(180f);
 			case SOUTH -> setYRot(-90f);
 		}
@@ -184,6 +183,70 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		}
 		updateData();
 	}
+
+	@Override
+	public void executeKeyPress(KeyId keyId, Player player) {
+		switch (keyId) {
+			case LAMP -> {
+				executeButtonClick(ButtonId.LAMP);
+				player.displayClientMessage(Component.translatable("text.betterminecarts.keyPress.lamp." + lampOn).withStyle(ChatFormatting.AQUA), true);
+			}
+			case WHISTLE -> executeButtonClick(ButtonId.WHISTLE);
+			case REDSTONE -> {
+				executeButtonClick(ButtonId.REDSTONE);
+				player.displayClientMessage(Component.translatable("text.betterminecarts.keyPress.redstone." + sendSignal).withStyle(ChatFormatting.AQUA), true);
+			}
+			case DATA -> {
+				getEngineData().forEach(player::sendSystemMessage);
+				player.sendSystemMessage(Component.translatable("text.betterminecarts.data.lamp").append(
+						Component.translatable("text.betterminecarts.keyPress.lamp." + lampOn)
+								.withStyle(lampOn ? ChatFormatting.YELLOW : ChatFormatting.GOLD)
+				));
+				player.sendSystemMessage(Component.translatable("text.betterminecarts.data.redstone").append(
+						Component.translatable("text.betterminecarts.keyPress.redstone." + sendSignal)
+								.withStyle(sendSignal ? ChatFormatting.RED : ChatFormatting.DARK_RED)
+				));
+				player.sendSystemMessage(Component.translatable("text.betterminecarts.data.speed").append(
+						Component.translatable("text.betterminecarts.keyPress.speed." + activeButton)
+								.withStyle(ChatFormatting.DARK_GRAY)
+				));
+			}
+			case INCREASE -> {
+				switch (activeButton) {
+					case BACK -> executeButtonClick(ButtonId.STOP);
+					case PAUSE -> executeButtonClick(ButtonId.FORWARD);
+					case STOP -> {
+						if (this instanceof SteamLocomotive) {
+							executeButtonClick(ButtonId.PAUSE);
+						} else {
+							executeButtonClick(ButtonId.FORWARD);
+						}
+					}
+					case FORWARD -> executeButtonClick(ButtonId.F_FORWARD);
+					case F_FORWARD -> executeButtonClick(ButtonId.FF_FORWARD);
+				}
+				player.displayClientMessage(Component.translatable("text.betterminecarts.keyPress.speed." + activeButton).withStyle(ChatFormatting.AQUA), true);
+			}
+			case DECREASE -> {
+				switch (activeButton) {
+					case PAUSE -> executeButtonClick(ButtonId.STOP);
+					case STOP -> executeButtonClick(ButtonId.BACK);
+					case FORWARD -> {
+						if (this instanceof SteamLocomotive) {
+							executeButtonClick(ButtonId.PAUSE);
+						} else {
+							executeButtonClick(ButtonId.STOP);
+						}
+					}
+					case F_FORWARD -> executeButtonClick(ButtonId.FORWARD);
+					case FF_FORWARD -> executeButtonClick(ButtonId.F_FORWARD);
+				}
+				player.displayClientMessage(Component.translatable("text.betterminecarts.keyPress.speed." + activeButton).withStyle(ChatFormatting.AQUA), true);
+			}
+		}
+	}
+
+	protected abstract List<Component> getEngineData();
 
 	private void setPush(Direction direction) {
 		if (!canPush()) {

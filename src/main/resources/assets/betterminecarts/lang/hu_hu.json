@@ -31,5 +31,31 @@
   "text.locomotive.color.blue": "Kék",
   "text.locomotive.color.black": "Fekete",
 
-  "betterminecarts.steam_whistle": "Gőz síp"
+  "betterminecarts.steam_whistle": "Gőz síp",
+
+  "key.category.betterminecarts": "Better Minecarts",
+  "key.betterminecarts.increase": "Sebesség Növelés",
+  "key.betterminecarts.decrease": "Sebesség Csökkentés",
+  "key.betterminecarts.lamp": "Lámpa Ki/Be",
+  "key.betterminecarts.whistle": "Síp",
+  "key.betterminecarts.redstone": "Redstone Jel Ki/Be",
+  "key.betterminecarts.data": "Mozdony Adatainak Lekérése",
+  "text.betterminecarts.keyPress.lamp.true": "Felkapcsolva",
+  "text.betterminecarts.keyPress.lamp.false": "Lekapcsolva",
+  "text.betterminecarts.keyPress.redstone.true": "Jel Küldés",
+  "text.betterminecarts.keyPress.redstone.false": "Nincs Jel Küldés",
+  "text.betterminecarts.keyPress.speed.BACK": "Hátramenet",
+  "text.betterminecarts.keyPress.speed.STOP": "Leállítva",
+  "text.betterminecarts.keyPress.speed.PAUSE": "Készenlét",
+  "text.betterminecarts.keyPress.speed.FORWARD": "Negyed Gőz",
+  "text.betterminecarts.keyPress.speed.F_FORWARD": "Fél Gőz",
+  "text.betterminecarts.keyPress.speed.FF_FORWARD": "Teljes Gőz",
+  "text.betterminecarts.data.lamp": "Lámpa:     ",
+  "text.betterminecarts.data.redstone": "Jel:         ",
+  "text.betterminecarts.data.speed": "Sebesség: ",
+  "text.betterminecarts.data.energy": "Energia:   ",
+  "text.betterminecarts.data.water": "Víz:         ",
+  "text.betterminecarts.data.steam": "Gőz:        ",
+  "text.betterminecarts.data.bucket": "Vödrök:    ",
+  "text.betterminecarts.data.coal": "Tüzelő:    "
 }

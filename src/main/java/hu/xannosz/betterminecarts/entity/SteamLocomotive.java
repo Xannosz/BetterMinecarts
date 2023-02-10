@@ -1,13 +1,15 @@
 package hu.xannosz.betterminecarts.entity;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
-import hu.xannosz.betterminecarts.button.ButtonId;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
+import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -29,6 +31,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static net.minecraft.world.item.crafting.RecipeType.SMELTING;
 import static net.minecraftforge.common.ForgeHooks.getBurnTime;
@@ -111,6 +116,29 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 	}
 
 	@Override
+	protected List<Component> getEngineData() {
+		return Arrays.asList(
+				Component.translatable("text.betterminecarts.data.water").append(
+						Component.literal(water + "/" + MAX_WATER)
+								.withStyle(ChatFormatting.BLUE)),
+				Component.translatable("text.betterminecarts.data.steam").append(
+						Component.literal(steam + "/" + MAX_STEAM)
+								.withStyle(ChatFormatting.GRAY)),
+				Component.translatable("text.betterminecarts.data.bucket").append(
+						Component.literal("" + (itemHandler.getStackInSlot(1).getCount() +
+										itemHandler.getStackInSlot(2).getCount() +
+										itemHandler.getStackInSlot(3).getCount()))
+								.withStyle(ChatFormatting.BOLD)),
+				Component.translatable("text.betterminecarts.data.coal").append(
+						Component.literal("" + itemHandler.getStackInSlot(4).getCount() +
+										"/" + itemHandler.getStackInSlot(5).getCount() +
+										"/" + itemHandler.getStackInSlot(6).getCount() +
+										"/" + itemHandler.getStackInSlot(7).getCount())
+								.withStyle(ChatFormatting.BLACK))
+		);
+	}
+
+	@Override
 	public void updateData() {
 		data.set(STEAM_KEY, steam);
 		data.set(WATER_KEY, water);
@@ -151,7 +179,7 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 	public void tick() {
 		super.tick();
 
-		if (burn > 0 && this.random.nextInt(2) == 0) {
+		if (isBurn() && this.random.nextInt(2) == 0) {
 			final Vec3 smokeCoordinates = getSmokeCoordinates();
 			this.level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
 					smokeCoordinates.x() + (random.nextFloat() - 0.5) * 0.1,

@@ -5,4 +5,5 @@ public class MinecartTweaksConfig {
 	public boolean furnaceMinecartsLoadChunks = true;
 	public boolean mobsPanicAfterWhistle = true;
 	public int mobsPanicAfterWhistleRange = 30;
+	public boolean keyControlFromTheWholeTrain = true;
 }

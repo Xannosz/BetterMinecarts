@@ -1,6 +1,6 @@
 package hu.xannosz.betterminecarts.screen;
 
-import hu.xannosz.betterminecarts.button.ButtonId;
+import hu.xannosz.betterminecarts.utils.ButtonId;
 import lombok.Builder;
 import lombok.Getter;
 

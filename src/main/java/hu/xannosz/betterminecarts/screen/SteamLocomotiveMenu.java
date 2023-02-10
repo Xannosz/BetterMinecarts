@@ -1,7 +1,7 @@
 package hu.xannosz.betterminecarts.screen;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
-import hu.xannosz.betterminecarts.button.ButtonId;
+import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.entity.SteamLocomotive;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import net.minecraft.network.FriendlyByteBuf;

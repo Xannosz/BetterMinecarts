@@ -1,4 +1,4 @@
-package hu.xannosz.betterminecarts.button;
+package hu.xannosz.betterminecarts.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

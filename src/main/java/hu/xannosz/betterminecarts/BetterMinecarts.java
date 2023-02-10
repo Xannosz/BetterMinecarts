@@ -13,6 +13,7 @@ import hu.xannosz.betterminecarts.integration.MinecartTweaksConfig;
 import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
 import hu.xannosz.betterminecarts.item.Crowbar;
 import hu.xannosz.betterminecarts.network.ButtonClickedPacket;
+import hu.xannosz.betterminecarts.network.KeyPressedPacket;
 import hu.xannosz.betterminecarts.network.PlaySoundPacket;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
@@ -138,6 +139,11 @@ public class BetterMinecarts {
 				.decoder(PlaySoundPacket::new)
 				.encoder(PlaySoundPacket::toBytes)
 				.consumerMainThread(PlaySoundPacket::handler)
+				.add();
+		INSTANCE.messageBuilder(KeyPressedPacket.class, 2, NetworkDirection.PLAY_TO_SERVER)
+				.decoder(KeyPressedPacket::new)
+				.encoder(KeyPressedPacket::toBytes)
+				.consumerMainThread(KeyPressedPacket::handler)
 				.add();
 	}
 
