@@ -97,11 +97,11 @@ public class SignalRailBlock extends DetectorRailBlock {
 	}
 
 	private AABB getSearchBB(BlockPos blockPos) {
-		return new AABB((double) blockPos.getX() + 0.2D,
+		return new AABB((double) blockPos.getX() - 0.2D,
 				blockPos.getY(),
-				(double) blockPos.getZ() + 0.2D,
-				(double) (blockPos.getX() + 1) - 0.2D,
+				(double) blockPos.getZ() - 0.2D,
+				(double) (blockPos.getX() + 1) + 0.2D,
 				(double) (blockPos.getY() + 1) - 0.2D,
-				(double) (blockPos.getZ() + 1) - 0.2D);
+				(double) (blockPos.getZ() + 1) + 0.2D);
 	}
 }

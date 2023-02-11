@@ -2,6 +2,7 @@ package hu.xannosz.betterminecarts;
 
 import hu.xannosz.betterminecarts.blockentity.GlowingRailBlockEntity;
 import hu.xannosz.betterminecarts.blocks.CrossedRailBlock;
+import hu.xannosz.betterminecarts.blocks.DeadEndBlock;
 import hu.xannosz.betterminecarts.blocks.GlowingRailBlock;
 import hu.xannosz.betterminecarts.blocks.SignalRailBlock;
 import hu.xannosz.betterminecarts.client.models.ElectricLocomotiveModel;
@@ -81,6 +82,10 @@ public class BetterMinecarts {
 	);
 	public static final RegistryObject<Block> GLOWING_RAIL = BLOCKS.register("glowing_rail",
 			GlowingRailBlock::new
+	);
+	@SuppressWarnings("unused")
+	public static final RegistryObject<Block> DEAD_END = registerBlock("dead_end",
+			DeadEndBlock::new
 	);
 
 	public static final RegistryObject<BlockEntityType<GlowingRailBlockEntity>> GLOWING_RAIL_BLOCK_ENTITY =

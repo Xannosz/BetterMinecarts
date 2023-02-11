@@ -3,6 +3,7 @@
 
   "block.betterminecarts.crossed_rail": "Crossed Rail",
   "block.betterminecarts.signal_rail": "Signal Rail",
+  "block.betterminecarts.dead_end": "Dead End",
 
   "item.betterminecarts.crowbar": "Crowbar",
   "item.betterminecarts.steam_locomotive": "Steam locomotive",

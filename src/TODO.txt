@@ -8,6 +8,8 @@
 - fly over the bridge (configurable)
 - drift (configurable)
 
-- dead end block
 - crafting minecart
 - furnace minecart? - locomotive pulling (furnace cart)
+
+- switch guis in train?
+- switch place in train?
