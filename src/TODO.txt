@@ -1,4 +1,3 @@
-- configuration
 - pre-release actions
 - remove slf
 
@@ -12,7 +11,3 @@
 - dead end block
 - crafting minecart
 - furnace minecart? - locomotive pulling (furnace cart)
-
-- signal rail send signal during the train
-- non-parallel stations
-- whistle use steam (conf)

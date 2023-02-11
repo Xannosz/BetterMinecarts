@@ -9,7 +9,7 @@ import hu.xannosz.betterminecarts.client.models.SteamLocomotiveModel;
 import hu.xannosz.betterminecarts.client.renderer.LocomotiveRenderer;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
 import hu.xannosz.betterminecarts.entity.SteamLocomotive;
-import hu.xannosz.betterminecarts.integration.MinecartTweaksConfig;
+import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
 import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
 import hu.xannosz.betterminecarts.item.Crowbar;
 import hu.xannosz.betterminecarts.network.ButtonClickedPacket;
@@ -41,7 +41,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -112,11 +114,10 @@ public class BetterMinecarts {
 		ENTITIES.register(modEventBus);
 		MENUS.register(modEventBus);
 		SOUND_EVENTS.register(modEventBus);
-		MinecraftForge.EVENT_BUS.register(this);
-	}
 
-	public static MinecartTweaksConfig getConfig() {
-		return new MinecartTweaksConfig();
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BetterMinecartsConfig.SPEC, MOD_ID + ".toml");
+
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	public static DamageSource minecart(Entity entity) {

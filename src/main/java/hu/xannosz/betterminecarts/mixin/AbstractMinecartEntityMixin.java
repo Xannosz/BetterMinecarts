@@ -1,6 +1,7 @@
 package hu.xannosz.betterminecarts.mixin;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
+import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
 import hu.xannosz.betterminecarts.utils.Linkable;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import hu.xannosz.betterminecarts.utils.TrainUtil;
@@ -117,12 +118,12 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 		}
 	}
 
-	@Inject(method = "canCollideWith", at = @At("HEAD"))
+	@Inject(method = "canCollideWith", at = @At("HEAD"), cancellable = true)
 	public void betterminecarts$damageEntities(Entity other, CallbackInfoReturnable<Boolean> info) {
 		if (other instanceof AbstractMinecart minecart && getLinkedParent() != null && !getLinkedParent().equals(minecart))
 			minecart.setDeltaMovement(getDeltaMovement());
 
-		float damage = BetterMinecarts.getConfig().minecartDamage;
+		float damage = BetterMinecartsConfig.MINECART_DAMAGE.get();
 
 		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && getDeltaMovement().length() > 1.5) {
 			living.hurt(BetterMinecarts.minecart(this), damage);
@@ -218,9 +219,9 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	@Override
 	public AbstractMinecart getLinkedParentForRender() {
 		int id = entityData.get(LINKED_PARENT);
-		if(id==-1){
+		if (id == -1) {
 			return null;
-		}else{
+		} else {
 			return (AbstractMinecart) level.getEntity(id);
 		}
 	}

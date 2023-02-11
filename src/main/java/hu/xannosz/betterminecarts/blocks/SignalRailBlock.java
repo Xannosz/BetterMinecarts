@@ -49,38 +49,40 @@ public class SignalRailBlock extends DetectorRailBlock {
 		}
 	}
 
-	private void checkPressed(Level level, BlockPos blockPos, BlockState blockState) {
-		if (this.canSurvive(blockState, level, blockPos)) {
-			boolean flag = blockState.getValue(POWERED);
-			boolean flag1 = false;
+	private void checkPressed(Level level, BlockPos blockPos, BlockState inputBlockState) {
+		if (this.canSurvive(inputBlockState, level, blockPos)) {
+			boolean isPowered = inputBlockState.getValue(POWERED);
+			boolean locomotiveOnRail = false;
+			boolean minecartOnRail = false;
 			List<AbstractMinecart> list = this.getInteractingMinecartOfType(level,
 					blockPos, AbstractMinecart.class, (entity) -> true);
 			for (AbstractMinecart locomotive : list) {
-				if (locomotive instanceof AbstractLocomotive && ((AbstractLocomotive) locomotive).popSignal()) {
-					flag1 = true;
+				if (locomotive instanceof AbstractLocomotive abstractLocomotive && abstractLocomotive.popSignal()) {
+					locomotiveOnRail = true;
 				}
+				minecartOnRail = true;
 			}
 
-			if (flag1 && !flag) {
-				BlockState blockstate = blockState.setValue(POWERED, Boolean.TRUE);
-				level.setBlock(blockPos, blockstate, 3);
-				this.updatePowerToConnected(level, blockPos, blockstate, true);
+			if (locomotiveOnRail && !isPowered) {
+				BlockState blockState = inputBlockState.setValue(POWERED, Boolean.TRUE);
+				level.setBlock(blockPos, blockState, 3);
+				this.updatePowerToConnected(level, blockPos, blockState, true);
 				level.updateNeighborsAt(blockPos, this);
 				level.updateNeighborsAt(blockPos.below(), this);
-				level.setBlocksDirty(blockPos, blockState, blockstate);
+				level.setBlocksDirty(blockPos, inputBlockState, blockState);
 			}
 
-			if (!flag1 && flag) {
-				BlockState blockState1 = blockState.setValue(POWERED, Boolean.FALSE);
-				level.setBlock(blockPos, blockState1, 3);
-				this.updatePowerToConnected(level, blockPos, blockState1, false);
+			if (!locomotiveOnRail && isPowered && !minecartOnRail) {
+				BlockState blockState = inputBlockState.setValue(POWERED, Boolean.FALSE);
+				level.setBlock(blockPos, blockState, 3);
+				this.updatePowerToConnected(level, blockPos, blockState, false);
 				level.updateNeighborsAt(blockPos, this);
 				level.updateNeighborsAt(blockPos.below(), this);
-				level.setBlocksDirty(blockPos, blockState, blockState1);
+				level.setBlocksDirty(blockPos, inputBlockState, blockState);
 			}
 
-			if (flag1) {
-				level.scheduleTick(blockPos, this, 20);
+			if (locomotiveOnRail || minecartOnRail) {
+				level.scheduleTick(blockPos, this, 28);
 			}
 
 			level.updateNeighbourForOutputSignal(blockPos, this);

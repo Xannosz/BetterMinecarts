@@ -33,9 +33,6 @@
 
   "betterminecarts.steam_whistle": "Steam whistle",
 
-  "text.autoConfig.betterminecarts.option.serverTweaks.minecartDamage": "Damage Dealt by Minecarts",
-  "text.autoConfig.betterminecarts.option.serverTweaks.furnaceMinecartsLoadChunks": "Should Furnace Minecarts be able to load chunks?",
-
   "key.category.betterminecarts": "Better Minecarts",
   "key.betterminecarts.increase": "Increase Speed",
   "key.betterminecarts.decrease": "Decrease Speed",

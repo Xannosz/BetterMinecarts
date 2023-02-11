@@ -1,6 +1,6 @@
 package hu.xannosz.betterminecarts.network;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
+import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
 import hu.xannosz.betterminecarts.utils.KeyId;
 import hu.xannosz.betterminecarts.utils.KeyUser;
 import hu.xannosz.betterminecarts.utils.Linkable;
@@ -40,7 +40,7 @@ public class KeyPressedPacket {
 			Entity entity = Objects.requireNonNull(context.getSender()).getLevel().getEntity(entityId);
 			if (entity instanceof Linkable linkable) {
 				Linkable head;
-				if (BetterMinecarts.getConfig().keyControlFromTheWholeTrain) {
+				if (BetterMinecartsConfig.KEY_CONTROL_FROM_THE_WHOLE_TRAIN.get()) {
 					head = TrainUtil.getHeadOfTrain(linkable);
 				} else if (linkable.getLinkedParent() == null) {
 					head = linkable;

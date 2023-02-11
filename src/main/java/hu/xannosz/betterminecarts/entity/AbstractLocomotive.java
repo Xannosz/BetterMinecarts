@@ -2,6 +2,7 @@ package hu.xannosz.betterminecarts.entity;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.blockentity.GlowingRailBlockEntity;
+import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
 import hu.xannosz.betterminecarts.network.PlaySoundPacket;
 import hu.xannosz.betterminecarts.utils.*;
 import lombok.extern.slf4j.Slf4j;
@@ -291,14 +292,22 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	}
 
 	private void whistle() {
+		if (BetterMinecartsConfig.WHISTLE_USE_STEAM_ON_STEAM_LOCOMOTIVE.get() &&
+				this instanceof SteamLocomotive steamLocomotive) {
+			if (!steamLocomotive.canWhistle()) {
+				return;
+			}
+		}
+
 		level.players().forEach(player ->
 				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
 						new PlaySoundPacket(blockPosition(), this instanceof SteamLocomotive))
 		);
-		if (BetterMinecarts.getConfig().mobsPanicAfterWhistle) {
+
+		if (BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE.get()) {
 			level.getEntities(this,
-					new AABB(this.getOnPos().offset(-BetterMinecarts.getConfig().mobsPanicAfterWhistleRange, -10, -BetterMinecarts.getConfig().mobsPanicAfterWhistleRange),
-							this.getOnPos().offset(BetterMinecarts.getConfig().mobsPanicAfterWhistleRange, 25, BetterMinecarts.getConfig().mobsPanicAfterWhistleRange))).forEach(
+					new AABB(this.getOnPos().offset(-BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), -10, -BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()),
+							this.getOnPos().offset(BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), 25, BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()))).forEach(
 					entity -> {
 						if (entity instanceof Mob cow) {
 							cow.goalSelector.getAvailableGoals().forEach(
@@ -320,7 +329,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		super.tick();
 
 		// load chunk
-		if (BetterMinecarts.getConfig().furnaceMinecartsLoadChunks && level instanceof ServerLevel server) {
+		if (BetterMinecartsConfig.FURNACE_MINECARTS_LOAD_CHUNKS.get() && level instanceof ServerLevel server) {
 			ChunkPos currentChunkPos = SectionPos.of(this).chunk();
 
 			if (!activeButton.equals(ButtonId.STOP) && !activeButton.equals(ButtonId.PAUSE))
@@ -450,7 +459,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		if (other instanceof AbstractMinecart minecart && self.getLinkedParent() != null && !self.getLinkedParent().equals(minecart))
 			minecart.setDeltaMovement(getDeltaMovement());
 
-		float damage = BetterMinecarts.getConfig().minecartDamage;
+		float damage = BetterMinecartsConfig.MINECART_DAMAGE.get();
 
 		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living &&
 				living.isAlive() && !living.isPassenger() && speed > 1) {

@@ -1,6 +1,6 @@
 package hu.xannosz.betterminecarts.mixin;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
+import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
 import hu.xannosz.betterminecarts.utils.Linkable;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import net.minecraft.core.BlockPos;
@@ -88,7 +88,7 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void betterminecarts$loadChunks(CallbackInfo info) {
-		if (BetterMinecarts.getConfig().furnaceMinecartsLoadChunks && level instanceof ServerLevel server) {
+		if (BetterMinecartsConfig.FURNACE_MINECARTS_LOAD_CHUNKS.get() && level instanceof ServerLevel server) {
 			ChunkPos currentChunkPos = SectionPos.of(this).chunk();
 
 			if (fuel > 0)

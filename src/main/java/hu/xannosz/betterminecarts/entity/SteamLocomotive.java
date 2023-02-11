@@ -115,6 +115,14 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 		return steam > MINIMUM_STEAM;
 	}
 
+	public boolean canWhistle() {
+		if (steam > MINIMUM_STEAM) {
+			steam -= 1;
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	protected List<Component> getEngineData() {
 		return Arrays.asList(
