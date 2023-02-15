@@ -8,10 +8,12 @@ import hu.xannosz.betterminecarts.blocks.SignalRailBlock;
 import hu.xannosz.betterminecarts.client.models.ElectricLocomotiveModel;
 import hu.xannosz.betterminecarts.client.models.SteamLocomotiveModel;
 import hu.xannosz.betterminecarts.client.renderer.LocomotiveRenderer;
+import hu.xannosz.betterminecarts.entity.CraftingMinecart;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
 import hu.xannosz.betterminecarts.entity.SteamLocomotive;
 import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
 import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
+import hu.xannosz.betterminecarts.item.CraftingMinecartItem;
 import hu.xannosz.betterminecarts.item.Crowbar;
 import hu.xannosz.betterminecarts.network.ButtonClickedPacket;
 import hu.xannosz.betterminecarts.network.KeyPressedPacket;
@@ -22,6 +24,8 @@ import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -98,11 +102,15 @@ public class BetterMinecarts {
 	@SuppressWarnings("unused")
 	public static final RegistryObject<Item> CROWBAR = ITEMS.register("crowbar",
 			() -> new Crowbar(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1)));
+	@SuppressWarnings("unused")
+	public static final RegistryObject<Item> CRAFTING_MINECART_ITEM = ITEMS.register("crafting_minecart_item", CraftingMinecartItem::new);
 
 	public static final RegistryObject<EntityType<ElectricLocomotive>> ELECTRIC_LOCOMOTIVE = ENTITIES.register("electric_locomotive",
 			() -> EntityType.Builder.<ElectricLocomotive>of(ElectricLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":electric_locomotive"));
 	public static final RegistryObject<EntityType<SteamLocomotive>> STEAM_LOCOMOTIVE = ENTITIES.register("steam_locomotive",
 			() -> EntityType.Builder.<SteamLocomotive>of(SteamLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":steam_locomotive"));
+	public static final RegistryObject<EntityType<CraftingMinecart>> CRAFTING_MINECART = ENTITIES.register("crafting_minecart_item.json",
+			() -> EntityType.Builder.<CraftingMinecart>of(CraftingMinecart::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":crafting_minecart_item.json"));
 
 	public static final RegistryObject<MenuType<ElectricLocomotiveMenu>> ELECTRIC_LOCOMOTIVE_MENU =
 			registerMenuType(ElectricLocomotiveMenu::new, "electric_locomotive_menu");
@@ -184,6 +192,7 @@ public class BetterMinecarts {
 			event.registerEntityRenderer(STEAM_LOCOMOTIVE.get(), context ->
 					new LocomotiveRenderer(context,
 							new SteamLocomotiveModel(context.bakeLayer(SteamLocomotiveModel.LAYER_LOCATION))));
+			event.registerEntityRenderer(CRAFTING_MINECART.get(), context -> new MinecartRenderer<>(context, ModelLayers.FURNACE_MINECART));
 		}
 
 		@SubscribeEvent

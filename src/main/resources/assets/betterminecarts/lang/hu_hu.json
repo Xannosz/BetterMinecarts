@@ -8,6 +8,9 @@
   "item.betterminecarts.crowbar": "Feszítővas",
   "item.betterminecarts.steam_locomotive": "Gőzmozdony",
   "item.betterminecarts.electric_locomotive": "Villanymozdony",
+  "item.betterminecarts.crafting_minecart_item": "Csille Barkácsasztallal",
+
+  "entity.betterminecarts.crafting_minecart_item.json": "Csille Barkácsasztallal",
 
   "text.crowbar.firstCartIdTag":"Első entitás Id: %s",
   "text.crowbar.deleteFirstCartId": "Első entitás Id törölve",

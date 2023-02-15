@@ -8,6 +8,9 @@
   "item.betterminecarts.crowbar": "Crowbar",
   "item.betterminecarts.steam_locomotive": "Steam locomotive",
   "item.betterminecarts.electric_locomotive": "Electric locomotive",
+  "item.betterminecarts.crafting_minecart_item": "Crafting Minecart",
+
+  "entity.betterminecarts.crafting_minecart_item.json": "Crafting Minecart",
 
   "text.crowbar.firstCartIdTag": "First selected entity Id: %s",
   "text.crowbar.deleteFirstCartId": "Delete first selected entity Id",

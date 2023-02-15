@@ -6,5 +6,4 @@
 - fly over the bridge (configurable)
 - drift (configurable)
 
-- crafting minecart - add recipe
 - furnace minecart - override furnace cart
