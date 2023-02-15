@@ -12,6 +12,7 @@ public class BetterMinecartsConfig {
 	public static final ForgeConfigSpec.ConfigValue<Integer> MOBS_PANIC_AFTER_WHISTLE_RANGE;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> KEY_CONTROL_FROM_THE_WHOLE_TRAIN;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> WHISTLE_USE_STEAM_ON_STEAM_LOCOMOTIVE;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> LOCOMOTIVE_EXPLODE_AFTER_FALL_DAMAGE;
 
 	static {
 		BUILDER.push("Configs for Flying Ships Mod");
@@ -28,6 +29,8 @@ public class BetterMinecartsConfig {
 				.define("keyControlFromTheWholeTrain", true);
 		WHISTLE_USE_STEAM_ON_STEAM_LOCOMOTIVE = BUILDER.comment("Should steam whistle use steam?")
 				.define("whistleUseSteamOnSteamLocomotive", true);
+		LOCOMOTIVE_EXPLODE_AFTER_FALL_DAMAGE = BUILDER.comment("Should Locomotives explode after fall damage?")
+				.define("locomotiveExplodeAfterFallDamage", true);
 
 		BUILDER.pop();
 		SPEC = BUILDER.build();

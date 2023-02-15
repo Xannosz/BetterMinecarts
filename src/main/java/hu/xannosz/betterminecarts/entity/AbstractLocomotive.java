@@ -21,6 +21,7 @@ import net.minecraft.server.level.TicketType;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,6 +34,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -340,6 +342,13 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 			prevChunkPos = currentChunkPos;
 		}
 
+		// check redstone under locomotive
+		if (activeButton != ButtonId.STOP &&
+				(level.getBlockState(getOnPos()).getBlock().equals(Blocks.RAIL) || level.getBlockState(getOnPos()).getBlock().equals(BetterMinecarts.GLOWING_RAIL.get())) &&
+				level.getBlockState(getOnPos().below()).getBlock().equals(Blocks.REDSTONE_BLOCK)) {
+			whistle();
+		}
+
 		// set lamp
 		if (lampOn && !level.isClientSide()) {
 			Set<BlockPos> positions = new HashSet<>();
@@ -388,6 +397,25 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	@Override
 	public @NotNull Type getMinecartType() {
 		return Type.FURNACE;
+	}
+
+	@Override
+	public boolean causeFallDamage(float height, float p_146829_, @NotNull DamageSource damageSource) {
+		if(height>=3 && height < 6){
+			explode(2);
+			return true;
+		}else if(height>=6){
+			explode(6);
+			return true;
+		}
+		return false;
+	}
+
+	protected void explode(float power) { //power: 3 normal creeper, 6 powered creeper
+		if (!this.level.isClientSide && BetterMinecartsConfig.LOCOMOTIVE_EXPLODE_AFTER_FALL_DAMAGE.get()) {
+			this.level.explode(this, this.getX(), this.getY(), this.getZ(), power, Explosion.BlockInteraction.DESTROY);
+			this.discard();
+		}
 	}
 
 	@Override

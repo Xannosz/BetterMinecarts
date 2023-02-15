@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  P",
+    " II",
+    "ISI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "betterminecarts:dead_end"
+  }
+}
