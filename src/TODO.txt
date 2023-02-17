@@ -3,7 +3,6 @@
 
 - sound hearable everywhere
 
-- fly over the bridge (configurable)
-- drift (configurable)
+- add crafting table to basic minecart
 
 - furnace minecart - override furnace cart

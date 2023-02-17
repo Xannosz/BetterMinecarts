@@ -119,7 +119,7 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 
 		//copy of mixin
 		if (locomotive instanceof Linkable linkable) {
-			AbstractMinecart parent = linkable.getLinkedParent();
+			AbstractMinecart parent = linkable.getLinkedParentForRender();
 			if (parent != null) {
 				double startX = parent.getX();
 				double startY = parent.getY();

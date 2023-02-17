@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
@@ -51,6 +52,9 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	@Shadow
 	public abstract double getMaxSpeed();
 
+	@Shadow
+	public abstract float getMaxSpeedAirVertical();
+
 	public AbstractMinecartEntityMixin(EntityType<?> type, Level world) {
 		super(type, world);
 	}
@@ -68,6 +72,24 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 			}
 		} else
 			info.setReturnValue(0.5);
+	}
+
+	@Inject(method = "comeOffTrack", at = @At("HEAD"), cancellable = true)
+	public void comeOffTrackHack(CallbackInfo info) {
+		if (this.onGround) {
+			this.setDeltaMovement(this.getDeltaMovement().scale(0.96D));
+		}
+
+		if (getMaxSpeedAirVertical() > 0 && getDeltaMovement().y > getMaxSpeedAirVertical()) {
+			if (Math.abs(getDeltaMovement().x) < 0.3f && Math.abs(getDeltaMovement().z) < 0.3f)
+				setDeltaMovement(new Vec3(getDeltaMovement().x, 0.15f, getDeltaMovement().z));
+			else
+				setDeltaMovement(new Vec3(getDeltaMovement().x, getMaxSpeedAirVertical(), getDeltaMovement().z));
+		}
+
+		this.move(MoverType.SELF, this.getDeltaMovement());
+
+		info.cancel();
 	}
 
 	@SuppressWarnings("ConstantConditions")

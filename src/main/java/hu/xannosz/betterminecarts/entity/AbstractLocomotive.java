@@ -401,11 +401,11 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	@Override
 	public boolean causeFallDamage(float height, float p_146829_, @NotNull DamageSource damageSource) {
-		if(height>=3 && height < 6){
+		if (height > 2 && height < 6) {
 			explode(2);
 			return true;
-		}else if(height>=6){
-			explode(6);
+		} else if (height >= 6) {
+			explode(8);
 			return true;
 		}
 		return false;
@@ -484,8 +484,11 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	@Override
 	public boolean canCollideWith(@NotNull Entity other) {
 		Linkable self = (Linkable) this;
-		if (other instanceof AbstractMinecart minecart && self.getLinkedParent() != null && !self.getLinkedParent().equals(minecart))
+		if (other instanceof AbstractMinecart minecart &&
+				((self.getLinkedParent() != null && !self.getLinkedParent().equals(minecart)) ||
+						self.getLinkedParent() == null)) {
 			minecart.setDeltaMovement(getDeltaMovement());
+		}
 
 		float damage = BetterMinecartsConfig.MINECART_DAMAGE.get();
 
