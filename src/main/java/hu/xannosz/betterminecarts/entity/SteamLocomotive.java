@@ -10,16 +10,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+import static hu.xannosz.betterminecarts.utils.MinecartHelper.IS_BURN;
 import static net.minecraft.world.item.crafting.RecipeType.SMELTING;
 import static net.minecraftforge.common.ForgeHooks.getBurnTime;
 
@@ -53,8 +50,6 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 	public static final int MAX_HEAT = 520;
 	public static final int MINIMUM_HEAT = 32;
 	public static final int MINIMUM_STEAM = 10;
-
-	private static final EntityDataAccessor<Boolean> IS_BURN = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.BOOLEAN);
 
 	private int steam = 0;
 	private int water = 0;

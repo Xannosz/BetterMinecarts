@@ -1,8 +1,10 @@
 - pre-release actions
 - remove slf
-
-- sound hearable everywhere
-
-- add crafting table to basic minecart
+- refactor to official structure
+- update icon
+- license for files
+- wiki
+- description
+- mod page
 
 - furnace minecart - override furnace cart

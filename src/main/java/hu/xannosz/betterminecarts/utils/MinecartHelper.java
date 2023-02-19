@@ -25,6 +25,10 @@ import java.util.Map;
 public class MinecartHelper {
 
 	public static final EntityDataAccessor<Integer> LINKED_PARENT = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<String> TOP_FILTER = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.STRING);
+	public static final EntityDataAccessor<String> BOTTOM_FILTER = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.STRING);
+	public static final EntityDataAccessor<Boolean> IS_LAMP_ON = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_BURN = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.BOOLEAN);
 
 	private static final Map<RailShape, Pair<Vec3i, Vec3i>> EXITS = Util.make(Maps.newEnumMap(RailShape.class), (p_38135_) -> {
 		Vec3i vec3i = Direction.WEST.getNormal();
@@ -47,6 +51,7 @@ public class MinecartHelper {
 		p_38135_.put(RailShape.NORTH_EAST, Pair.of(vec3i2, vec3i1));
 	});
 
+	@SuppressWarnings("deprecation")
 	public static boolean shouldSlowDown(AbstractMinecart minecart, Level world) {
 		boolean slowEm = false;
 

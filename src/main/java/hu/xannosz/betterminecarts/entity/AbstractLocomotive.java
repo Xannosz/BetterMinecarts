@@ -12,9 +12,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.TicketType;
@@ -48,6 +45,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static hu.xannosz.betterminecarts.utils.MinecartHelper.*;
 import static net.minecraft.world.level.block.BaseRailBlock.WATERLOGGED;
 import static net.minecraft.world.level.block.RailBlock.SHAPE;
 
@@ -58,10 +56,6 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	public static final int ID_KEY_2 = 1;
 	public static final int ACTIVE_BUTTON_KEY = 2;
 	public static final int ACTIVE_FUNCTION_KEY = 3;
-
-	private static final EntityDataAccessor<String> TOP_FILTER = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.STRING);
-	private static final EntityDataAccessor<String> BOTTOM_FILTER = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.STRING);
-	private static final EntityDataAccessor<Boolean> IS_LAMP_ON = SynchedEntityData.defineId(AbstractMinecart.class, EntityDataSerializers.BOOLEAN);
 
 	protected ButtonId activeButton = ButtonId.STOP;
 	protected double xPush = 0;
@@ -301,9 +295,12 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 			}
 		}
 
-		level.players().forEach(player ->
-				BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-						new PlaySoundPacket(blockPosition(), this instanceof SteamLocomotive))
+		level.players().forEach(player -> {
+					if (player.distanceToSqr(this) < 7000) {
+						BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+								new PlaySoundPacket(blockPosition(), this instanceof SteamLocomotive));
+					}
+				}
 		);
 
 		if (BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE.get()) {
