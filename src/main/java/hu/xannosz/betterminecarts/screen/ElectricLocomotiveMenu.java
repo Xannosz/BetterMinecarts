@@ -1,8 +1,7 @@
 package hu.xannosz.betterminecarts.screen;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
-import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
+import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -17,6 +16,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import static hu.xannosz.betterminecarts.entity.ElectricLocomotive.*;
+import static hu.xannosz.betterminecarts.screen.ModMenus.ELECTRIC_LOCOMOTIVE_MENU;
 
 public class ElectricLocomotiveMenu extends AbstractContainerMenu {
 
@@ -31,7 +31,7 @@ public class ElectricLocomotiveMenu extends AbstractContainerMenu {
 	}
 
 	public ElectricLocomotiveMenu(int containerId, Inventory inv, Entity entity, ContainerData data) {
-		super(BetterMinecarts.ELECTRIC_LOCOMOTIVE_MENU.get(), containerId);
+		super(ELECTRIC_LOCOMOTIVE_MENU.get(), containerId);
 
 		checkContainerSize(inv, 0);
 		this.entity = ((ElectricLocomotive) entity);
@@ -71,11 +71,11 @@ public class ElectricLocomotiveMenu extends AbstractContainerMenu {
 		return ButtonId.getButtonFromId(data.get(ACTIVE_BUTTON_KEY));
 	}
 
-	public boolean isSignalActive(){
-		return MinecartHelper.convertIntToBitArray(data.get(ACTIVE_FUNCTION_KEY),2)[0];
+	public boolean isSignalActive() {
+		return MinecartHelper.convertIntToBitArray(data.get(ACTIVE_FUNCTION_KEY), 2)[0];
 	}
 
-	public boolean isLampOn(){
-		return MinecartHelper.convertIntToBitArray(data.get(ACTIVE_FUNCTION_KEY),2)[1];
+	public boolean isLampOn() {
+		return MinecartHelper.convertIntToBitArray(data.get(ACTIVE_FUNCTION_KEY), 2)[1];
 	}
 }

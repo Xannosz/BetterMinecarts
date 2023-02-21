@@ -1,7 +1,6 @@
 package hu.xannosz.betterminecarts.utils;
 
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -18,7 +17,6 @@ import java.util.Set;
 import static hu.xannosz.betterminecarts.item.Crowbar.FIRST_CART_ID_TAG;
 import static hu.xannosz.betterminecarts.item.Crowbar.MODE_TAG;
 
-@Slf4j
 @UtilityClass
 public class TrainUtil {
 

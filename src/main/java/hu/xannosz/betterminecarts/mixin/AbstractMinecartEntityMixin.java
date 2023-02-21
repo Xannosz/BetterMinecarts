@@ -31,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
+import static hu.xannosz.betterminecarts.item.ModItems.CROWBAR;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.LINKED_PARENT;
 
 @Mixin(AbstractMinecart.class)
@@ -183,7 +184,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 
-		if (stack.is(BetterMinecarts.CROWBAR.get())) {
+		if (stack.is(CROWBAR.get())) {
 			if (level instanceof ServerLevel server) {
 				TrainUtil.clickedByCrowbar(stack, this, server);
 				updateChains();

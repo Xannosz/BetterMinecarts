@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import static hu.xannosz.betterminecarts.blockentity.ModBlockEntities.GLOWING_RAIL_BLOCK_ENTITY;
 import static net.minecraft.world.level.block.BaseRailBlock.WATERLOGGED;
 import static net.minecraft.world.level.block.RailBlock.SHAPE;
 
@@ -17,7 +18,7 @@ public class GlowingRailBlockEntity extends BlockEntity {
 	private int count = 0;
 
 	public GlowingRailBlockEntity(BlockPos blockPos, BlockState blockState) {
-		super(BetterMinecarts.GLOWING_RAIL_BLOCK_ENTITY.get(), blockPos, blockState);
+		super(GLOWING_RAIL_BLOCK_ENTITY.get(), blockPos, blockState);
 	}
 
 	@SuppressWarnings("unused")

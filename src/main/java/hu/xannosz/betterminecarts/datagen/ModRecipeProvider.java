@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
+import static hu.xannosz.betterminecarts.item.ModItems.LOCOMOTIVE_ITEMS;
+
 public class ModRecipeProvider extends RecipeProvider implements IConditionBuilder {
 	public ModRecipeProvider(DataGenerator dataGenerator) {
 		super(dataGenerator);
@@ -48,8 +50,8 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 		}
 		final String sourceId = BetterMinecarts.generateNameFromData(sourceTop, sourceBottom, isSteam);
 		final String targetId = BetterMinecarts.generateNameFromData(targetTop, targetBottom, isSteam);
-		final AbstractLocomotiveItem source = BetterMinecarts.LOCOMOTIVE_ITEMS.get(sourceId).get();
-		final AbstractLocomotiveItem target = BetterMinecarts.LOCOMOTIVE_ITEMS.get(targetId).get();
+		final AbstractLocomotiveItem source = LOCOMOTIVE_ITEMS.get(sourceId).get();
+		final AbstractLocomotiveItem target = LOCOMOTIVE_ITEMS.get(targetId).get();
 		ShapedRecipeBuilder.shaped(target)
 				.define('T', targetTop.getDye())
 				.define('L', source)
@@ -70,8 +72,8 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 		}
 		final String sourceId = BetterMinecarts.generateNameFromData(sourceTop, sourceBottom, isSteam);
 		final String targetId = BetterMinecarts.generateNameFromData(targetTop, sourceBottom, isSteam);
-		final AbstractLocomotiveItem source = BetterMinecarts.LOCOMOTIVE_ITEMS.get(sourceId).get();
-		final AbstractLocomotiveItem target = BetterMinecarts.LOCOMOTIVE_ITEMS.get(targetId).get();
+		final AbstractLocomotiveItem source = LOCOMOTIVE_ITEMS.get(sourceId).get();
+		final AbstractLocomotiveItem target = LOCOMOTIVE_ITEMS.get(targetId).get();
 		ShapedRecipeBuilder.shaped(target)
 				.define('T', targetTop.getDye())
 				.define('L', source)
@@ -90,8 +92,8 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 		}
 		final String sourceId = BetterMinecarts.generateNameFromData(sourceTop, sourceBottom, isSteam);
 		final String targetId = BetterMinecarts.generateNameFromData(sourceTop, targetBottom, isSteam);
-		final AbstractLocomotiveItem source = BetterMinecarts.LOCOMOTIVE_ITEMS.get(sourceId).get();
-		final AbstractLocomotiveItem target = BetterMinecarts.LOCOMOTIVE_ITEMS.get(targetId).get();
+		final AbstractLocomotiveItem source = LOCOMOTIVE_ITEMS.get(sourceId).get();
+		final AbstractLocomotiveItem target = LOCOMOTIVE_ITEMS.get(targetId).get();
 		ShapedRecipeBuilder.shaped(target)
 				.define('L', source)
 				.define('B', targetBottom.getDye())
@@ -110,8 +112,8 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 		}
 		final String sourceId = BetterMinecarts.generateNameFromData(sourceTop, sourceBottom, isSteam);
 		final String targetId = BetterMinecarts.generateNameFromData(targetTop, targetBottom, isSteam);
-		final AbstractLocomotiveItem source = BetterMinecarts.LOCOMOTIVE_ITEMS.get(sourceId).get();
-		final AbstractLocomotiveItem target = BetterMinecarts.LOCOMOTIVE_ITEMS.get(targetId).get();
+		final AbstractLocomotiveItem source = LOCOMOTIVE_ITEMS.get(sourceId).get();
+		final AbstractLocomotiveItem target = LOCOMOTIVE_ITEMS.get(targetId).get();
 		ShapelessRecipeBuilder.shapeless(source).requires(target)
 				.unlockedBy("never", inventoryTrigger(getItemPredicate()))
 				.save(finishedRecipeConsumer, new ResourceLocation(BetterMinecarts.MOD_ID,

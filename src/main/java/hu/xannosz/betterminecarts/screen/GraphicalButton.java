@@ -1,8 +1,8 @@
 package hu.xannosz.betterminecarts.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.network.ButtonClickedPacket;
+import hu.xannosz.betterminecarts.network.ModMessages;
 import lombok.Setter;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -41,16 +41,11 @@ public class GraphicalButton extends AbstractButton {
 
 	@Override
 	public void onPress() {
-		BetterMinecarts.INSTANCE.sendToServer(new ButtonClickedPacket(config.getButtonId(), entityId));
+		ModMessages.INSTANCE.sendToServer(new ButtonClickedPacket(config.getButtonId(), entityId));
 	}
 
 	@Override
 	public void updateNarration(@NotNull NarrationElementOutput narrationElementOutput) {
 
-	}
-
-	public void setVisibility(boolean visible) {
-		this.visible = visible;
-		active = visible;
 	}
 }

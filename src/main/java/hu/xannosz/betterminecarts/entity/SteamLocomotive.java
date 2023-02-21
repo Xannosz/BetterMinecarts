@@ -5,7 +5,6 @@ import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -31,11 +30,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+import static hu.xannosz.betterminecarts.entity.ModEntities.STEAM_LOCOMOTIVE;
+import static hu.xannosz.betterminecarts.item.ModItems.LOCOMOTIVE_ITEMS;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.IS_BURN;
 import static net.minecraft.world.item.crafting.RecipeType.SMELTING;
 import static net.minecraftforge.common.ForgeHooks.getBurnTime;
 
-@Slf4j
 public class SteamLocomotive extends AbstractLocomotive implements Container {
 
 	public static final int STEAM_KEY = 4;
@@ -84,7 +84,7 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 	}
 
 	public SteamLocomotive(Level level, double x, double y, double z, MinecartColor top, MinecartColor bottom) {
-		super(BetterMinecarts.STEAM_LOCOMOTIVE.get(), x, y, z, level, top, bottom, DATA_SIZE);
+		super(STEAM_LOCOMOTIVE.get(), x, y, z, level, top, bottom, DATA_SIZE);
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 		}
 		Containers.dropContents(level, blockPosition(), inventory);
 
-		return BetterMinecarts.LOCOMOTIVE_ITEMS.get(
+		return LOCOMOTIVE_ITEMS.get(
 				BetterMinecarts.generateNameFromData(getTopFilter(), getBottomFilter(), true)).get();
 	}
 

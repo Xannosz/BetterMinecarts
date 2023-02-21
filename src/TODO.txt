@@ -1,10 +1,9 @@
 - pre-release actions
-- remove slf
-- refactor to official structure
-- update icon
+
 - license for files
 - wiki
-- description
+- description and readme
 - mod page
 
 - furnace minecart - override furnace cart
+- middle button on minecarts

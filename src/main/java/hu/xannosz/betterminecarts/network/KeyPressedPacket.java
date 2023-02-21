@@ -5,7 +5,6 @@ import hu.xannosz.betterminecarts.utils.KeyId;
 import hu.xannosz.betterminecarts.utils.KeyUser;
 import hu.xannosz.betterminecarts.utils.Linkable;
 import hu.xannosz.betterminecarts.utils.TrainUtil;
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
@@ -13,7 +12,6 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-@Slf4j
 public class KeyPressedPacket {
 	private final KeyId keyId;
 	private final int entityId;

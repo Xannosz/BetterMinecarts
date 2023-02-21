@@ -7,6 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
+import static hu.xannosz.betterminecarts.item.ModItems.LOCOMOTIVE_ITEMS;
+
 public class ModItemModelProvider extends ItemModelProvider {
 	public ModItemModelProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
 		super(generator, BetterMinecarts.MOD_ID, existingFileHelper);
@@ -14,7 +16,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		BetterMinecarts.LOCOMOTIVE_ITEMS.forEach((name, register) -> locomotiveItem(name, register.get()));
+		LOCOMOTIVE_ITEMS.forEach((name, register) -> locomotiveItem(name, register.get()));
 	}
 
 	private void locomotiveItem(String name, AbstractLocomotiveItem item) {

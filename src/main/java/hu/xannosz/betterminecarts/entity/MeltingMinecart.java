@@ -1,6 +1,5 @@
 package hu.xannosz.betterminecarts.entity;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import lombok.Getter;
@@ -24,6 +23,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
+import static hu.xannosz.betterminecarts.entity.ModEntities.CRAFTING_MINECART;
+import static hu.xannosz.betterminecarts.item.ModItems.CROWBAR;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.IS_BURN;
 import static net.minecraft.world.item.crafting.RecipeType.SMELTING;
 import static net.minecraftforge.common.ForgeHooks.getBurnTime;
@@ -66,7 +67,7 @@ public class MeltingMinecart extends AbstractMinecart implements MenuProvider, C
 	}
 
 	public MeltingMinecart(double x, double y, double z, Level level) {
-		super(BetterMinecarts.CRAFTING_MINECART.get(), level, x, y, z);//TODO
+		super(CRAFTING_MINECART.get(), level, x, y, z);//TODO
 	}
 
 	@Override
@@ -95,7 +96,7 @@ public class MeltingMinecart extends AbstractMinecart implements MenuProvider, C
 	public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 
-		if (stack.is(BetterMinecarts.CROWBAR.get())) {
+		if (stack.is(CROWBAR.get())) {
 			return super.interact(player, hand);
 		}
 		if (player.isShiftKeyDown()) {
@@ -107,12 +108,14 @@ public class MeltingMinecart extends AbstractMinecart implements MenuProvider, C
 
 	@Override
 	public void tick() {
+		super.tick();
 		if (level.isClientSide()) {
 			return;
 		}
 
 		burn--;
 		burn = Math.max(burn, 0);
+
 
 		updateData();
 	}

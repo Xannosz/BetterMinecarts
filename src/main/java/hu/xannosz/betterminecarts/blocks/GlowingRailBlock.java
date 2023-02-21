@@ -1,6 +1,5 @@
 package hu.xannosz.betterminecarts.blocks;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.blockentity.GlowingRailBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -14,6 +13,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static hu.xannosz.betterminecarts.blockentity.ModBlockEntities.GLOWING_RAIL_BLOCK_ENTITY;
 
 public class GlowingRailBlock extends RailBlock implements EntityBlock {
 	public GlowingRailBlock() {
@@ -30,7 +31,7 @@ public class GlowingRailBlock extends RailBlock implements EntityBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
 			@NotNull Level level, @NotNull BlockState blockState, @NotNull BlockEntityType<T> blockEntityType) {
-		return blockEntityType == BetterMinecarts.GLOWING_RAIL_BLOCK_ENTITY.get() ?
+		return blockEntityType == GLOWING_RAIL_BLOCK_ENTITY.get() ?
 				(level2, pos, state, blockEntity) ->
 						GlowingRailBlockEntity.tick(level2, pos, state,
 								(GlowingRailBlockEntity) blockEntity) : null;

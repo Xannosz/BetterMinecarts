@@ -1,6 +1,5 @@
 package hu.xannosz.betterminecarts.entity;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.screen.CraftingMinecartMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -19,18 +18,22 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import static hu.xannosz.betterminecarts.entity.ModEntities.CRAFTING_MINECART;
+import static hu.xannosz.betterminecarts.item.ModItems.CRAFTING_MINECART_ITEM;
+import static hu.xannosz.betterminecarts.item.ModItems.CROWBAR;
+
 public class CraftingMinecart extends AbstractMinecart implements MenuProvider {
 	public CraftingMinecart(EntityType<?> entityType, Level level) {
 		super(entityType, level);
 	}
 
 	public CraftingMinecart(double x, double y, double z, Level level) {
-		super(BetterMinecarts.CRAFTING_MINECART.get(), level, x, y, z);
+		super(CRAFTING_MINECART.get(), level, x, y, z);
 	}
 
 	@Override
 	protected @NotNull Item getDropItem() {
-		return BetterMinecarts.CRAFTING_MINECART_ITEM.get();
+		return CRAFTING_MINECART_ITEM.get();
 	}
 
 	@Override
@@ -42,7 +45,7 @@ public class CraftingMinecart extends AbstractMinecart implements MenuProvider {
 	public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 
-		if (stack.is(BetterMinecarts.CROWBAR.get())) {
+		if (stack.is(CROWBAR.get())) {
 			return super.interact(player, hand);
 		}
 		if (player.isShiftKeyDown()) {

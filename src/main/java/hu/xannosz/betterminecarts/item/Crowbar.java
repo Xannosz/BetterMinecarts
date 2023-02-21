@@ -1,7 +1,6 @@
 package hu.xannosz.betterminecarts.item;
 
 import hu.xannosz.betterminecarts.utils.CrowbarMode;
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -16,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-@Slf4j
 public class Crowbar extends Item {
 
 	public static final String MODE_TAG = "mode";

@@ -4,7 +4,6 @@ import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +21,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@Slf4j
+import static hu.xannosz.betterminecarts.entity.ModEntities.ELECTRIC_LOCOMOTIVE;
+import static hu.xannosz.betterminecarts.item.ModItems.LOCOMOTIVE_ITEMS;
+
 public class ElectricLocomotive extends AbstractLocomotive {
 
 	public static final int POWER_KEY = 4;
@@ -37,12 +38,12 @@ public class ElectricLocomotive extends AbstractLocomotive {
 	}
 
 	public ElectricLocomotive(Level level, double x, double y, double z, MinecartColor top, MinecartColor bottom) {
-		super(BetterMinecarts.ELECTRIC_LOCOMOTIVE.get(), x, y, z, level, top, bottom, DATA_SIZE);
+		super(ELECTRIC_LOCOMOTIVE.get(), x, y, z, level, top, bottom, DATA_SIZE);
 	}
 
 	@Override
 	protected @NotNull Item getDropItem() {
-		return BetterMinecarts.LOCOMOTIVE_ITEMS.get(
+		return LOCOMOTIVE_ITEMS.get(
 				BetterMinecarts.generateNameFromData(getTopFilter(), getBottomFilter(), false)).get();
 	}
 

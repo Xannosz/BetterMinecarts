@@ -3,9 +3,9 @@ package hu.xannosz.betterminecarts.entity;
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.blockentity.GlowingRailBlockEntity;
 import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
+import hu.xannosz.betterminecarts.network.ModMessages;
 import hu.xannosz.betterminecarts.network.PlaySoundPacket;
 import hu.xannosz.betterminecarts.utils.*;
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,11 +45,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static hu.xannosz.betterminecarts.blocks.ModBlocks.GLOWING_RAIL;
+import static hu.xannosz.betterminecarts.item.ModItems.CROWBAR;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.*;
 import static net.minecraft.world.level.block.BaseRailBlock.WATERLOGGED;
 import static net.minecraft.world.level.block.RailBlock.SHAPE;
 
-@Slf4j
 public abstract class AbstractLocomotive extends AbstractMinecart implements ButtonUser, MenuProvider, KeyUser {
 
 	public static final int ID_KEY_1 = 0;
@@ -297,7 +298,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 		level.players().forEach(player -> {
 					if (player.distanceToSqr(this) < 7000) {
-						BetterMinecarts.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+						ModMessages.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
 								new PlaySoundPacket(blockPosition(), this instanceof SteamLocomotive));
 					}
 				}
@@ -327,26 +328,12 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	public void tick() {
 		super.tick();
 
-		// load chunk
-		if (BetterMinecartsConfig.FURNACE_MINECARTS_LOAD_CHUNKS.get() && level instanceof ServerLevel server) {
-			ChunkPos currentChunkPos = SectionPos.of(this).chunk();
+		loadChunk();
+		checkRedstoneUnderLocomotive();
+		setLamp();
+	}
 
-			if (!activeButton.equals(ButtonId.STOP) && !activeButton.equals(ButtonId.PAUSE))
-				server.getChunkSource().addRegionTicket(TicketType.PLAYER, currentChunkPos, 3, chunkPosition());
-			if (!currentChunkPos.equals(prevChunkPos) || activeButton.equals(ButtonId.STOP) || activeButton.equals(ButtonId.PAUSE))
-				server.getChunkSource().removeRegionTicket(TicketType.PLAYER, prevChunkPos, 3, chunkPosition());
-
-			prevChunkPos = currentChunkPos;
-		}
-
-		// check redstone under locomotive
-		if (activeButton != ButtonId.STOP &&
-				(level.getBlockState(getOnPos()).getBlock().equals(Blocks.RAIL) || level.getBlockState(getOnPos()).getBlock().equals(BetterMinecarts.GLOWING_RAIL.get())) &&
-				level.getBlockState(getOnPos().below()).getBlock().equals(Blocks.REDSTONE_BLOCK)) {
-			whistle();
-		}
-
-		// set lamp
+	private void setLamp() {
 		if (lampOn && !level.isClientSide()) {
 			Set<BlockPos> positions = new HashSet<>();
 			positions.add(getOnPos());
@@ -360,19 +347,44 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 			positions.add(getOnPos().offset(0, 0, 1));
 
 			for (BlockPos position : positions) {
-				BlockState state = level.getBlockState(position);
-				if (state.getBlock().equals(BetterMinecarts.GLOWING_RAIL.get())) {
-					if (level.getBlockEntity(position) instanceof GlowingRailBlockEntity glowingRailBlockEntity) {
-						glowingRailBlockEntity.setCount(0);
-					}
-				}
-				if (state.getBlock().equals(Blocks.RAIL)) {
-					level.setBlock(position, BetterMinecarts.GLOWING_RAIL.get().defaultBlockState()
-									.setValue(SHAPE, state.getValue(SHAPE))
-									.setValue(WATERLOGGED, state.getValue(WATERLOGGED)),
-							2, 0);
-				}
+				setLampOnPosition(position);
 			}
+		}
+	}
+
+	private void setLampOnPosition(BlockPos position) {
+		BlockState state = level.getBlockState(position);
+		if (state.getBlock().equals(GLOWING_RAIL.get())) {
+			if (level.getBlockEntity(position) instanceof GlowingRailBlockEntity glowingRailBlockEntity) {
+				glowingRailBlockEntity.setCount(0);
+			}
+		}
+		if (state.getBlock().equals(Blocks.RAIL)) {
+			level.setBlock(position, GLOWING_RAIL.get().defaultBlockState()
+							.setValue(SHAPE, state.getValue(SHAPE))
+							.setValue(WATERLOGGED, state.getValue(WATERLOGGED)),
+					2, 0);
+		}
+	}
+
+	private void checkRedstoneUnderLocomotive() {
+		if (activeButton != ButtonId.STOP &&
+				(level.getBlockState(getOnPos()).getBlock().equals(Blocks.RAIL) || level.getBlockState(getOnPos()).getBlock().equals(GLOWING_RAIL.get())) &&
+				level.getBlockState(getOnPos().below()).getBlock().equals(Blocks.REDSTONE_BLOCK)) {
+			whistle();
+		}
+	}
+
+	private void loadChunk() {
+		if (BetterMinecartsConfig.FURNACE_MINECARTS_LOAD_CHUNKS.get() && level instanceof ServerLevel server) {
+			ChunkPos currentChunkPos = SectionPos.of(this).chunk();
+
+			if (!activeButton.equals(ButtonId.STOP) && !activeButton.equals(ButtonId.PAUSE))
+				server.getChunkSource().addRegionTicket(TicketType.PLAYER, currentChunkPos, 3, chunkPosition());
+			if (!currentChunkPos.equals(prevChunkPos) || activeButton.equals(ButtonId.STOP) || activeButton.equals(ButtonId.PAUSE))
+				server.getChunkSource().removeRegionTicket(TicketType.PLAYER, prevChunkPos, 3, chunkPosition());
+
+			prevChunkPos = currentChunkPos;
 		}
 	}
 
@@ -381,7 +393,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 
-		if (stack.is(BetterMinecarts.CROWBAR.get())) {
+		if (stack.is(CROWBAR.get())) {
 			return super.interact(player, hand);
 		}
 		if (player.isShiftKeyDown()) {

@@ -1,26 +1,11 @@
 package hu.xannosz.betterminecarts;
 
-import hu.xannosz.betterminecarts.blockentity.GlowingRailBlockEntity;
-import hu.xannosz.betterminecarts.blocks.CrossedRailBlock;
-import hu.xannosz.betterminecarts.blocks.DeadEndBlock;
-import hu.xannosz.betterminecarts.blocks.GlowingRailBlock;
-import hu.xannosz.betterminecarts.blocks.SignalRailBlock;
 import hu.xannosz.betterminecarts.client.models.ElectricLocomotiveModel;
 import hu.xannosz.betterminecarts.client.models.SteamLocomotiveModel;
 import hu.xannosz.betterminecarts.client.renderer.LocomotiveRenderer;
-import hu.xannosz.betterminecarts.entity.CraftingMinecart;
-import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
-import hu.xannosz.betterminecarts.entity.SteamLocomotive;
 import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
-import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
-import hu.xannosz.betterminecarts.item.CraftingMinecartItem;
-import hu.xannosz.betterminecarts.item.Crowbar;
-import hu.xannosz.betterminecarts.network.ButtonClickedPacket;
-import hu.xannosz.betterminecarts.network.KeyPressedPacket;
-import hu.xannosz.betterminecarts.network.PlaySoundPacket;
-import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
+import hu.xannosz.betterminecarts.network.ModMessages;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
-import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -31,96 +16,38 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.IContainerFactory;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Supplier;
+import static hu.xannosz.betterminecarts.blockentity.ModBlockEntities.BLOCK_ENTITIES;
+import static hu.xannosz.betterminecarts.blocks.ModBlocks.BLOCKS;
+import static hu.xannosz.betterminecarts.entity.ModEntities.*;
+import static hu.xannosz.betterminecarts.item.ModItems.ITEMS;
+import static hu.xannosz.betterminecarts.screen.ModMenus.*;
 
 @Mod(BetterMinecarts.MOD_ID)
 public class BetterMinecarts {
 	public static final String MOD_ID = "betterminecarts";
 
-	public static SimpleChannel INSTANCE;
-	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, BetterMinecarts.MOD_ID);
-	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, BetterMinecarts.MOD_ID);
-	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, BetterMinecarts.MOD_ID);
-	public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, BetterMinecarts.MOD_ID);
-	public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, BetterMinecarts.MOD_ID);
 	public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, BetterMinecarts.MOD_ID);
-
-	@SuppressWarnings("unused")
-	public static final RegistryObject<Block> CROSSED_RAIL = registerBlock("crossed_rail",
-			CrossedRailBlock::new
-	);
-	@SuppressWarnings("unused")
-	public static final RegistryObject<Block> SIGNAL_RAIL = registerBlock("signal_rail",
-			SignalRailBlock::new
-	);
-	public static final RegistryObject<Block> GLOWING_RAIL = BLOCKS.register("glowing_rail",
-			GlowingRailBlock::new
-	);
-	@SuppressWarnings("unused")
-	public static final RegistryObject<Block> DEAD_END = registerBlock("dead_end",
-			DeadEndBlock::new
-	);
-
-	public static final RegistryObject<BlockEntityType<GlowingRailBlockEntity>> GLOWING_RAIL_BLOCK_ENTITY =
-			BLOCK_ENTITIES.register("glowing_rail_block_entity", () ->
-					BlockEntityType.Builder.of(
-							GlowingRailBlockEntity::new,
-							GLOWING_RAIL.get()).build(null));
-
-	public static final Map<String, RegistryObject<AbstractLocomotiveItem>> LOCOMOTIVE_ITEMS = createLocomotiveItems();
-	@SuppressWarnings("unused")
-	public static final RegistryObject<Item> CROWBAR = ITEMS.register("crowbar",
-			() -> new Crowbar(new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1)));
-	@SuppressWarnings("unused")
-	public static final RegistryObject<Item> CRAFTING_MINECART_ITEM = ITEMS.register("crafting_minecart_item", CraftingMinecartItem::new);
-
-	public static final RegistryObject<EntityType<ElectricLocomotive>> ELECTRIC_LOCOMOTIVE = ENTITIES.register("electric_locomotive",
-			() -> EntityType.Builder.<ElectricLocomotive>of(ElectricLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":electric_locomotive"));
-	public static final RegistryObject<EntityType<SteamLocomotive>> STEAM_LOCOMOTIVE = ENTITIES.register("steam_locomotive",
-			() -> EntityType.Builder.<SteamLocomotive>of(SteamLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":steam_locomotive"));
-	public static final RegistryObject<EntityType<CraftingMinecart>> CRAFTING_MINECART = ENTITIES.register("crafting_minecart_item.json",
-			() -> EntityType.Builder.<CraftingMinecart>of(CraftingMinecart::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":crafting_minecart_item.json"));
-
-	public static final RegistryObject<MenuType<ElectricLocomotiveMenu>> ELECTRIC_LOCOMOTIVE_MENU =
-			registerMenuType(ElectricLocomotiveMenu::new, "electric_locomotive_menu");
-	public static final RegistryObject<MenuType<SteamLocomotiveMenu>> STEAM_LOCOMOTIVE_MENU =
-			registerMenuType(SteamLocomotiveMenu::new, "steam_locomotive_menu");
-	public static RegistryObject<SoundEvent> STEAM_WHISTLE = registerSoundEvent("steam_whistle");
+	public static RegistryObject<SoundEvent> STEAM_WHISTLE = SOUND_EVENTS.register("steam_whistle",
+			() -> new SoundEvent(new ResourceLocation(BetterMinecarts.MOD_ID, "steam_whistle")));
 
 	public BetterMinecarts() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-		modEventBus.addListener(this::setupMessages);
+
+		modEventBus.addListener(ModMessages::setupMessages);
 		BLOCKS.register(modEventBus);
 		BLOCK_ENTITIES.register(modEventBus);
 		ITEMS.register(modEventBus);
@@ -135,49 +62,6 @@ public class BetterMinecarts {
 
 	public static DamageSource minecart(Entity entity) {
 		return new EntityDamageSource(MOD_ID + ".minecart", entity);
-	}
-
-	private void setupMessages(final FMLCommonSetupEvent event) {
-		INSTANCE = NetworkRegistry.ChannelBuilder
-				.named(new ResourceLocation(BetterMinecarts.MOD_ID, "messages"))
-				.networkProtocolVersion(() -> "1.0")
-				.clientAcceptedVersions(s -> true)
-				.serverAcceptedVersions(s -> true)
-				.simpleChannel();
-		INSTANCE.messageBuilder(ButtonClickedPacket.class, 0, NetworkDirection.PLAY_TO_SERVER)
-				.decoder(ButtonClickedPacket::new)
-				.encoder(ButtonClickedPacket::toBytes)
-				.consumerMainThread(ButtonClickedPacket::handler)
-				.add();
-		INSTANCE.messageBuilder(PlaySoundPacket.class, 1, NetworkDirection.PLAY_TO_CLIENT)
-				.decoder(PlaySoundPacket::new)
-				.encoder(PlaySoundPacket::toBytes)
-				.consumerMainThread(PlaySoundPacket::handler)
-				.add();
-		INSTANCE.messageBuilder(KeyPressedPacket.class, 2, NetworkDirection.PLAY_TO_SERVER)
-				.decoder(KeyPressedPacket::new)
-				.encoder(KeyPressedPacket::toBytes)
-				.consumerMainThread(KeyPressedPacket::handler)
-				.add();
-	}
-
-	private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> blockCreator) {
-		RegistryObject<T> block = BLOCKS.register(name, blockCreator);
-		registerBlockItem(name, block);
-		return block;
-	}
-
-	private static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
-		ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)));
-	}
-
-	private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory,
-																								  String name) {
-		return MENUS.register(name, () -> IForgeMenuType.create(factory));
-	}
-
-	private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
-		return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(BetterMinecarts.MOD_ID, name)));
 	}
 
 	@SuppressWarnings("unused")
@@ -210,22 +94,6 @@ public class BetterMinecarts {
 			event.registerLayerDefinition(SteamLocomotiveModel.LAYER_LOCATION,
 					SteamLocomotiveModel::createBodyLayer);
 		}
-	}
-
-	private static Map<String, RegistryObject<AbstractLocomotiveItem>> createLocomotiveItems() {
-		Map<String, RegistryObject<AbstractLocomotiveItem>> result = new HashMap<>();
-		for (MinecartColor topColor : MinecartColor.values()) {
-			for (MinecartColor bottomColor : MinecartColor.values()) {
-				result.put(generateNameFromData(topColor, bottomColor, true),
-						ITEMS.register(generateNameFromData(topColor, bottomColor, true),
-								() -> new AbstractLocomotiveItem(topColor, bottomColor, true)));
-				result.put(generateNameFromData(topColor, bottomColor, false),
-						ITEMS.register(generateNameFromData(topColor, bottomColor, false),
-								() -> new AbstractLocomotiveItem(topColor, bottomColor, false)));
-			}
-		}
-
-		return result;
 	}
 
 	public static String generateNameFromData(MinecartColor topColor, MinecartColor bottomColor, boolean isSteam) {
