@@ -47,6 +47,7 @@ import java.util.Set;
 
 import static hu.xannosz.betterminecarts.blocks.ModBlocks.GLOWING_RAIL;
 import static hu.xannosz.betterminecarts.item.ModItems.CROWBAR;
+import static hu.xannosz.betterminecarts.item.ModItems.LOCOMOTIVE_ITEMS;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.*;
 import static net.minecraft.world.level.block.BaseRailBlock.WATERLOGGED;
 import static net.minecraft.world.level.block.RailBlock.SHAPE;
@@ -406,6 +407,19 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	@Override
 	public @NotNull Type getMinecartType() {
 		return Type.FURNACE;
+	}
+
+	@Override
+	public ItemStack getPickResult() {
+		ItemStack result = new ItemStack(LOCOMOTIVE_ITEMS.get(
+				BetterMinecarts.generateNameFromData(getTopFilter(),
+						getBottomFilter(), this instanceof SteamLocomotive)).get(), 1);
+
+		if(hasCustomName()){
+			result.setHoverName(getCustomName());
+		}
+
+		return result;
 	}
 
 	@Override

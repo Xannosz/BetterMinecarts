@@ -1,9 +1,7 @@
 - pre-release actions
 
-- license for files
-- wiki
-- description and readme
+- license for foreign files
+- wiki add to mods.toml
 - mod page
 
 - furnace minecart - override furnace cart
-- middle button on minecarts

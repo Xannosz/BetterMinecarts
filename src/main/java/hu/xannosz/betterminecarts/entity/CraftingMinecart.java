@@ -1,5 +1,6 @@
 package hu.xannosz.betterminecarts.entity;
 
+import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.screen.CraftingMinecartMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -19,8 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import static hu.xannosz.betterminecarts.entity.ModEntities.CRAFTING_MINECART;
-import static hu.xannosz.betterminecarts.item.ModItems.CRAFTING_MINECART_ITEM;
-import static hu.xannosz.betterminecarts.item.ModItems.CROWBAR;
+import static hu.xannosz.betterminecarts.item.ModItems.*;
 
 public class CraftingMinecart extends AbstractMinecart implements MenuProvider {
 	public CraftingMinecart(EntityType<?> entityType, Level level) {
@@ -39,6 +39,17 @@ public class CraftingMinecart extends AbstractMinecart implements MenuProvider {
 	@Override
 	public @NotNull Type getMinecartType() {
 		return Type.FURNACE;
+	}
+
+	@Override
+	public ItemStack getPickResult() {
+		ItemStack result = new ItemStack(CRAFTING_MINECART_ITEM.get(), 1);
+
+		if(hasCustomName()){
+			result.setHoverName(getCustomName());
+		}
+
+		return result;
 	}
 
 	@Override
