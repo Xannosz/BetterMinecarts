@@ -1,7 +1,8 @@
 - pre-release actions
 
 - license for foreign files
-- wiki add to mods.toml
+- wiki
 - mod page
 
 - furnace minecart - override furnace cart
+- disable hurt on collide on minecart if it has parent (move on track)
