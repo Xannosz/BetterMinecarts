@@ -1,0 +1,13 @@
+Some file copied from Cammies-Minecart-Tweaks (https://github.com/CammiePone/Cammies-Minecart-Tweaks) 2022
+Modified by Xannosz 2022-2023
+
+better_minecarts.mixins.json
+data/minecraft.tags.blocks.rails.json
+data/betterminecarts/loot_tables/blocks/crossed_rail.json
+data/betterminecarts/recipes/crossed_rail.json
+assets/betterminecarts/blockstates/crossed_rail.json
+assets/betterminecarts/models/block/crossed_rail.json
+assets/betterminecarts/models/item/crossed_rail.json
+assets/betterminecarts/textures/block/crossed_rail.json
+assets/betterminecarts/textures/entity/chain.json
+assets/betterminecarts/lang/en_us.json

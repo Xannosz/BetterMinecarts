@@ -40,10 +40,10 @@ public class Crowbar extends Item {
 
 		if (firstCartIdTag == 0) {
 			itemStack.getOrCreateTag().putString(MODE_TAG, Objects.requireNonNull(mode.next()).getLabel());
-			useOnContext.getPlayer().displayClientMessage(Component.translatable("text.crowbar.mode." + mode.next().getLabel()).withStyle(ChatFormatting.AQUA), true);
+			useOnContext.getPlayer().displayClientMessage(Component.translatable("text.betterminecarts.crowbar.mode." + mode.next().getLabel()).withStyle(ChatFormatting.AQUA), true);
 		} else {
 			itemStack.getOrCreateTag().putInt(FIRST_CART_ID_TAG, 0);
-			useOnContext.getPlayer().displayClientMessage(Component.translatable("text.crowbar.deleteFirstCartId").withStyle(ChatFormatting.BLUE), true);
+			useOnContext.getPlayer().displayClientMessage(Component.translatable("text.betterminecarts.crowbar.deleteFirstCartId").withStyle(ChatFormatting.BLUE), true);
 		}
 
 		return InteractionResult.SUCCESS;
@@ -54,10 +54,10 @@ public class Crowbar extends Item {
 		final CrowbarMode mode = CrowbarMode.getFromLabel(itemStack.getOrCreateTag().getString(MODE_TAG));
 		final int firstCartIdTag = itemStack.getOrCreateTag().getInt(FIRST_CART_ID_TAG);
 		if (mode != null) {
-			components.add(Component.translatable("text.crowbar.mode." + mode.getLabel()).withStyle(ChatFormatting.AQUA));
+			components.add(Component.translatable("text.betterminecarts.crowbar.mode." + mode.getLabel()).withStyle(ChatFormatting.AQUA));
 		}
 		if (firstCartIdTag != 0) {
-			components.add(Component.translatable("text.crowbar.firstCartIdTag", firstCartIdTag).withStyle(ChatFormatting.BLUE));
+			components.add(Component.translatable("text.betterminecarts.crowbar.firstCartIdTag", firstCartIdTag).withStyle(ChatFormatting.BLUE));
 		}
 		super.appendHoverText(itemStack, level, components, tooltipFlag);
 	}

@@ -73,8 +73,8 @@ public class AbstractLocomotiveItem extends Item {
 	@Override
 	public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag tooltipFlag) {
 		if (topColor != null && bottomColor != null) {
-			components.add(Component.translatable("text.locomotive.color." + topColor.getLabel()).withStyle(topColor.getLabelColor()));
-			components.add(Component.translatable("text.locomotive.color." + bottomColor.getLabel()).withStyle(bottomColor.getLabelColor()));
+			components.add(Component.translatable("text.betterminecarts.locomotive.color." + topColor.getLabel()).withStyle(topColor.getLabelColor()));
+			components.add(Component.translatable("text.betterminecarts.locomotive.color." + bottomColor.getLabel()).withStyle(bottomColor.getLabelColor()));
 		}
 
 		super.appendHoverText(itemStack, level, components, tooltipFlag);
