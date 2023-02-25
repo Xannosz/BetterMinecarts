@@ -4,3 +4,5 @@ update wiki page
 update description in mods.toml, readme, mod page
 update license file and all foreign files
 all language file has valid content
+download wiki and check spelling
+try every link on wiki

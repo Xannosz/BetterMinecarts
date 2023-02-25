@@ -1,2 +1,4 @@
 - furnace minecart - override furnace cart
 - disable hurt on collide on minecart if it has parent (move on track)
+- generate train stations in villages
+- abstract minecart item name visibility
