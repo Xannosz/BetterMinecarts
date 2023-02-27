@@ -1,8 +1,110 @@
 version range in mods.toml
 version in build.gradle and mods.toml
 update wiki page
-update description in mods.toml, readme, mod page
+update description in mods.toml, readme, mod pages
 update license file and all foreign files
 all language file has valid content
 download wiki and check spelling
 try every link on wiki
+
+manual test: (client and server)
+  graphic:
+    smoke
+    fire on steam locomotive back
+    chains
+    buttons steam
+    buttons electric
+    fire inside steam locomotive
+    gauges in steam locomotive
+    gauges in electric locomotive
+  main functions:
+    connect
+    disconnect
+    revert
+    chain connect
+    crowbar id deletion
+    lamp on steam locomotive
+    whistle on steam locomotive
+    redstone on steam locomotive
+    lamp on electric locomotive
+    whistle on electric locomotive
+    redstone on electric locomotive
+    all speed gui on steam locomotive
+    all speed gui on electric locomotive
+    all speed keyboard on steam locomotive
+    all speed keyboard on electric locomotive
+    functions keyboard on steam locomotive
+    functions keyboard on electric locomotive
+    test automatic switch with steam locomotive
+    test automatic switch with electric locomotive
+  additional functions:
+    pick up steam locomotives with name
+    pick up steam locomotives without it
+    pick up electric locomotives with name
+    pick up electric locomotives without it
+    pick up crafting minecart with name
+    pick up crafting minecart without it
+    whistle from long distance
+    automatic whistle 2 way with steam locomotive
+    automatic whistle 2 way with electric locomotive
+    steam locomotive interact with hoppers
+    collusion with mobs with steam locomotive
+    collusion with mobs with electric locomotive
+    get off the track with steam locomotive
+    get off the track with electric locomotive
+    fall damage with steam locomotive
+    fall damage with electric locomotive
+    chunk loading with steam locomotive
+    chunk loading with electric locomotive
+    mobs whistle interact with steam locomotive
+    mobs whistle interact with electric locomotive
+    name the steam locomotive
+    name the electric locomotive
+    name the crafting minecart
+    change minecart type on the fly furnace
+    change minecart type on the fly crafting
+    change minecart type on the fly chest
+    change minecart type on the fly hopper
+    change minecart type on the fly tnt
+  crafting: (client)
+    crowbar
+    crafting minecart
+    electric locomotive
+    steam locomotive
+    signal rail
+    crossed rail
+    dead end
+    double coloring steam locomotive
+    double coloring electric locomotive
+    single up coloring steam locomotive
+    single up coloring electric locomotive
+    single down coloring steam locomotive
+    single down coloring electric locomotive
+    backward coloring steam locomotive
+    backward coloring electric locomotive
+  looting: (client)
+    signal rail
+    crossed rail
+    dead end
+    colored steam locomotive with name
+    colored steam locomotive without name
+    colored electric locomotive with name
+    colored electric locomotive without name
+    crafting minecart with name
+    crafting minecart without name
+  long ride:
+    test all gui stop not ride
+    test all gui run not ride
+    test all gui stop ride
+    test all gui run ride
+    all corner
+    all uphill
+  configuration: (client)
+    minecartDamage
+    furnaceMinecartsLoadChunks
+    mobsPanicAfterWhistle
+    mobsPanicAfterWhistleRange
+    keyControlFromTheWholeTrain
+    whistleUseSteamOnSteamLocomotive
+    locomotiveExplodeAfterFallDamage
+    key control
