@@ -11,7 +11,7 @@ import static hu.xannosz.betterminecarts.item.ModItems.LOCOMOTIVE_ITEMS;
 
 public class ModItemModelProvider extends ItemModelProvider {
 	public ModItemModelProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-		super(generator, BetterMinecarts.MOD_ID, existingFileHelper);
+		super(generator.getPackOutput(), BetterMinecarts.MOD_ID, existingFileHelper);
 	}
 
 	@Override

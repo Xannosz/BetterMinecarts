@@ -32,9 +32,7 @@ package hu.xannosz.betterminecarts.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.utils.Linkable;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -46,6 +44,8 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -96,8 +96,8 @@ public abstract class MinecartEntityRendererMixin<T extends AbstractMinecart> ex
 		float length = Mth.sqrt(squaredLength) - 1F;
 
 		stack.pushPose();
-		stack.mulPose(Vector3f.YP.rotationDegrees(-hAngle - 90));
-		stack.mulPose(Vector3f.XP.rotation(-vAngle));
+		stack.m_252781_(Axis.f_252436_.m_252977_(-hAngle - 90));
+		stack.m_252781_(Axis.f_252529_.m_252977_(-vAngle));
 		stack.translate(0, 0, 0.5);
 		stack.pushPose();
 
@@ -111,26 +111,26 @@ public abstract class MinecartEntityRendererMixin<T extends AbstractMinecart> ex
 		float minV = 0F;
 		float maxV = length / 10;
 		PoseStack.Pose entry = stack.last();
-		Matrix4f matrix4f = entry.pose();
-		Matrix3f matrix3f = entry.normal();
+		Matrix4f matrix4f = entry.m_252922_();
+		Matrix3f matrix3f = entry.m_252943_();
 
-		vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(0, 0, 0, 255).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(0, 0, 0, 255).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.m_252986_(matrix4f, vertX1, vertY1, 0F).color(0, 0, 0, 255).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).m_252939_(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.m_252986_(matrix4f, vertX1, vertY1, length).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).m_252939_(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.m_252986_(matrix4f, vertX2, vertY2, length).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).m_252939_(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.m_252986_(matrix4f, vertX2, vertY2, 0F).color(0, 0, 0, 255).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).m_252939_(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
 
 		stack.popPose();
 		stack.translate(0.19, 0.19, 0);
-		stack.mulPose(Vector3f.ZP.rotationDegrees(90));
+		stack.m_252781_(Axis.f_252403_.m_252977_(90));
 
 		entry = stack.last();
-		matrix4f = entry.pose();
-		matrix3f = entry.normal();
+		matrix4f = entry.m_252922_();
+		matrix3f = entry.m_252943_();
 
-		vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(0, 0, 0, 255).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(0, 0, 0, 255).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.m_252986_(matrix4f, vertX1, vertY1, 0F).color(0, 0, 0, 255).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).m_252939_(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.m_252986_(matrix4f, vertX1, vertY1, length).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).m_252939_(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.m_252986_(matrix4f, vertX2, vertY2, length).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).m_252939_(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.m_252986_(matrix4f, vertX2, vertY2, 0F).color(0, 0, 0, 255).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).m_252939_(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
 
 		stack.popPose();
 	}

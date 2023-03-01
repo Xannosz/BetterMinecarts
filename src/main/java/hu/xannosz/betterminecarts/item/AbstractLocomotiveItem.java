@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -30,7 +29,7 @@ public class AbstractLocomotiveItem extends Item {
 	private final boolean isSteam;
 
 	public AbstractLocomotiveItem(MinecartColor topColor, MinecartColor bottomColor, boolean isSteam) {
-		super(createProperties(topColor, bottomColor, isSteam));
+		super(new Properties().stacksTo(1));
 		this.topColor = topColor;
 		this.bottomColor = bottomColor;
 		this.isSteam = isSteam;
@@ -92,17 +91,6 @@ public class AbstractLocomotiveItem extends Item {
 				(double) blockpos.getX() + 0.5D,
 				(double) blockpos.getY() + 0.0625D + d0,
 				(double) blockpos.getZ() + 0.5D, top, bottom);
-	}
-
-	@NotNull
-	private static Properties createProperties(MinecartColor topColor, MinecartColor bottomColor, boolean isSteam) {
-		if (topColor.equals(MinecartColor.YELLOW) && bottomColor.equals(MinecartColor.BROWN) && !isSteam) {
-			return new Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1);
-		}
-		if (topColor.equals(MinecartColor.LIGHT_GRAY) && bottomColor.equals(MinecartColor.GRAY) && isSteam) {
-			return new Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1);
-		}
-		return new Properties().tab(CreativeModeTab.TAB_SEARCH).stacksTo(1);
 	}
 
 	@Override

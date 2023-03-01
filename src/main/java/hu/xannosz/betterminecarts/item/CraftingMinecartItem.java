@@ -4,7 +4,6 @@ import hu.xannosz.betterminecarts.entity.CraftingMinecart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -17,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CraftingMinecartItem extends Item {
 	public CraftingMinecartItem() {
-		super(new Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1));
+		super(new Properties().stacksTo(1));
 	}
 
 	public @NotNull InteractionResult useOn(UseOnContext useOnContext) {

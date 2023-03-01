@@ -3,3 +3,4 @@
 - R newly spawned locomotive smoking on wrong place
 - generate train stations in villages
 - abstract minecart item name visibility
+- portal usage with minecarts

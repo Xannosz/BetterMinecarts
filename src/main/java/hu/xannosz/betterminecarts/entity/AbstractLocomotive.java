@@ -31,7 +31,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -415,7 +414,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 				BetterMinecarts.generateNameFromData(getTopFilter(),
 						getBottomFilter(), this instanceof SteamLocomotive)).get(), 1);
 
-		if(hasCustomName()){
+		if (hasCustomName()) {
 			result.setHoverName(getCustomName());
 		}
 
@@ -436,7 +435,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	protected void explode(float power) { //power: 3 normal creeper, 6 powered creeper
 		if (!this.level.isClientSide && BetterMinecartsConfig.LOCOMOTIVE_EXPLODE_AFTER_FALL_DAMAGE.get()) {
-			this.level.explode(this, this.getX(), this.getY(), this.getZ(), power, Explosion.BlockInteraction.DESTROY);
+			this.level.m_254849_(this, this.getX(), this.getY(), this.getZ(), power, Level.ExplosionInteraction.BLOCK);
 			this.discard();
 		}
 	}

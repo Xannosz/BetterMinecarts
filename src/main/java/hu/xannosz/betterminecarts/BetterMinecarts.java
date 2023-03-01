@@ -4,6 +4,7 @@ import hu.xannosz.betterminecarts.client.models.ElectricLocomotiveModel;
 import hu.xannosz.betterminecarts.client.models.SteamLocomotiveModel;
 import hu.xannosz.betterminecarts.client.renderer.LocomotiveRenderer;
 import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
+import hu.xannosz.betterminecarts.item.ModItems;
 import hu.xannosz.betterminecarts.network.ModMessages;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
@@ -16,9 +17,11 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -42,7 +45,8 @@ public class BetterMinecarts {
 
 	public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, BetterMinecarts.MOD_ID);
 	public static RegistryObject<SoundEvent> STEAM_WHISTLE = SOUND_EVENTS.register("steam_whistle",
-			() -> new SoundEvent(new ResourceLocation(BetterMinecarts.MOD_ID, "steam_whistle")));
+			() -> SoundEvent.m_262856_(new ResourceLocation(BetterMinecarts.MOD_ID, "steam_whistle"),
+					16f));
 
 	public BetterMinecarts() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -58,10 +62,22 @@ public class BetterMinecarts {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BetterMinecartsConfig.SPEC, MOD_ID + ".toml");
 
 		MinecraftForge.EVENT_BUS.register(this);
+
+		modEventBus.addListener(this::addCreative);
 	}
 
 	public static DamageSource minecart(Entity entity) {
 		return new EntityDamageSource(MOD_ID + ".minecart", entity);
+	}
+
+	private void addCreative(CreativeModeTabEvent.BuildContents event) {
+		if (event.getTab() == CreativeModeTabs.f_257028_ || event.getTab() == CreativeModeTabs.f_256869_) {
+			event.accept(ModItems.CROWBAR);
+			event.accept(ModItems.CRAFTING_MINECART_ITEM);
+			event.accept(ModItems.LOCOMOTIVE_ITEMS.get(generateNameFromData(MinecartColor.YELLOW, MinecartColor.BROWN, false)));
+			event.accept(ModItems.LOCOMOTIVE_ITEMS.get(generateNameFromData(MinecartColor.LIGHT_GRAY, MinecartColor.GRAY, true)));
+			ModItems.BLOCK_ITEMS.forEach(event::accept);
+		}
 	}
 
 	@SuppressWarnings("unused")

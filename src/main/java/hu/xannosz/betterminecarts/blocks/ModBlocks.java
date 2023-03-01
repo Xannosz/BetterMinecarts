@@ -2,7 +2,6 @@ package hu.xannosz.betterminecarts.blocks;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
@@ -11,6 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
+import static hu.xannosz.betterminecarts.item.ModItems.BLOCK_ITEMS;
 import static hu.xannosz.betterminecarts.item.ModItems.ITEMS;
 
 public class ModBlocks {
@@ -42,6 +42,6 @@ public class ModBlocks {
 	}
 
 	private static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
-		ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().tab(CreativeModeTab.TAB_TRANSPORTATION)));
+		BLOCK_ITEMS.add(ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties())));
 	}
 }

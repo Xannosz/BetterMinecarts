@@ -81,9 +81,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	private boolean isUpdated = false;
 
 	@Shadow
-	public abstract double getMaxSpeed();
-
-	@Shadow
 	public abstract float getMaxSpeedAirVertical();
 
 	public AbstractMinecartEntityMixin(EntityType<?> type, Level world) {
