@@ -99,6 +99,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 			case EAST -> setYRot(180f);
 			case SOUTH -> setYRot(-90f);
 		}
+		updateData();
 	}
 
 	public float normalizeRotation(float yRotation) {

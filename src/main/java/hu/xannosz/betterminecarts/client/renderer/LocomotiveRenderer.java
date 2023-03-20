@@ -180,7 +180,7 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 
 		stack.pushPose();
 		stack.m_252781_(Axis.f_252436_.m_252977_(-hAngle - 90));
-		stack.m_252781_(Axis.f_252529_.m_252977_(-vAngle));
+		stack.m_252781_(Axis.f_252529_.m_252961_(-vAngle));
 		stack.translate(0, 0, 0.5);
 		stack.pushPose();
 

@@ -4,3 +4,5 @@
 - generate train stations in villages
 - abstract minecart item name visibility
 - portal usage with minecarts
+- diesel locomotive (ethanol powered)
+- mine locomotive?

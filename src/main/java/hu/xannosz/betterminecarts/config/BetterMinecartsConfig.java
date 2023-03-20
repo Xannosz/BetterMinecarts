@@ -15,7 +15,7 @@ public class BetterMinecartsConfig {
 	public static final ForgeConfigSpec.ConfigValue<Boolean> LOCOMOTIVE_EXPLODE_AFTER_FALL_DAMAGE;
 
 	static {
-		BUILDER.push("Configs for Flying Ships Mod");
+		BUILDER.push("Configs for Better Minecarts Mod");
 
 		MINECART_DAMAGE = BUILDER.comment("Damage Dealt by Minecarts")
 				.define("minecartDamage", 20F);
