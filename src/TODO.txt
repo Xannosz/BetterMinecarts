@@ -6,3 +6,7 @@
 - portal usage with minecarts
 - diesel locomotive (ethanol powered)
 - mine locomotive?
+- JEI integration
+- colorized item models
+
+D:
