@@ -1,6 +1,7 @@
 package hu.xannosz.betterminecarts.entity;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
+import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
+import hu.xannosz.betterminecarts.item.ModItems;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
@@ -31,7 +32,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static hu.xannosz.betterminecarts.entity.ModEntities.STEAM_LOCOMOTIVE;
-import static hu.xannosz.betterminecarts.item.ModItems.LOCOMOTIVE_ITEMS;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.IS_BURN;
 import static net.minecraft.world.item.crafting.RecipeType.SMELTING;
 import static net.minecraftforge.common.ForgeHooks.getBurnTime;
@@ -89,14 +89,17 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 
 	@Override
 	protected @NotNull Item getDropItem() {
-		SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
+		SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots() + 1);
 		for (int i = 0; i < itemHandler.getSlots(); i++) {
 			inventory.setItem(i, itemHandler.getStackInSlot(i));
 		}
+		ItemStack locomotive = new ItemStack(ModItems.STEAM_LOCOMOTIVE.get());
+		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.TOP_COLOR_TAG, getTopFilter().getLabel());
+		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.BOTTOM_COLOR_TAG, getBottomFilter().getLabel());
+		inventory.setItem(itemHandler.getSlots(), locomotive);
 		Containers.dropContents(level, blockPosition(), inventory);
 
-		return LOCOMOTIVE_ITEMS.get(
-				BetterMinecarts.generateNameFromData(getTopFilter(), getBottomFilter(), true)).get();
+		return Items.AIR;
 	}
 
 	@Override

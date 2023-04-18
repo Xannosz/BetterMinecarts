@@ -1,6 +1,7 @@
 package hu.xannosz.betterminecarts.entity;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
+import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
+import hu.xannosz.betterminecarts.item.ModItems;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
@@ -8,11 +9,15 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Containers;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PoweredRailBlock;
@@ -22,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static hu.xannosz.betterminecarts.entity.ModEntities.ELECTRIC_LOCOMOTIVE;
-import static hu.xannosz.betterminecarts.item.ModItems.LOCOMOTIVE_ITEMS;
 
 public class ElectricLocomotive extends AbstractLocomotive {
 
@@ -43,8 +47,14 @@ public class ElectricLocomotive extends AbstractLocomotive {
 
 	@Override
 	protected @NotNull Item getDropItem() {
-		return LOCOMOTIVE_ITEMS.get(
-				BetterMinecarts.generateNameFromData(getTopFilter(), getBottomFilter(), false)).get();
+		SimpleContainer inventory = new SimpleContainer(1);
+		ItemStack locomotive = new ItemStack(ModItems.ELECTRIC_LOCOMOTIVE.get());
+		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.TOP_COLOR_TAG, getTopFilter().getLabel());
+		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.BOTTOM_COLOR_TAG, getBottomFilter().getLabel());
+		inventory.setItem(0, locomotive);
+		Containers.dropContents(level, blockPosition(), inventory);
+
+		return Items.AIR;
 	}
 
 	@Override

@@ -17,6 +17,7 @@
   "text.betterminecarts.crowbar.mode.connect": "Összekapcsolás",
   "text.betterminecarts.crowbar.mode.disconnect": "Lekapcsolás",
   "text.betterminecarts.crowbar.mode.revert": "Visszafordítás",
+  "text.betterminecarts.crowbar.mode.label": "Név láthatóság",
 
   "text.betterminecarts.locomotive.color.yellow": "Sárga",
   "text.betterminecarts.locomotive.color.brown": "Barna",

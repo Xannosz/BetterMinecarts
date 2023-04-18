@@ -17,6 +17,7 @@
   "text.betterminecarts.crowbar.mode.connect": "Connect",
   "text.betterminecarts.crowbar.mode.disconnect": "Disconnect",
   "text.betterminecarts.crowbar.mode.revert": "Revert",
+  "text.betterminecarts.crowbar.mode.label": "Toggle name visibility",
 
   "text.betterminecarts.locomotive.color.yellow": "Yellow",
   "text.betterminecarts.locomotive.color.brown": "Brown",

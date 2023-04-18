@@ -36,6 +36,12 @@ public class TrainUtil {
 			return;
 		}
 
+		if (mode.equals(CrowbarMode.LABEL)) {
+			minecart.setCustomNameVisible(!minecart.isCustomNameVisible());
+			itemStack.getOrCreateTag().putInt(FIRST_CART_ID_TAG, minecart.getId());
+			return;
+		}
+
 		if (firstCartIdTag == 0) {
 			itemStack.getOrCreateTag().putInt(FIRST_CART_ID_TAG, minecart.getId());
 			return;

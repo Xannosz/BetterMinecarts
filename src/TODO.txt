@@ -2,11 +2,12 @@
 - R disable hurt on collide on minecart if it has parent (move on track)
 - R newly spawned locomotive smoking on wrong place
 - generate train stations in villages
-- abstract minecart item name visibility
-- portal usage with minecarts
 - diesel locomotive (ethanol powered)
-- mine locomotive?
-- JEI integration
-- colorized item models
 
 D:
+- remove coloring recipes
+- add on the fly colorizing
+- add label mode to Crowbar
+- toggle custom name visibility with crowbar in label mode
+- add label mode to translation files
+- add locomotives and crafting minecart dispenser functionality

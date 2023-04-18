@@ -146,10 +146,10 @@ public class SteamLocomotiveScreen extends AbstractContainerScreen<SteamLocomoti
 	}
 
 	@Override
-	public void m_86412_(@NotNull PoseStack poseStack, int mouseX, int mouseY, float delta) {
+	public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float delta) {
 		//call built-in functions
 		renderBackground(poseStack);
-		super.m_86412_(poseStack, mouseX, mouseY, delta);
+		super.render(poseStack, mouseX, mouseY, delta);
 
 		//call built-in function
 		renderTooltip(poseStack, mouseX, mouseY);

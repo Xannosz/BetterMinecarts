@@ -8,7 +8,6 @@ import hu.xannosz.betterminecarts.item.ModItems;
 import hu.xannosz.betterminecarts.network.ModMessages;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
-import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
@@ -45,7 +44,7 @@ public class BetterMinecarts {
 
 	public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, BetterMinecarts.MOD_ID);
 	public static RegistryObject<SoundEvent> STEAM_WHISTLE = SOUND_EVENTS.register("steam_whistle",
-			() -> SoundEvent.m_262856_(new ResourceLocation(BetterMinecarts.MOD_ID, "steam_whistle"),
+			() -> SoundEvent.createFixedRangeEvent(new ResourceLocation(BetterMinecarts.MOD_ID, "steam_whistle"),
 					16f));
 
 	public BetterMinecarts() {
@@ -71,11 +70,11 @@ public class BetterMinecarts {
 	}
 
 	private void addCreative(CreativeModeTabEvent.BuildContents event) {
-		if (event.getTab() == CreativeModeTabs.f_257028_ || event.getTab() == CreativeModeTabs.f_256869_) {
+		if (event.getTab() == CreativeModeTabs.REDSTONE_BLOCKS || event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
 			event.accept(ModItems.CROWBAR);
 			event.accept(ModItems.CRAFTING_MINECART_ITEM);
-			event.accept(ModItems.LOCOMOTIVE_ITEMS.get(generateNameFromData(MinecartColor.YELLOW, MinecartColor.BROWN, false)));
-			event.accept(ModItems.LOCOMOTIVE_ITEMS.get(generateNameFromData(MinecartColor.LIGHT_GRAY, MinecartColor.GRAY, true)));
+			event.accept(ModItems.ELECTRIC_LOCOMOTIVE);
+			event.accept(ModItems.STEAM_LOCOMOTIVE);
 			ModItems.BLOCK_ITEMS.forEach(event::accept);
 		}
 	}
@@ -109,14 +108,6 @@ public class BetterMinecarts {
 					ElectricLocomotiveModel::createBodyLayer);
 			event.registerLayerDefinition(SteamLocomotiveModel.LAYER_LOCATION,
 					SteamLocomotiveModel::createBodyLayer);
-		}
-	}
-
-	public static String generateNameFromData(MinecartColor topColor, MinecartColor bottomColor, boolean isSteam) {
-		if (isSteam) {
-			return "steam_locomotive_item_" + topColor.getLabel() + "_" + bottomColor.getLabel();
-		} else {
-			return "electric_locomotive_item_" + topColor.getLabel() + "_" + bottomColor.getLabel();
 		}
 	}
 }

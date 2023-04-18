@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum CrowbarMode {
-	CONNECT("connect"), DISCONNECT("disconnect"), REVERT("revert");
+	CONNECT("connect"), DISCONNECT("disconnect"), REVERT("revert"), LABEL("label");
 
 	private final String label;
 
@@ -19,6 +19,9 @@ public enum CrowbarMode {
 				return REVERT;
 			}
 			case REVERT -> {
+				return LABEL;
+			}
+			case LABEL -> {
 				return CONNECT;
 			}
 		}

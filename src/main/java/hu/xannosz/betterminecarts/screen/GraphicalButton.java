@@ -45,7 +45,7 @@ public class GraphicalButton extends AbstractButton {
 	}
 
 	@Override
-	public void m_168797_(@NotNull NarrationElementOutput narrationElementOutput) {
+	public void updateWidgetNarration(@NotNull NarrationElementOutput narrationElementOutput) {
 
 	}
 }
