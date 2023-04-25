@@ -14,7 +14,7 @@ plugins {
 // MixinGradle:
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.19.3-1.6.1-44.1.0-T1'
+version = '1.19.3-1.7.0-44.1.0'
 group = 'hu.xannosz.betterminecarts'
 archivesBaseName = 'betterminecarts'
 
@@ -92,6 +92,7 @@ mixin {
 
 repositories {
 
+mavenCentral()
 }
 
 dependencies {
@@ -99,11 +100,11 @@ dependencies {
     // Apply Mixin AP
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.24'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
 jar {

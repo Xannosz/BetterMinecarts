@@ -96,6 +96,9 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 		ItemStack locomotive = new ItemStack(ModItems.STEAM_LOCOMOTIVE.get());
 		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.TOP_COLOR_TAG, getTopFilter().getLabel());
 		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.BOTTOM_COLOR_TAG, getBottomFilter().getLabel());
+		if (hasCustomName()) {
+			locomotive.setHoverName(getCustomName());
+		}
 		inventory.setItem(itemHandler.getSlots(), locomotive);
 		Containers.dropContents(level, blockPosition(), inventory);
 

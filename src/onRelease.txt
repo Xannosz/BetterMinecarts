@@ -1,4 +1,4 @@
-version range in mods.toml
+version range, loaderVersion in mods.toml
 version in build.gradle and mods.toml
 update wiki page
 update description in mods.toml, readme, mod pages

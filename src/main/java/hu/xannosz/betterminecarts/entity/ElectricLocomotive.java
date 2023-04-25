@@ -51,6 +51,9 @@ public class ElectricLocomotive extends AbstractLocomotive {
 		ItemStack locomotive = new ItemStack(ModItems.ELECTRIC_LOCOMOTIVE.get());
 		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.TOP_COLOR_TAG, getTopFilter().getLabel());
 		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.BOTTOM_COLOR_TAG, getBottomFilter().getLabel());
+		if (hasCustomName()) {
+			locomotive.setHoverName(getCustomName());
+		}
 		inventory.setItem(0, locomotive);
 		Containers.dropContents(level, blockPosition(), inventory);
 
