@@ -7,7 +7,6 @@ import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
 import hu.xannosz.betterminecarts.network.ModMessages;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
-import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
@@ -93,14 +92,6 @@ public class BetterMinecarts {
 					ElectricLocomotiveModel::createBodyLayer);
 			event.registerLayerDefinition(SteamLocomotiveModel.LAYER_LOCATION,
 					SteamLocomotiveModel::createBodyLayer);
-		}
-	}
-
-	public static String generateNameFromData(MinecartColor topColor, MinecartColor bottomColor, boolean isSteam) {
-		if (isSteam) {
-			return "steam_locomotive_item_" + topColor.getLabel() + "_" + bottomColor.getLabel();
-		} else {
-			return "electric_locomotive_item_" + topColor.getLabel() + "_" + bottomColor.getLabel();
 		}
 	}
 }

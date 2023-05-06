@@ -25,14 +25,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class AbstractLocomotiveItem extends Item {
-	private final MinecartColor topColor;
-	private final MinecartColor bottomColor;
+
+	public static final String TOP_COLOR_TAG = "topColor";
+	public static final String BOTTOM_COLOR_TAG = "bottomColor";
+
 	private final boolean isSteam;
 
-	public AbstractLocomotiveItem(MinecartColor topColor, MinecartColor bottomColor, boolean isSteam) {
-		super(createProperties(topColor, bottomColor, isSteam));
-		this.topColor = topColor;
-		this.bottomColor = bottomColor;
+	public AbstractLocomotiveItem(boolean isSteam) {
+		super(new Properties().stacksTo(1).tab(CreativeModeTab.TAB_TRANSPORTATION));
 		this.isSteam = isSteam;
 	}
 
@@ -40,6 +40,20 @@ public class AbstractLocomotiveItem extends Item {
 		Level level = useOnContext.getLevel();
 		BlockPos blockpos = useOnContext.getClickedPos();
 		BlockState blockstate = level.getBlockState(blockpos);
+
+		MinecartColor topColor = MinecartColor.getFromLabel(useOnContext.getItemInHand().getOrCreateTag().getString(TOP_COLOR_TAG));
+		MinecartColor bottomColor = MinecartColor.getFromLabel(useOnContext.getItemInHand().getOrCreateTag().getString(BOTTOM_COLOR_TAG));
+
+		if (topColor == null || bottomColor == null) {
+			if (isSteam) {
+				topColor = MinecartColor.LIGHT_GRAY;
+				bottomColor = MinecartColor.GRAY;
+			} else {
+				topColor = MinecartColor.YELLOW;
+				bottomColor = MinecartColor.BROWN;
+			}
+		}
+
 		if (!blockstate.is(BlockTags.RAILS)) {
 			return InteractionResult.FAIL;
 		} else {
@@ -72,10 +86,21 @@ public class AbstractLocomotiveItem extends Item {
 
 	@Override
 	public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag tooltipFlag) {
-		if (topColor != null && bottomColor != null) {
-			components.add(Component.translatable("text.betterminecarts.locomotive.color." + topColor.getLabel()).withStyle(topColor.getLabelColor()));
-			components.add(Component.translatable("text.betterminecarts.locomotive.color." + bottomColor.getLabel()).withStyle(bottomColor.getLabelColor()));
+		MinecartColor topColor = MinecartColor.getFromLabel(itemStack.getOrCreateTag().getString(TOP_COLOR_TAG));
+		MinecartColor bottomColor = MinecartColor.getFromLabel(itemStack.getOrCreateTag().getString(BOTTOM_COLOR_TAG));
+
+		if (topColor == null || bottomColor == null) {
+			if (isSteam) {
+				topColor = MinecartColor.LIGHT_GRAY;
+				bottomColor = MinecartColor.GRAY;
+			} else {
+				topColor = MinecartColor.YELLOW;
+				bottomColor = MinecartColor.BROWN;
+			}
 		}
+
+		components.add(Component.translatable("text.betterminecarts.locomotive.color." + topColor.getLabel()).withStyle(topColor.getLabelColor()));
+		components.add(Component.translatable("text.betterminecarts.locomotive.color." + bottomColor.getLabel()).withStyle(bottomColor.getLabelColor()));
 
 		super.appendHoverText(itemStack, level, components, tooltipFlag);
 	}
@@ -92,17 +117,6 @@ public class AbstractLocomotiveItem extends Item {
 				(double) blockpos.getX() + 0.5D,
 				(double) blockpos.getY() + 0.0625D + d0,
 				(double) blockpos.getZ() + 0.5D, top, bottom);
-	}
-
-	@NotNull
-	private static Properties createProperties(MinecartColor topColor, MinecartColor bottomColor, boolean isSteam) {
-		if (topColor.equals(MinecartColor.YELLOW) && bottomColor.equals(MinecartColor.BROWN) && !isSteam) {
-			return new Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1);
-		}
-		if (topColor.equals(MinecartColor.LIGHT_GRAY) && bottomColor.equals(MinecartColor.GRAY) && isSteam) {
-			return new Properties().tab(CreativeModeTab.TAB_TRANSPORTATION).stacksTo(1);
-		}
-		return new Properties().tab(CreativeModeTab.TAB_SEARCH).stacksTo(1);
 	}
 
 	@Override

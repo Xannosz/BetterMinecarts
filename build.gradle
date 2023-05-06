@@ -14,7 +14,7 @@ plugins {
 // MixinGradle:
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.19.2-1.6.1-43.1.3'
+version = '1.19.2-1.6.2-43.1.3'
 group = 'hu.xannosz.betterminecarts'
 archivesBaseName = 'betterminecarts'
 

@@ -3,6 +3,7 @@ package hu.xannosz.betterminecarts.entity;
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.blockentity.GlowingRailBlockEntity;
 import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
+import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
 import hu.xannosz.betterminecarts.network.ModMessages;
 import hu.xannosz.betterminecarts.network.PlaySoundPacket;
 import hu.xannosz.betterminecarts.utils.*;
@@ -46,8 +47,7 @@ import java.util.List;
 import java.util.Set;
 
 import static hu.xannosz.betterminecarts.blocks.ModBlocks.GLOWING_RAIL;
-import static hu.xannosz.betterminecarts.item.ModItems.CROWBAR;
-import static hu.xannosz.betterminecarts.item.ModItems.LOCOMOTIVE_ITEMS;
+import static hu.xannosz.betterminecarts.item.ModItems.*;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.*;
 import static net.minecraft.world.level.block.BaseRailBlock.WATERLOGGED;
 import static net.minecraft.world.level.block.RailBlock.SHAPE;
@@ -397,6 +397,16 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		if (stack.is(CROWBAR.get())) {
 			return super.interact(player, hand);
 		}
+		if (MinecartColor.getFromItem(stack.getItem()) != null) {
+			if (player.isShiftKeyDown()) {
+				bottomFilter = MinecartColor.getFromItem(stack.getItem());
+			} else {
+				topFilter = MinecartColor.getFromItem(stack.getItem());
+			}
+			stack.shrink(1);
+			updateData();
+			return InteractionResult.SUCCESS;
+		}
 		if (player.isShiftKeyDown()) {
 			return InteractionResult.PASS;
 		}
@@ -411,11 +421,13 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	@Override
 	public ItemStack getPickResult() {
-		ItemStack result = new ItemStack(LOCOMOTIVE_ITEMS.get(
-				BetterMinecarts.generateNameFromData(getTopFilter(),
-						getBottomFilter(), this instanceof SteamLocomotive)).get(), 1);
+		ItemStack result = new ItemStack(
+				(this instanceof SteamLocomotive ? STEAM_LOCOMOTIVE : ELECTRIC_LOCOMOTIVE).get(), 1);
 
-		if(hasCustomName()){
+		result.getOrCreateTag().putString(AbstractLocomotiveItem.TOP_COLOR_TAG, getTopFilter().getLabel());
+		result.getOrCreateTag().putString(AbstractLocomotiveItem.BOTTOM_COLOR_TAG, getBottomFilter().getLabel());
+
+		if (hasCustomName()) {
 			result.setHoverName(getCustomName());
 		}
 

@@ -41,6 +41,15 @@ public enum MinecartColor {
 		return null;
 	}
 
+	public static MinecartColor getFromItem(Item dye) {
+		for (MinecartColor color : values()) {
+			if (color.dye.equals(dye)) {
+				return color;
+			}
+		}
+		return null;
+	}
+
 	public Vec3 getFormattedFilter() {
 		return getFilter().scale(1 / 255f);
 	}
