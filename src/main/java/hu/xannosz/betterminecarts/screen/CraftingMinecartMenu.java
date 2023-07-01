@@ -14,9 +14,9 @@ public class CraftingMinecartMenu extends CraftingMenu {
 	private final Level level;
 
 	public CraftingMinecartMenu(int id, Inventory inventory, CraftingMinecart entity) {
-		super(id, inventory, ContainerLevelAccess.create(inventory.player.level, entity.getOnPos()));
+		super(id, inventory, ContainerLevelAccess.create(inventory.player.level(), entity.getOnPos()));
 		this.entity = entity;
-		level = inventory.player.level;
+		level = inventory.player.level();
 	}
 
 	public boolean stillValid(@NotNull Player player) {

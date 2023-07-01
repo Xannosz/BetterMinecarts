@@ -1,10 +1,10 @@
 package hu.xannosz.betterminecarts.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import hu.xannosz.betterminecarts.BetterMinecarts;
-import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
+import hu.xannosz.betterminecarts.utils.ButtonId;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -90,12 +90,12 @@ public class ElectricLocomotiveScreen extends AbstractContainerScreen<ElectricLo
 	}
 
 	@Override
-	protected void renderBg(@NotNull PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
+	protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);
 		RenderSystem.enableBlend();
-		this.blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
+		guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
 		back.setEntityId(menu.getElectricLocomotiveId());
 		stop.setEntityId(menu.getElectricLocomotiveId());
@@ -128,21 +128,21 @@ public class ElectricLocomotiveScreen extends AbstractContainerScreen<ElectricLo
 			power = ElectricLocomotive.MAX_POWER;
 		}
 		int t = (power * 140) / ElectricLocomotive.MAX_POWER;
-		drawTexturedModalRect(poseStack, x + 6, y + 6, 0, 43, t, 12, partialTick);
+		drawTexturedModalRect(guiGraphics, x + 6, y + 6, 0, 43, t, 12, partialTick);
 	}
 
 	@Override
-	public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float delta) {
+	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		//call built-in functions
-		renderBackground(poseStack);
-		super.render(poseStack, mouseX, mouseY, delta);
+		renderBackground(guiGraphics);
+		super.render(guiGraphics, mouseX, mouseY, delta);
 
 		//call built-in function
-		renderTooltip(poseStack, mouseX, mouseY);
+		renderTooltip(guiGraphics, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderLabels(@NotNull PoseStack poseStack, int mouseX, int mouseY) {
+	protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
 
 	}
 

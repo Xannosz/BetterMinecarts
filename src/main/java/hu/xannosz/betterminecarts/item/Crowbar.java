@@ -30,7 +30,7 @@ public class Crowbar extends Item {
 			return InteractionResult.FAIL;
 		}
 
-		if (useOnContext.getPlayer().level.isClientSide()) {
+		if (useOnContext.getPlayer().level().isClientSide()) {
 			return InteractionResult.SUCCESS;
 		}
 

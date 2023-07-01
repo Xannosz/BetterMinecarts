@@ -33,7 +33,7 @@ public class ButtonClickedPacket {
 		NetworkEvent.Context context = supplier.get();
 		context.enqueueWork(() -> {
 			// SERVER SITE
-			Entity entity = Objects.requireNonNull(context.getSender()).getLevel().getEntity(entityId);
+			Entity entity = Objects.requireNonNull(context.getSender()).level().getEntity(entityId);
 			if (entity instanceof ButtonUser) {
 				((ButtonUser) entity).executeButtonClick(buttonId);
 			}

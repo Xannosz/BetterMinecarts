@@ -118,7 +118,7 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void betterminecarts$loadChunks(CallbackInfo info) {
-		if (BetterMinecartsConfig.FURNACE_MINECARTS_LOAD_CHUNKS.get() && level instanceof ServerLevel server) {
+		if (BetterMinecartsConfig.FURNACE_MINECARTS_LOAD_CHUNKS.get() && level() instanceof ServerLevel server) {
 			ChunkPos currentChunkPos = SectionPos.of(this).chunk();
 
 			if (fuel > 0)
@@ -146,7 +146,7 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 			zPush = altPushZ;
 		}
 
-		AtomicBoolean shouldSlowDown = new AtomicBoolean(MinecartHelper.shouldSlowDown(this, level));
+		AtomicBoolean shouldSlowDown = new AtomicBoolean(MinecartHelper.shouldSlowDown(this, level()));
 		train.add(this);
 
 		if (getLinkedChild() != null) {
@@ -157,7 +157,7 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 				train.add(linkable.getLinkedChild());
 			}
 
-			train.forEach(child -> shouldSlowDown.set(shouldSlowDown.get() || MinecartHelper.shouldSlowDown(child, level)));
+			train.forEach(child -> shouldSlowDown.set(shouldSlowDown.get() || MinecartHelper.shouldSlowDown(child, level())));
 		}
 
 
@@ -181,7 +181,7 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 
 			if (stack.getItem() instanceof BucketItem) {
 				SoundEvent soundEvent = SoundEvents.BUCKET_EMPTY_LAVA;
-				level.playSound(player, player.blockPosition(), soundEvent, SoundSource.BLOCKS, 1.0f, 1.0f);
+				level().playSound(player, player.blockPosition(), soundEvent, SoundSource.BLOCKS, 1.0f, 1.0f);
 			}
 
 			fuel = (int) Math.min(72000, fuel + (fuelTime * 2.25));
@@ -193,7 +193,7 @@ public abstract class FurnaceMinecartEntityMixin extends AbstractMinecart implem
 		}
 
 		INGREDIENT = Ingredient.of();
-		info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide()));
+		info.setReturnValue(InteractionResult.sidedSuccess(level().isClientSide()));
 	}
 
 	@ModifyConstant(method = "interact", constant = @Constant(intValue = 32000))

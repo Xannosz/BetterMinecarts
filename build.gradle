@@ -1,7 +1,7 @@
 buildscript {
     dependencies {
         // MixinGradle:
-        classpath 'org.spongepowered:mixingradle:0.7.+'
+      //  classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 
@@ -9,12 +9,13 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 // MixinGradle:
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.19.3-1.7.0-44.1.0'
+version = '1.20.1-1.7.0-47.0.35'
 group = 'hu.xannosz.betterminecarts'
 archivesBaseName = 'betterminecarts'
 
@@ -22,7 +23,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
-    mappings channel: "official", version: "1.19.3"
+    mappings channel: "official", version: "1.20.1"
 
     runs {
         client {
@@ -96,7 +97,7 @@ mavenCentral()
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:1.19.3-44.1.0"
+    minecraft "net.minecraftforge:forge:1.20.1-47.0.35"
     // Apply Mixin AP
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 

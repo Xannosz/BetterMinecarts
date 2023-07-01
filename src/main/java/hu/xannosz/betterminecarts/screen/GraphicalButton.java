@@ -1,9 +1,9 @@
 package hu.xannosz.betterminecarts.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import hu.xannosz.betterminecarts.network.ButtonClickedPacket;
 import hu.xannosz.betterminecarts.network.ModMessages;
 import lombok.Setter;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -29,10 +29,10 @@ public class GraphicalButton extends AbstractButton {
 	}
 
 	@Override
-	public void renderButton(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		if (visible) {
 			if (isHovered || selected) {
-				drawTexturedModalRect(poseStack, config.getHitBoxX(), config.getHitBoxY(),
+				drawTexturedModalRect(guiGraphics, config.getHitBoxX(), config.getHitBoxY(),
 						config.getHoveredX(), config.getHoveredY(),
 						config.getHitBoxW(), config.getHitBoxH(), partialTicks);
 			}

@@ -281,7 +281,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		data.set(ID_KEY_2, ids[1]);
 		data.set(ACTIVE_BUTTON_KEY, activeButton.getId());
 		data.set(ACTIVE_FUNCTION_KEY, MinecartHelper.convertBitArrayToInt(new boolean[]{sendSignal, lampOn}));
-		if (level.isClientSide()) {
+		if (level().isClientSide()) {
 			return;
 		}
 		entityData.set(TOP_FILTER, topFilter.getLabel());
@@ -297,7 +297,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 			}
 		}
 
-		level.players().forEach(player -> {
+		level().players().forEach(player -> {
 					if (player.distanceToSqr(this) < 7000) {
 						ModMessages.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
 								new PlaySoundPacket(blockPosition(), this instanceof SteamLocomotive));
@@ -306,7 +306,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		);
 
 		if (BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE.get()) {
-			level.getEntities(this,
+			level().getEntities(this,
 					new AABB(this.getOnPos().offset(-BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), -10, -BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()),
 							this.getOnPos().offset(BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), 25, BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()))).forEach(
 					entity -> {
@@ -335,7 +335,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	}
 
 	private void setLamp() {
-		if (lampOn && !level.isClientSide()) {
+		if (lampOn && !level().isClientSide()) {
 			Set<BlockPos> positions = new HashSet<>();
 			positions.add(getOnPos());
 			positions.add(getOnPos().offset(1, 0, 1));
@@ -354,14 +354,14 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	}
 
 	private void setLampOnPosition(BlockPos position) {
-		BlockState state = level.getBlockState(position);
+		BlockState state = level().getBlockState(position);
 		if (state.getBlock().equals(GLOWING_RAIL.get())) {
-			if (level.getBlockEntity(position) instanceof GlowingRailBlockEntity glowingRailBlockEntity) {
+			if (level().getBlockEntity(position) instanceof GlowingRailBlockEntity glowingRailBlockEntity) {
 				glowingRailBlockEntity.setCount(0);
 			}
 		}
 		if (state.getBlock().equals(Blocks.RAIL)) {
-			level.setBlock(position, GLOWING_RAIL.get().defaultBlockState()
+			level().setBlock(position, GLOWING_RAIL.get().defaultBlockState()
 							.setValue(SHAPE, state.getValue(SHAPE))
 							.setValue(WATERLOGGED, state.getValue(WATERLOGGED)),
 					2, 0);
@@ -370,14 +370,14 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	private void checkRedstoneUnderLocomotive() {
 		if (activeButton != ButtonId.STOP &&
-				(level.getBlockState(getOnPos()).getBlock().equals(Blocks.RAIL) || level.getBlockState(getOnPos()).getBlock().equals(GLOWING_RAIL.get())) &&
-				level.getBlockState(getOnPos().below()).getBlock().equals(Blocks.REDSTONE_BLOCK)) {
+				(level().getBlockState(getOnPos()).getBlock().equals(Blocks.RAIL) || level().getBlockState(getOnPos()).getBlock().equals(GLOWING_RAIL.get())) &&
+				level().getBlockState(getOnPos().below()).getBlock().equals(Blocks.REDSTONE_BLOCK)) {
 			whistle();
 		}
 	}
 
 	private void loadChunk() {
-		if (BetterMinecartsConfig.FURNACE_MINECARTS_LOAD_CHUNKS.get() && level instanceof ServerLevel server) {
+		if (BetterMinecartsConfig.FURNACE_MINECARTS_LOAD_CHUNKS.get() && level() instanceof ServerLevel server) {
 			ChunkPos currentChunkPos = SectionPos.of(this).chunk();
 
 			if (!activeButton.equals(ButtonId.STOP) && !activeButton.equals(ButtonId.PAUSE))
@@ -447,8 +447,8 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	}
 
 	protected void explode(float power) { //power: 3 normal creeper, 6 powered creeper
-		if (!this.level.isClientSide && BetterMinecartsConfig.LOCOMOTIVE_EXPLODE_AFTER_FALL_DAMAGE.get()) {
-			this.level.explode(this, this.getX(), this.getY(), this.getZ(), power, Level.ExplosionInteraction.BLOCK);
+		if (!this.level().isClientSide && BetterMinecartsConfig.LOCOMOTIVE_EXPLODE_AFTER_FALL_DAMAGE.get()) {
+			this.level().explode(this, this.getX(), this.getY(), this.getZ(), power, Level.ExplosionInteraction.BLOCK);
 			this.discard();
 		}
 	}
@@ -527,7 +527,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 		float damage = BetterMinecartsConfig.MINECART_DAMAGE.get();
 
-		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living &&
+		if (damage > 0 && !level().isClientSide() && other instanceof LivingEntity living &&
 				living.isAlive() && !living.isPassenger() && speed > 1) {
 			living.hurt(BetterMinecarts.minecart(this), damage);
 

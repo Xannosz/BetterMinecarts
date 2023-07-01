@@ -44,7 +44,7 @@ public class SteamLocomotiveMenu extends AbstractContainerMenu {
 
 		checkContainerSize(inv, 8);
 		this.entity = ((SteamLocomotive) entity);
-		level = inv.player.level;
+		level = inv.player.level();
 		this.data = data;
 
 		addPlayerInventory(inv);

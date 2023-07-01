@@ -76,7 +76,7 @@ public class MeltingMinecart extends AbstractMinecart implements MenuProvider, C
 		for (int i = 0; i < itemHandler.getSlots(); i++) {
 			inventory.setItem(i, itemHandler.getStackInSlot(i));
 		}
-		Containers.dropContents(level, blockPosition(), inventory);
+		Containers.dropContents(level(), blockPosition(), inventory);
 
 		return Items.FURNACE_MINECART;
 	}
@@ -109,7 +109,7 @@ public class MeltingMinecart extends AbstractMinecart implements MenuProvider, C
 	@Override
 	public void tick() {
 		super.tick();
-		if (level.isClientSide()) {
+		if (level().isClientSide()) {
 			return;
 		}
 
@@ -146,7 +146,7 @@ public class MeltingMinecart extends AbstractMinecart implements MenuProvider, C
 		data.set(MAX_COOKING_KEY, maxCooking);
 		data.set(BURN_KEY, burn);
 		data.set(MAX_BURN_KEY, maxBurn);
-		if (level.isClientSide()) {
+		if (level().isClientSide()) {
 			return;
 		}
 		entityData.set(IS_BURN, burn > 0);

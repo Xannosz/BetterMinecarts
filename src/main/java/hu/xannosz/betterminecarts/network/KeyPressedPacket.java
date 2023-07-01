@@ -35,7 +35,7 @@ public class KeyPressedPacket {
 		NetworkEvent.Context context = supplier.get();
 		context.enqueueWork(() -> {
 			// SERVER SITE
-			Entity entity = Objects.requireNonNull(context.getSender()).getLevel().getEntity(entityId);
+			Entity entity = Objects.requireNonNull(context.getSender()).level().getEntity(entityId);
 			if (entity instanceof Linkable linkable) {
 				Linkable head;
 				if (BetterMinecartsConfig.KEY_CONTROL_FROM_THE_WHOLE_TRAIN.get()) {

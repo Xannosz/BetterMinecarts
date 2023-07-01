@@ -75,11 +75,11 @@ public abstract class AllMinecartEntityMixin extends net.minecraft.world.entity.
 			if (type != net.minecraft.world.entity.vehicle.AbstractMinecart.Type.RIDEABLE) {
 				net.minecraft.world.entity.vehicle.AbstractMinecart minecart;
 				if (type != null) {
-					minecart = AbstractMinecart.createMinecart(level, getX(), getY(), getZ(), type);
+					minecart = AbstractMinecart.createMinecart(level(), getX(), getY(), getZ(), type);
 				} else {
-					minecart = new CraftingMinecart(getX(), getY(), getZ(), level);
+					minecart = new CraftingMinecart(getX(), getY(), getZ(), level());
 				}
-				level.addFreshEntity(minecart);
+				level().addFreshEntity(minecart);
 
 				if (parent != null) {
 					setLinkedParent(null);
@@ -97,7 +97,7 @@ public abstract class AllMinecartEntityMixin extends net.minecraft.world.entity.
 				if (!player.isCreative())
 					stack.shrink(1);
 
-				info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide()));
+				info.setReturnValue(InteractionResult.sidedSuccess(level().isClientSide()));
 			}
 		}
 

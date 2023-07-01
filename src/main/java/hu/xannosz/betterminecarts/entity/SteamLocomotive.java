@@ -100,7 +100,7 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 			locomotive.setHoverName(getCustomName());
 		}
 		inventory.setItem(itemHandler.getSlots(), locomotive);
-		Containers.dropContents(level, blockPosition(), inventory);
+		Containers.dropContents(level(), blockPosition(), inventory);
 
 		return Items.AIR;
 	}
@@ -155,7 +155,7 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 		data.set(BURN_KEY, burn);
 		data.set(MAX_BURN_KEY, maxBurn);
 		super.updateData();
-		if (level.isClientSide()) {
+		if (level().isClientSide()) {
 			return;
 		}
 		entityData.set(IS_BURN, burn > 0);
@@ -190,14 +190,14 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 
 		if (isBurn() && this.random.nextInt(2) == 0) {
 			final Vec3 smokeCoordinates = getSmokeCoordinates();
-			this.level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+			this.level().addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
 					smokeCoordinates.x() + (random.nextFloat() - 0.5) * 0.1,
 					smokeCoordinates.y(),
 					smokeCoordinates.z() + (random.nextFloat() - 0.5) * 0.1,
 					0.0D, 0.2D, 0.0D);
 		}
 
-		if (level.isClientSide()) {
+		if (level().isClientSide()) {
 			return;
 		}
 

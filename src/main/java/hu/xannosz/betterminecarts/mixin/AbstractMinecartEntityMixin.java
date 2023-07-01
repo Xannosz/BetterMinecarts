@@ -104,7 +104,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 
 	@Inject(method = "comeOffTrack", at = @At("HEAD"), cancellable = true)
 	public void comeOffTrackHack(CallbackInfo info) {
-		if (this.onGround) {
+		if (this.onGround()) {
 			this.setDeltaMovement(this.getDeltaMovement().scale(0.96D));
 		}
 
@@ -123,7 +123,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	@SuppressWarnings("ConstantConditions")
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void betterminecarts$tick(CallbackInfo info) {
-		if (!level.isClientSide()) {
+		if (!level().isClientSide()) {
 			if (getLinkedParent() != null) {
 				double distance = getLinkedParent().distanceTo(this) - 1;
 
@@ -158,7 +158,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 					setLinkedParent(null);
 				}
 			} else {
-				MinecartHelper.shouldSlowDown((AbstractMinecart) (Object) this, level);
+				MinecartHelper.shouldSlowDown((AbstractMinecart) (Object) this, level());
 			}
 
 			if (getLinkedChild() != null && getLinkedChild().isRemoved()) {
@@ -175,7 +175,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 
 		float damage = BetterMinecartsConfig.MINECART_DAMAGE.get();
 
-		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && getDeltaMovement().length() > 1.5) {
+		if (damage > 0 && !level().isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && getDeltaMovement().length() > 1.5) {
 			living.hurt(BetterMinecarts.minecart(this), damage);
 
 			Vec3 knockBack = living.getDeltaMovement().add(getDeltaMovement().x() * 0.9, getDeltaMovement().length() * 0.2, getDeltaMovement().z() * 0.9);
@@ -212,7 +212,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 		ItemStack stack = player.getItemInHand(hand);
 
 		if (stack.is(CROWBAR.get())) {
-			if (level instanceof ServerLevel server) {
+			if (level() instanceof ServerLevel server) {
 				TrainUtil.clickedByCrowbar(stack, this, server);
 				updateChains();
 			}
@@ -224,7 +224,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 
 	@Override
 	public AbstractMinecart getLinkedParent() {
-		if (level instanceof ServerLevel server && linkedParent == null && parentUuid != null && server.getEntity(parentUuid) instanceof AbstractMinecart parent)
+		if (level() instanceof ServerLevel server && linkedParent == null && parentUuid != null && server.getEntity(parentUuid) instanceof AbstractMinecart parent)
 			setLinkedParent(parent);
 
 		return linkedParent;
@@ -240,7 +240,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 
 	@Override
 	public AbstractMinecart getLinkedChild() {
-		if (level instanceof ServerLevel server && linkedChild == null && childUuid != null && server.getEntity(childUuid) instanceof AbstractMinecart child)
+		if (level() instanceof ServerLevel server && linkedChild == null && childUuid != null && server.getEntity(childUuid) instanceof AbstractMinecart child)
 			setLinkedChild(child);
 
 		return linkedChild;
@@ -256,7 +256,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 
 	@Override
 	public void updateChains() {
-		if (!level.isClientSide()) {
+		if (!level().isClientSide()) {
 			AbstractMinecart parent = getLinkedParent();
 			if (parent == null) {
 				entityData.set(LINKED_PARENT, -1);
@@ -272,7 +272,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 		if (id == -1) {
 			return null;
 		} else {
-			return (AbstractMinecart) level.getEntity(id);
+			return (AbstractMinecart) level().getEntity(id);
 		}
 	}
 }

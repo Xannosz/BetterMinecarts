@@ -35,7 +35,7 @@ public class ElectricLocomotiveMenu extends AbstractContainerMenu {
 
 		checkContainerSize(inv, 0);
 		this.entity = ((ElectricLocomotive) entity);
-		level = inv.player.level;
+		level = inv.player.level();
 		this.data = data;
 
 		addDataSlots(data);

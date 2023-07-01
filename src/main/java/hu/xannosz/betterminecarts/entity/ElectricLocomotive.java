@@ -55,7 +55,7 @@ public class ElectricLocomotive extends AbstractLocomotive {
 			locomotive.setHoverName(getCustomName());
 		}
 		inventory.setItem(0, locomotive);
-		Containers.dropContents(level, blockPosition(), inventory);
+		Containers.dropContents(level(), blockPosition(), inventory);
 
 		return Items.AIR;
 	}

@@ -1,10 +1,10 @@
 package hu.xannosz.betterminecarts.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import hu.xannosz.betterminecarts.BetterMinecarts;
-import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.entity.SteamLocomotive;
+import hu.xannosz.betterminecarts.utils.ButtonId;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -101,12 +101,12 @@ public class SteamLocomotiveScreen extends AbstractContainerScreen<SteamLocomoti
 	}
 
 	@Override
-	protected void renderBg(@NotNull PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
+	protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);
 		RenderSystem.enableBlend();
-		this.blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
+		guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
 		menu.createSlots();
 
@@ -139,24 +139,24 @@ public class SteamLocomotiveScreen extends AbstractContainerScreen<SteamLocomoti
 		lamp.setSelected(menu.isLampOn());
 		redstone.setSelected(menu.isSignalActive());
 
-		steam.render(poseStack, menu.getSteam(), SteamLocomotive.MAX_STEAM, partialTick);
-		water.render(poseStack, menu.getWater(), SteamLocomotive.MAX_WATER, partialTick);
-		heat.render(poseStack, menu.getHeat(), 125, partialTick);
-		burn.render(poseStack, menu.getBurn(), menu.getMaxBurn(), partialTick);
+		steam.render(guiGraphics, menu.getSteam(), SteamLocomotive.MAX_STEAM, partialTick);
+		water.render(guiGraphics, menu.getWater(), SteamLocomotive.MAX_WATER, partialTick);
+		heat.render(guiGraphics, menu.getHeat(), 125, partialTick);
+		burn.render(guiGraphics, menu.getBurn(), menu.getMaxBurn(), partialTick);
 	}
 
 	@Override
-	public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float delta) {
+	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		//call built-in functions
-		renderBackground(poseStack);
-		super.render(poseStack, mouseX, mouseY, delta);
+		renderBackground(guiGraphics);
+		super.render(guiGraphics, mouseX, mouseY, delta);
 
 		//call built-in function
-		renderTooltip(poseStack, mouseX, mouseY);
+		renderTooltip(guiGraphics, mouseX, mouseY);
 	}
 
 	@Override
-	protected void renderLabels(@NotNull PoseStack poseStack, int mouseX, int mouseY) {
+	protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
 
 	}
 

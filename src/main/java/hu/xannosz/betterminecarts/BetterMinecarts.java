@@ -14,13 +14,12 @@ import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -66,11 +65,11 @@ public class BetterMinecarts {
 	}
 
 	public static DamageSource minecart(Entity entity) {
-		return new EntityDamageSource(MOD_ID + ".minecart", entity);
+		return null;//return new DamageSource(MOD_ID + ".minecart", entity);
 	}
 
-	private void addCreative(CreativeModeTabEvent.BuildContents event) {
-		if (event.getTab() == CreativeModeTabs.REDSTONE_BLOCKS || event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+	private void addCreative(BuildCreativeModeTabContentsEvent event) {
+		if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS || event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
 			event.accept(ModItems.CROWBAR);
 			event.accept(ModItems.CRAFTING_MINECART_ITEM);
 			event.accept(ModItems.ELECTRIC_LOCOMOTIVE);
