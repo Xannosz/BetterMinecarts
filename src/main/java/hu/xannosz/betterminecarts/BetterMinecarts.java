@@ -11,9 +11,11 @@ import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
@@ -65,7 +67,9 @@ public class BetterMinecarts {
 	}
 
 	public static DamageSource minecart(Entity entity) {
-		return null;//return new DamageSource(MOD_ID + ".minecart", entity);
+		return new DamageSource(
+				Holder.direct(new DamageType(MOD_ID + ".minecart", 0.5f))
+				, entity);
 	}
 
 	private void addCreative(BuildCreativeModeTabContentsEvent event) {

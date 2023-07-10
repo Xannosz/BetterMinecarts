@@ -176,8 +176,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 		float damage = BetterMinecartsConfig.MINECART_DAMAGE.get();
 
 		if (damage > 0 && !level().isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && getDeltaMovement().length() > 1.5) {
-			living.hurt(BetterMinecarts.minecart(this), damage);
-
+			//living.hurt(BetterMinecarts.minecart(this), damage);//TODO solve concurrent modification
 			Vec3 knockBack = living.getDeltaMovement().add(getDeltaMovement().x() * 0.9, getDeltaMovement().length() * 0.2, getDeltaMovement().z() * 0.9);
 			living.setDeltaMovement(knockBack);
 			living.hasImpulse = true;

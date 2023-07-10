@@ -18,7 +18,7 @@ public class DeadEndBlock extends Block {
 	public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
 
 	public DeadEndBlock() {
-		super(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion());
+		super(BlockBehaviour.Properties.copy(Blocks.RAIL).strength(2.0F, 3.0F));
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
 
