@@ -1,4 +1,3 @@
 - furnace minecart - override furnace cart
-- R disable hurt on collide on minecart if it has parent (move on track)
-- R newly spawned locomotive smoking on wrong place
 - diesel locomotive (ethanol powered)
+- draisine (manual locomotive)

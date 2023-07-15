@@ -72,6 +72,9 @@ manual test: (client and server)
     dispenser functionality on steam locomotive
     dispenser functionality on electric locomotive
     dispenser functionality on crafting minecart
+    collusion with single cart, collusion with tail of train
+    test connection with every minecart type
+    newly spawned locomotive smoking place
   crafting: (client)
     crowbar
     crafting minecart

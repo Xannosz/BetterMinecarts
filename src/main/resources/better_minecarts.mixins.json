@@ -5,6 +5,7 @@
   "refmap": "better_minecarts.refmap.json",
   "mixins": [
     "AbstractMinecartEntityMixin",
+    "ChestMinecartMixin",
     "FurnaceMinecartEntityMixin",
     "AllMinecartEntityMixin"
   ],

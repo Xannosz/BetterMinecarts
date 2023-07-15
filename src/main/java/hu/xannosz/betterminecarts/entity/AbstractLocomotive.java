@@ -96,6 +96,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	public void setStartDirection(Direction direction) {
 		switch (direction) {
+			case NORTH -> setYRot(90f);
 			case EAST -> setYRot(180f);
 			case SOUTH -> setYRot(-90f);
 		}
