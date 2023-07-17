@@ -97,6 +97,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	public void setStartDirection(Direction direction) {
 		switch (direction) {
+			case NORTH -> setYRot(90f);
 			case EAST -> setYRot(180f);
 			case SOUTH -> setYRot(-90f);
 		}
@@ -525,7 +526,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 			minecart.setDeltaMovement(getDeltaMovement());
 		}
 
-		float damage = BetterMinecartsConfig.MINECART_DAMAGE.get();
+		float damage = BetterMinecartsConfig.MINECART_DAMAGE.get().floatValue();
 
 		if (damage > 0 && !level.isClientSide() && other instanceof LivingEntity living &&
 				living.isAlive() && !living.isPassenger() && speed > 1) {
