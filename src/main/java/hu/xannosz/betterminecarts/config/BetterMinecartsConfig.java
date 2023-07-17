@@ -6,7 +6,7 @@ public class BetterMinecartsConfig {
 	public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 	public static final ForgeConfigSpec SPEC;
 
-	public static final ForgeConfigSpec.ConfigValue<Float> MINECART_DAMAGE;
+	public static final ForgeConfigSpec.ConfigValue<Double> MINECART_DAMAGE;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> FURNACE_MINECARTS_LOAD_CHUNKS;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> MOBS_PANIC_AFTER_WHISTLE;
 	public static final ForgeConfigSpec.ConfigValue<Integer> MOBS_PANIC_AFTER_WHISTLE_RANGE;
@@ -18,7 +18,7 @@ public class BetterMinecartsConfig {
 		BUILDER.push("Configs for Better Minecarts Mod");
 
 		MINECART_DAMAGE = BUILDER.comment("Damage Dealt by Minecarts")
-				.define("minecartDamage", 20F);
+				.define("minecartDamage", 20D);
 		FURNACE_MINECARTS_LOAD_CHUNKS = BUILDER.comment("Should Locomotives be able to load chunks?")
 				.define("furnaceMinecartsLoadChunks", true);
 		MOBS_PANIC_AFTER_WHISTLE = BUILDER.comment("Should Mobs panic after whistle?")

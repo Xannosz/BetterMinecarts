@@ -173,7 +173,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 		if (other instanceof AbstractMinecart minecart && getLinkedParent() != null && !getLinkedParent().equals(minecart))
 			minecart.setDeltaMovement(getDeltaMovement());
 
-		float damage = BetterMinecartsConfig.MINECART_DAMAGE.get();
+		float damage = BetterMinecartsConfig.MINECART_DAMAGE.get().floatValue();
 
 		if (damage > 0 && !level().isClientSide() && other instanceof LivingEntity living && living.isAlive() && !living.isPassenger() && getDeltaMovement().length() > 0.25) {
 			Vec3 knockBack = living.getDeltaMovement().add(getDeltaMovement().x() * 0.9, getDeltaMovement().length() * 0.2, getDeltaMovement().z() * 0.9);
