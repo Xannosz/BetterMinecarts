@@ -30,16 +30,18 @@ Modified by Xannosz 2022-2023
 ############################################################*/
 package hu.xannosz.betterminecarts.mixin;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
 import hu.xannosz.betterminecarts.utils.Linkable;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import hu.xannosz.betterminecarts.utils.TrainUtil;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -59,6 +61,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.lang.reflect.Method;
+import java.util.Random;
 import java.util.UUID;
 
 import static hu.xannosz.betterminecarts.item.ModItems.CROWBAR;
@@ -105,7 +108,15 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	@Inject(method = "comeOffTrack", at = @At("HEAD"), cancellable = true)
 	public void comeOffTrackHack(CallbackInfo info) {
 		if (this.onGround()) {
-			this.setDeltaMovement(this.getDeltaMovement().scale(0.96D));
+			if (getLinkedParent() != null || getLinkedChild() != null) {
+				this.setDeltaMovement(this.getDeltaMovement().scale(0.96D));
+			} else {
+				this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
+			}
+			if (new Random().nextInt(100) < 5 && this.getDeltaMovement().length()>0.04f) {
+				hurt(new DamageSource(Holder.direct(
+						new DamageType("generic", 0.5f))), 1.5f);
+			}
 		}
 
 		if (getMaxSpeedAirVertical() > 0 && getDeltaMovement().y > getMaxSpeedAirVertical()) {

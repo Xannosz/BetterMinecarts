@@ -1,3 +1,7 @@
 - furnace minecart - override furnace cart
 - diesel locomotive (ethanol powered)
-- draisine (manual locomotive)
++ destroy minecart on ground with 1% chance
++ disable solo minecart sliding
+
+? diesel booster
+? draisine (manual locomotive)
