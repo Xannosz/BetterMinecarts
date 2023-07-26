@@ -1,9 +1,7 @@
 package hu.xannosz.betterminecarts.item;
 
 import hu.xannosz.betterminecarts.BetterMinecarts;
-import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
-import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
-import hu.xannosz.betterminecarts.entity.SteamLocomotive;
+import hu.xannosz.betterminecarts.entity.*;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -33,11 +31,11 @@ public class AbstractLocomotiveItem extends Item {
 	public static final String TOP_COLOR_TAG = "topColor";
 	public static final String BOTTOM_COLOR_TAG = "bottomColor";
 
-	private final boolean isSteam;
+	private final LocomotiveType locomotiveType;
 
-	public AbstractLocomotiveItem(boolean isSteam) {
+	public AbstractLocomotiveItem(LocomotiveType locomotiveType) {
 		super(new Properties().stacksTo(1));
-		this.isSteam = isSteam;
+		this.locomotiveType = locomotiveType;
 		DispenserBlock.registerBehavior(this, DISPENSE_ITEM_BEHAVIOR);
 	}
 
@@ -55,13 +53,8 @@ public class AbstractLocomotiveItem extends Item {
 			MinecartColor bottomColor = MinecartColor.getFromLabel(itemStack.getOrCreateTag().getString(BOTTOM_COLOR_TAG));
 
 			if (topColor == null || bottomColor == null) {
-				if (((AbstractLocomotiveItem) itemStack.getItem()).isSteam) {
-					topColor = MinecartColor.LIGHT_GRAY;
-					bottomColor = MinecartColor.GRAY;
-				} else {
-					topColor = MinecartColor.YELLOW;
-					bottomColor = MinecartColor.BROWN;
-				}
+				topColor = ((AbstractLocomotiveItem) itemStack.getItem()).locomotiveType.getTopColor();
+				bottomColor = ((AbstractLocomotiveItem) itemStack.getItem()).locomotiveType.getBottomColor();
 			}
 
 			BlockPos blockpos = blockSource.getPos().relative(direction);
@@ -88,9 +81,17 @@ public class AbstractLocomotiveItem extends Item {
 				}
 			}
 
-			AbstractLocomotive abstractLocomotive = ((AbstractLocomotiveItem) itemStack.getItem()).isSteam ?
-					new SteamLocomotive(level, d0, d1 + d3, d2, topColor, bottomColor) :
-					new ElectricLocomotive(level, d0, d1 + d3, d2, topColor, bottomColor);
+			AbstractLocomotive abstractLocomotive;
+			switch (((AbstractLocomotiveItem) itemStack.getItem()).locomotiveType) {
+				case ELECTRIC ->
+						abstractLocomotive =new ElectricLocomotive(level, d0, d1 + d3, d2, topColor, bottomColor);
+				case STEAM ->
+						abstractLocomotive = new SteamLocomotive(level, d0, d1 + d3, d2, topColor, bottomColor) ;
+				case DIESEL ->
+						abstractLocomotive = new DieselLocomotive(level, d0, d1 + d3, d2, topColor, bottomColor);
+				default -> abstractLocomotive = null;
+			}
+
 			if (itemStack.hasCustomHoverName()) {
 				abstractLocomotive.setCustomName(itemStack.getHoverName());
 				abstractLocomotive.setCustomNameVisible(true);
@@ -117,13 +118,8 @@ public class AbstractLocomotiveItem extends Item {
 		MinecartColor bottomColor = MinecartColor.getFromLabel(useOnContext.getItemInHand().getOrCreateTag().getString(BOTTOM_COLOR_TAG));
 
 		if (topColor == null || bottomColor == null) {
-			if (isSteam) {
-				topColor = MinecartColor.LIGHT_GRAY;
-				bottomColor = MinecartColor.GRAY;
-			} else {
-				topColor = MinecartColor.YELLOW;
-				bottomColor = MinecartColor.BROWN;
-			}
+			topColor = locomotiveType.getTopColor();
+			bottomColor = locomotiveType.getBottomColor();
 		}
 
 		if (!blockstate.is(BlockTags.RAILS)) {
@@ -137,9 +133,17 @@ public class AbstractLocomotiveItem extends Item {
 					d0 = 0.5D;
 				}
 
-				AbstractLocomotive abstractLocomotive = isSteam ?
-						createSteamLocomotive(bottomColor, topColor, level, blockpos, d0) :
-						createElectricLocomotive(bottomColor, topColor, level, blockpos, d0);
+				AbstractLocomotive abstractLocomotive;
+				switch (locomotiveType) {
+					case ELECTRIC ->
+							abstractLocomotive = createElectricLocomotive(bottomColor, topColor, level, blockpos, d0);
+					case STEAM ->
+							abstractLocomotive = createSteamLocomotive(bottomColor, topColor, level, blockpos, d0);
+					case DIESEL ->
+							abstractLocomotive = createDieselLocomotive(bottomColor, topColor, level, blockpos, d0);
+					default -> abstractLocomotive = null;
+				}
+
 				if (itemstack.hasCustomHoverName()) {
 					abstractLocomotive.setCustomName(itemstack.getHoverName());
 					abstractLocomotive.setCustomNameVisible(true);
@@ -162,13 +166,8 @@ public class AbstractLocomotiveItem extends Item {
 		MinecartColor bottomColor = MinecartColor.getFromLabel(itemStack.getOrCreateTag().getString(BOTTOM_COLOR_TAG));
 
 		if (topColor == null || bottomColor == null) {
-			if (isSteam) {
-				topColor = MinecartColor.LIGHT_GRAY;
-				bottomColor = MinecartColor.GRAY;
-			} else {
-				topColor = MinecartColor.YELLOW;
-				bottomColor = MinecartColor.BROWN;
-			}
+			topColor = locomotiveType.getTopColor();
+			bottomColor = locomotiveType.getBottomColor();
 		}
 
 		components.add(Component.translatable("text.betterminecarts.locomotive.color." + topColor.getLabel()).withStyle(topColor.getLabelColor()));
@@ -191,12 +190,19 @@ public class AbstractLocomotiveItem extends Item {
 				(double) blockpos.getZ() + 0.5D, top, bottom);
 	}
 
+	private AbstractLocomotive createDieselLocomotive(MinecartColor bottom, MinecartColor top, Level level, BlockPos blockpos, double d0) {
+		return new DieselLocomotive(level,
+				(double) blockpos.getX() + 0.5D,
+				(double) blockpos.getY() + 0.0625D + d0,
+				(double) blockpos.getZ() + 0.5D, top, bottom);
+	}
+
 	@Override
 	public @NotNull String getDescriptionId() {
 		return "item." + BetterMinecarts.MOD_ID + "." + getLocomotiveName();
 	}
 
 	public String getLocomotiveName() {
-		return (isSteam ? "steam" : "electric") + "_locomotive";
+		return locomotiveType.getName();
 	}
 }

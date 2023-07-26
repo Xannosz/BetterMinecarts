@@ -1,11 +1,13 @@
 package hu.xannosz.betterminecarts;
 
+import hu.xannosz.betterminecarts.client.models.DieselLocomotiveModel;
 import hu.xannosz.betterminecarts.client.models.ElectricLocomotiveModel;
 import hu.xannosz.betterminecarts.client.models.SteamLocomotiveModel;
 import hu.xannosz.betterminecarts.client.renderer.LocomotiveRenderer;
 import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
 import hu.xannosz.betterminecarts.item.ModItems;
 import hu.xannosz.betterminecarts.network.ModMessages;
+import hu.xannosz.betterminecarts.screen.DieselLocomotiveScreen;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveScreen;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -78,6 +80,7 @@ public class BetterMinecarts {
 			event.accept(ModItems.CRAFTING_MINECART_ITEM);
 			event.accept(ModItems.ELECTRIC_LOCOMOTIVE);
 			event.accept(ModItems.STEAM_LOCOMOTIVE);
+			event.accept(ModItems.DIESEL_LOCOMOTIVE);
 			ModItems.BLOCK_ITEMS.forEach(event::accept);
 		}
 	}
@@ -94,6 +97,9 @@ public class BetterMinecarts {
 			event.registerEntityRenderer(STEAM_LOCOMOTIVE.get(), context ->
 					new LocomotiveRenderer(context,
 							new SteamLocomotiveModel(context.bakeLayer(SteamLocomotiveModel.LAYER_LOCATION))));
+			event.registerEntityRenderer(DIESEL_LOCOMOTIVE.get(), context ->
+					new LocomotiveRenderer(context,
+							new DieselLocomotiveModel(context.bakeLayer(DieselLocomotiveModel.LAYER_LOCATION))));
 			event.registerEntityRenderer(CRAFTING_MINECART.get(), context -> new MinecartRenderer<>(context, ModelLayers.FURNACE_MINECART));
 		}
 
@@ -102,6 +108,7 @@ public class BetterMinecarts {
 		public static void onClientSetup(FMLClientSetupEvent event) {
 			MenuScreens.register(ELECTRIC_LOCOMOTIVE_MENU.get(), ElectricLocomotiveScreen::new);
 			MenuScreens.register(STEAM_LOCOMOTIVE_MENU.get(), SteamLocomotiveScreen::new);
+			MenuScreens.register(DIESEL_LOCOMOTIVE_MENU.get(), DieselLocomotiveScreen::new);
 		}
 
 		@SubscribeEvent
@@ -111,6 +118,8 @@ public class BetterMinecarts {
 					ElectricLocomotiveModel::createBodyLayer);
 			event.registerLayerDefinition(SteamLocomotiveModel.LAYER_LOCATION,
 					SteamLocomotiveModel::createBodyLayer);
+			event.registerLayerDefinition(DieselLocomotiveModel.LAYER_LOCATION,
+					DieselLocomotiveModel::createBodyLayer);
 		}
 	}
 }

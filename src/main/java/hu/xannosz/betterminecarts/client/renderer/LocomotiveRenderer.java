@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
+import hu.xannosz.betterminecarts.entity.DieselLocomotive;
 import hu.xannosz.betterminecarts.entity.ElectricLocomotive;
 import hu.xannosz.betterminecarts.entity.SteamLocomotive;
 import hu.xannosz.betterminecarts.utils.Linkable;
@@ -28,16 +29,20 @@ import org.spongepowered.asm.mixin.Unique;
 public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 	private static final ResourceLocation ELECTRIC_LOCOMOTIVE =
 			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/electric_locomotive.png");
-	private static final ResourceLocation STEAM_LOCOMOTIVE =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive.png");
 	private static final ResourceLocation ELECTRIC_LOCOMOTIVE_ON =
 			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/electric_locomotive_on.png");
+	private static final ResourceLocation STEAM_LOCOMOTIVE =
+			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive.png");
 	private static final ResourceLocation STEAM_LOCOMOTIVE_ON =
 			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_on.png");
 	private static final ResourceLocation STEAM_LOCOMOTIVE_BURN =
 			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_burn.png");
 	private static final ResourceLocation STEAM_LOCOMOTIVE_ON_BURN =
 			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_on_burn.png");
+	private static final ResourceLocation DIESEL_LOCOMOTIVE =
+			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/diesel_locomotive.png");
+	private static final ResourceLocation DIESEL_LOCOMOTIVE_ON =
+			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/diesel_locomotive_on.png");
 
 	protected final EntityModel<AbstractLocomotive> model;
 
@@ -164,6 +169,13 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 				} else {
 					return STEAM_LOCOMOTIVE;
 				}
+			}
+		}
+		if (locomotive instanceof DieselLocomotive) {
+			if (locomotive.isLampOn()) {
+				return DIESEL_LOCOMOTIVE_ON;
+			} else {
+				return DIESEL_LOCOMOTIVE;
 			}
 		}
 		return ELECTRIC_LOCOMOTIVE;

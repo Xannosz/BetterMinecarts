@@ -18,6 +18,9 @@ public class ModMenus {
 	public static final RegistryObject<MenuType<SteamLocomotiveMenu>> STEAM_LOCOMOTIVE_MENU =
 			registerMenuType(SteamLocomotiveMenu::new, "steam_locomotive_menu");
 
+	public static final RegistryObject<MenuType<DieselLocomotiveMenu>> DIESEL_LOCOMOTIVE_MENU =
+			registerMenuType(DieselLocomotiveMenu::new, "diesel_locomotive_menu");
+
 	private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
 		return MENUS.register(name, () -> IForgeMenuType.create(factory));
 	}

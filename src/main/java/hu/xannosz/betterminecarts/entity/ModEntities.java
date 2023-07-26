@@ -16,6 +16,9 @@ public class ModEntities {
 	public static final RegistryObject<EntityType<SteamLocomotive>> STEAM_LOCOMOTIVE = ENTITIES.register("steam_locomotive",
 			() -> EntityType.Builder.<SteamLocomotive>of(SteamLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":steam_locomotive"));
 
+	public static final RegistryObject<EntityType<DieselLocomotive>> DIESEL_LOCOMOTIVE = ENTITIES.register("diesel_locomotive",
+			() -> EntityType.Builder.<DieselLocomotive>of(DieselLocomotive::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":diesel_locomotive"));
+
 	public static final RegistryObject<EntityType<CraftingMinecart>> CRAFTING_MINECART = ENTITIES.register("crafting_minecart_item.json",
 			() -> EntityType.Builder.<CraftingMinecart>of(CraftingMinecart::new, MobCategory.MISC).sized(1.0f, 1.0f).build(BetterMinecarts.MOD_ID + ":crafting_minecart_item.json"));
 
