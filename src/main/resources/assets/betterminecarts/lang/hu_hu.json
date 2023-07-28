@@ -8,6 +8,7 @@
   "item.betterminecarts.crowbar": "Feszítővas",
   "item.betterminecarts.steam_locomotive": "Gőzmozdony",
   "item.betterminecarts.electric_locomotive": "Villanymozdony",
+  "item.betterminecarts.diesel_locomotive": "Dízelmozdony",
   "item.betterminecarts.crafting_minecart_item": "Csille Barkácsasztallal",
 
   "entity.betterminecarts.crafting_minecart_item.json": "Csille Barkácsasztallal",
@@ -37,6 +38,7 @@
   "text.betterminecarts.locomotive.color.black": "Fekete",
 
   "betterminecarts.steam_whistle": "Gőz síp",
+  "betterminecarts.diesel_whistle": "Vonat kürt",
 
   "key.category.betterminecarts": "Better Minecarts",
   "key.betterminecarts.increase": "Sebesség Növelés",

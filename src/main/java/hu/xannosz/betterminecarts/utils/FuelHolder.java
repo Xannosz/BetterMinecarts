@@ -1,15 +1,26 @@
 package hu.xannosz.betterminecarts.utils;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.fml.loading.FMLPaths;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hu.xannosz.betterminecarts.utils.Fuel.*;
+
+@Slf4j
 public class FuelHolder {
 	public static final String FUEL_COLOR_KEY = "BETTER_MINECARTS_FUEL_COLOR";
 	public static final String AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS_KEY = "BETTER_MINECARTS_AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS";
@@ -22,13 +33,36 @@ public class FuelHolder {
 	private final List<Fuel> fuels = new ArrayList<>();
 
 	private FuelHolder() {
-		Fuel fuel = new Fuel();
-		fuel.setFuelColor(0xAFAFAFFF);
-		fuel.setAmountInOneItemInMilliBuckets(200);
-		fuel.setEnergyInOneMilliBucket(3);
-		fuel.setItemQualifiedName("minecraft:honey_bottle");
-		fuel.setLeftoverItemQualifiedName("minecraft:glass_bottle");
-		fuels.add(fuel);
+		Path configPath = FMLPaths.GAMEDIR.get().resolve("config/betterminecartsfuel.json");
+
+		if (!configPath.toFile().exists()) {
+			try {
+				final String content = "[\n" +
+						new Fuel(0xAFAFAFFF, 200, 3,
+								"minecraft:honey_bottle", "minecraft:glass_bottle").toJson() +
+						",\n" +
+						new Fuel(0x0F0F0FFF, 400, 3,
+								"minecraft:apple", "minecraft:glass_bottle").toJson() +
+						"]\n";
+				Files.writeString(configPath, content);
+			} catch (IOException e) {
+				log.error("Problem with fuel json parsing", e);
+			}
+		}
+		try {
+			for (JsonObject value : Json.createReader(new FileInputStream(configPath.toFile()))
+					.readArray().getValuesAs(JsonObject.class)) {
+				fuels.add(new Fuel(
+						value.getInt(FUEL_COLOR),
+						value.getInt(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS),
+						value.getInt(ENERGY_IN_ONE_MILLI_BUCKET),
+						value.getString(ITEM_QUALIFIED_NAME),
+						value.getString(LEFTOVER_ITEM_QUALIFIED_NAME)
+				));
+			}
+		} catch (IOException e) {
+			log.error("Problem with fuel json parsing", e);
+		}
 	}
 
 	public boolean isFuel(ItemStack item) {
@@ -42,7 +76,7 @@ public class FuelHolder {
 		if (item.getOrCreateTag().contains(LEFTOVER_ITEM_KEY)) {
 			return getItemFromQualifiedName(item.getOrCreateTag().getString(LEFTOVER_ITEM_KEY));
 		}
-		if(!isFuel(item)){
+		if (!isFuel(item)) {
 			return Items.AIR;
 		}
 		return getItemFromQualifiedName(getFuelFromList(item).getLeftoverItemQualifiedName());
@@ -52,7 +86,7 @@ public class FuelHolder {
 		if (item.getOrCreateTag().contains(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS_KEY)) {
 			return item.getOrCreateTag().getInt(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS_KEY);
 		}
-		if(!isFuel(item)){
+		if (!isFuel(item)) {
 			return 0;
 		}
 		return getFuelFromList(item).getAmountInOneItemInMilliBuckets();
@@ -62,7 +96,7 @@ public class FuelHolder {
 		if (item.getOrCreateTag().contains(ENERGY_IN_ONE_MILLI_BUCKET_KEY)) {
 			return item.getOrCreateTag().getInt(ENERGY_IN_ONE_MILLI_BUCKET_KEY);
 		}
-		if(!isFuel(item)){
+		if (!isFuel(item)) {
 			return 0;
 		}
 		return getFuelFromList(item).getEnergyInOneMilliBucket();
@@ -72,7 +106,7 @@ public class FuelHolder {
 		if (item.getOrCreateTag().contains(FUEL_COLOR_KEY)) {
 			return item.getOrCreateTag().getInt(FUEL_COLOR_KEY);
 		}
-		if(!isFuel(item)){
+		if (!isFuel(item)) {
 			return 0xFFFFFFFF;
 		}
 		return getFuelFromList(item).getFuelColor();

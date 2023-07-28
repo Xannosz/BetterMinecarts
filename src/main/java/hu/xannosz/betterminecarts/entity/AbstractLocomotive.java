@@ -69,10 +69,12 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	private MinecartColor topFilter;
 	private MinecartColor bottomFilter;
 	private ChunkPos prevChunkPos;
+	private final LocomotiveType locomotiveType;
 
-	protected AbstractLocomotive(EntityType<?> entityType, Level level,
+	protected AbstractLocomotive(EntityType<?> entityType, Level level, LocomotiveType locomotiveType,
 								 MinecartColor topFilter, MinecartColor bottomFilter, int dataSize) {
 		super(entityType, level);
+		this.locomotiveType = locomotiveType;
 		this.topFilter = topFilter;
 		this.bottomFilter = bottomFilter;
 		data = new SimpleContainerData(dataSize);
@@ -80,9 +82,10 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		updateData();
 	}
 
-	protected AbstractLocomotive(EntityType<?> entityType, double x, double y, double z, Level level,
+	protected AbstractLocomotive(EntityType<?> entityType, double x, double y, double z, Level level, LocomotiveType locomotiveType,
 								 MinecartColor topFilter, MinecartColor bottomFilter, int dataSize) {
 		super(entityType, level, x, y, z);
+		this.locomotiveType = locomotiveType;
 		this.topFilter = topFilter;
 		this.bottomFilter = bottomFilter;
 		data = new SimpleContainerData(dataSize);
@@ -301,7 +304,7 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 		level().players().forEach(player -> {
 					if (player.distanceToSqr(this) < 7000) {
 						ModMessages.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-								new PlaySoundPacket(blockPosition(), this instanceof SteamLocomotive));
+								new PlaySoundPacket(blockPosition(), locomotiveType));
 					}
 				}
 		);

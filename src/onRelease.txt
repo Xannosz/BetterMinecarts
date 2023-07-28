@@ -9,14 +9,16 @@ try every link on wiki
 
 manual test: (client and server)
   graphic:
-    smoke
+    smoke (steam, diesel locomotive)
     fire on steam locomotive back
     chains
     buttons steam
     buttons electric
+    buttons diesel
     fire inside steam locomotive
     gauges in steam locomotive
     gauges in electric locomotive
+    gauges in diesel locomotive
   main functions:
     connect
     disconnect
@@ -29,38 +31,55 @@ manual test: (client and server)
     lamp on electric locomotive
     whistle on electric locomotive
     redstone on electric locomotive
+    lamp on diesel locomotive
+    whistle on diesel locomotive
+    redstone on diesel locomotive
     all speed gui on steam locomotive
     all speed gui on electric locomotive
+    all speed gui on diesel locomotive
     all speed keyboard on steam locomotive
     all speed keyboard on electric locomotive
+    all speed keyboard on diesel locomotive
     functions keyboard on steam locomotive
     functions keyboard on electric locomotive
+    functions keyboard on diesel locomotive
     test automatic switch with steam locomotive
     test automatic switch with electric locomotive
+    test automatic switch with diesel locomotive
     on the fly colorization
   additional functions:
     pick up steam locomotives with name
     pick up steam locomotives without it
     pick up electric locomotives with name
     pick up electric locomotives without it
+    pick up diesel locomotives with name
+    pick up diesel locomotives without it
     pick up crafting minecart with name
     pick up crafting minecart without it
     whistle from long distance
     automatic whistle 2 way with steam locomotive
     automatic whistle 2 way with electric locomotive
+    automatic whistle 2 way with diesel locomotive
     steam locomotive interact with hoppers
+    diesel locomotive interact with hoppers
     collusion with mobs with steam locomotive
     collusion with mobs with electric locomotive
+    collusion with mobs with diesel locomotive
     get off the track with steam locomotive
     get off the track with electric locomotive
+    get off the track with diesel locomotive
     fall damage with steam locomotive
     fall damage with electric locomotive
+    fall damage with diesel locomotive
     chunk loading with steam locomotive
     chunk loading with electric locomotive
+    chunk loading with diesel locomotive
     mobs whistle interact with steam locomotive
     mobs whistle interact with electric locomotive
+    mobs whistle interact with diesel locomotive
     name the steam locomotive
     name the electric locomotive
+    name the diesel locomotive
     name the crafting minecart
     change minecart type on the fly furnace
     change minecart type on the fly crafting
@@ -71,15 +90,18 @@ manual test: (client and server)
     toggle name visibility
     dispenser functionality on steam locomotive
     dispenser functionality on electric locomotive
+    dispenser functionality on diesel locomotive
     dispenser functionality on crafting minecart
     collusion with single cart, collusion with tail of train
     test connection with every minecart type
-    newly spawned locomotive smoking place
+    newly spawned steam locomotive smoking place
+    newly spawned diesel locomotive smoking place
   crafting: (client)
     crowbar
     crafting minecart
     electric locomotive
     steam locomotive
+    diesel locomotive
     signal rail
     crossed rail
     dead end
@@ -91,6 +113,8 @@ manual test: (client and server)
     colored steam locomotive without name
     colored electric locomotive with name
     colored electric locomotive without name
+    colored diesel locomotive with name
+    colored diesel locomotive without name
     crafting minecart with name
     crafting minecart without name
   long ride:

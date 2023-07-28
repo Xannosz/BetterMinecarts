@@ -15,7 +15,7 @@ public class ClientPacketHandlerClass {
 				(double) msg.getPosition().getX() + 0.5D,
 				(double) msg.getPosition().getY() + 0.5D,
 				(double) msg.getPosition().getZ() + 0.5D,
-				msg.isSteam() ? BetterMinecarts.STEAM_WHISTLE.get() : SoundEvents.BELL_BLOCK,
+				msg.getType().getWhistle(),
 				SoundSource.BLOCKS, 5F, 5F, true);
 	}
 }

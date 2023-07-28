@@ -1,5 +1,6 @@
 package hu.xannosz.betterminecarts.network;
 
+import hu.xannosz.betterminecarts.entity.LocomotiveType;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,21 +13,21 @@ import java.util.function.Supplier;
 @Getter
 public class PlaySoundPacket {
 	private final BlockPos position;
-	private final boolean isSteam;
+	private final LocomotiveType type;
 
-	public PlaySoundPacket(BlockPos position, boolean isSteam) {
+	public PlaySoundPacket(BlockPos position, LocomotiveType type) {
 		this.position = position;
-		this.isSteam = isSteam;
+		this.type = type;
 	}
 
 	public PlaySoundPacket(FriendlyByteBuf buf) {
 		position = buf.readBlockPos();
-		isSteam = buf.readBoolean();
+		type = buf.readEnum(LocomotiveType.class);
 	}
 
 	public void toBytes(FriendlyByteBuf buf) {
 		buf.writeBlockPos(position);
-		buf.writeBoolean(isSteam);
+		buf.writeEnum(type);
 	}
 
 	public void handler(Supplier<NetworkEvent.Context> supplier) {

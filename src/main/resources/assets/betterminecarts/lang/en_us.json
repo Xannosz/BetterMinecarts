@@ -8,6 +8,7 @@
   "item.betterminecarts.crowbar": "Crowbar",
   "item.betterminecarts.steam_locomotive": "Steam locomotive",
   "item.betterminecarts.electric_locomotive": "Electric locomotive",
+  "item.betterminecarts.diesel_locomotive": "Diesel locomotive",
   "item.betterminecarts.crafting_minecart_item": "Crafting Minecart",
 
   "entity.betterminecarts.crafting_minecart_item.json": "Crafting Minecart",
@@ -37,6 +38,7 @@
   "text.betterminecarts.locomotive.color.black": "Black",
 
   "betterminecarts.steam_whistle": "Steam whistle",
+  "betterminecarts.diesel_whistle": "Train horn",
 
   "key.category.betterminecarts": "Better Minecarts",
   "key.betterminecarts.increase": "Increase Speed",

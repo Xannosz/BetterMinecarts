@@ -31,6 +31,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLConfig;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -48,6 +50,9 @@ public class BetterMinecarts {
 	public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, BetterMinecarts.MOD_ID);
 	public static RegistryObject<SoundEvent> STEAM_WHISTLE = SOUND_EVENTS.register("steam_whistle",
 			() -> SoundEvent.createFixedRangeEvent(new ResourceLocation(BetterMinecarts.MOD_ID, "steam_whistle"),
+					16f));
+	public static RegistryObject<SoundEvent> DIESEL_WHISTLE = SOUND_EVENTS.register("diesel_whistle",
+			() -> SoundEvent.createFixedRangeEvent(new ResourceLocation(BetterMinecarts.MOD_ID, "diesel_whistle"),
 					16f));
 
 	public BetterMinecarts() {

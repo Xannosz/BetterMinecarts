@@ -4,5 +4,11 @@
     "sounds": [
       "betterminecarts:steam_whistle"
     ]
+  },
+  "diesel_whistle": {
+    "subtitle": "betterminecarts.diesel_whistle",
+    "sounds": [
+      "betterminecarts:diesel_whistle"
+    ]
   }
 }

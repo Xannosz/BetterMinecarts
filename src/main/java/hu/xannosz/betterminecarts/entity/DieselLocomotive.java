@@ -9,6 +9,7 @@ import hu.xannosz.betterminecarts.utils.MinecartColor;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -25,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -34,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 import static hu.xannosz.betterminecarts.entity.ModEntities.DIESEL_LOCOMOTIVE;
+import static hu.xannosz.betterminecarts.utils.MinecartHelper.IS_BURN;
 
 public class DieselLocomotive extends AbstractLocomotive implements Container {
 
@@ -72,11 +75,11 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 	private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
 	public DieselLocomotive(EntityType<?> entityType, Level level) {
-		super(entityType, level, LocomotiveType.DIESEL.getTopColor(), LocomotiveType.DIESEL.getBottomColor(), DATA_SIZE);
+		super(entityType, level, LocomotiveType.DIESEL, LocomotiveType.DIESEL.getTopColor(), LocomotiveType.DIESEL.getBottomColor(), DATA_SIZE);
 	}
 
 	public DieselLocomotive(Level level, double x, double y, double z, MinecartColor topFilter, MinecartColor bottomFilter) {
-		super(DIESEL_LOCOMOTIVE.get(), x, y, z, level, topFilter, bottomFilter, DATA_SIZE);
+		super(DIESEL_LOCOMOTIVE.get(), x, y, z, level, LocomotiveType.DIESEL, topFilter, bottomFilter, DATA_SIZE);
 	}
 
 	@Override
@@ -135,6 +138,10 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		data.set(POWER_KEY, power);
 		data.set(CLOCK_KEY, clock);
 		super.updateData();
+		if (level().isClientSide()) {
+			return;
+		}
+		entityData.set(IS_BURN, activeButton != ButtonId.STOP);
 	}
 
 	@Override
@@ -157,9 +164,11 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		fuels = new HashMap<>();
 		ListTag tagList = compoundTag.getList("FuelItems", Tag.TAG_COMPOUND);
 		for (int i = 0; i < tagList.size(); i++) {
-			CompoundTag itemTags = tagList.getCompound(i);
-			int amount = itemTags.getInt("Amount");
-			fuels.put(itemTags, amount);
+			CompoundTag itemTag = tagList.getCompound(i);
+			int amount = itemTag.getInt("Amount");
+			itemTag.remove("Amount");
+			itemTag.putByte("Count",(byte) 1);
+			fuels.put(itemTag, amount);
 		}
 		itemHandler.deserializeNBT(compoundTag.getCompound("Inventory"));
 		updateData();
@@ -169,7 +178,14 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 	public void tick() {
 		super.tick();
 
-		//smoke
+		if (entityData.get(IS_BURN)) {
+			final Vec3 smokeCoordinates = getSmokeCoordinates();
+			this.level().addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+					smokeCoordinates.x() + (random.nextFloat() - 0.5) * 0.1,
+					smokeCoordinates.y(),
+					smokeCoordinates.z() + (random.nextFloat() - 0.5) * 0.1,
+					0.0D, 0.2D, 0.0D);
+		}
 
 		if (level().isClientSide()) {
 			return;
@@ -248,6 +264,24 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		updateData();
 	}
 
+	private Vec3 getSmokeCoordinates() {
+		switch (getMotionDirection()) {
+			case NORTH -> {
+				return new Vec3(this.getX(), this.getY() + 1.2, this.getZ() + 0.1);
+			}
+			case SOUTH -> {
+				return new Vec3(this.getX(), this.getY() + 1.2, this.getZ() - 0.1);
+			}
+			case WEST -> {
+				return new Vec3(this.getX() + 0.1, this.getY() + 1.2, this.getZ());
+			}
+			case EAST -> {
+				return new Vec3(this.getX() - 0.1, this.getY() + 1.2, this.getZ());
+			}
+		}
+		return new Vec3(this.getX(), this.getY() + 1.2, this.getZ());
+	}
+
 	private void moveStack(int s, int t) {
 		if (itemHandler.getStackInSlot(s).isEmpty()) {
 			return;
@@ -273,6 +307,12 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 	public void invalidateCaps() {
 		super.invalidateCaps();
 		lazyItemHandler.invalidate();
+	}
+
+	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		entityData.define(IS_BURN, false);
 	}
 
 	private int getFuelAmount() {
@@ -374,6 +414,7 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		}
 		CompoundTag itemTag = new CompoundTag();
 		itemStack.save(itemTag);
+		itemTag.putByte("Count",(byte) 1);
 		return itemTag;
 	}
 

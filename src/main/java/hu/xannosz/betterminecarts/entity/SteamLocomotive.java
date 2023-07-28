@@ -80,11 +80,11 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 	private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
 	public SteamLocomotive(EntityType<?> entityType, Level level) {
-		super(entityType, level, LocomotiveType.STEAM.getTopColor(), LocomotiveType.STEAM.getBottomColor(), DATA_SIZE);
+		super(entityType, level, LocomotiveType.STEAM, LocomotiveType.STEAM.getTopColor(), LocomotiveType.STEAM.getBottomColor(), DATA_SIZE);
 	}
 
 	public SteamLocomotive(Level level, double x, double y, double z, MinecartColor top, MinecartColor bottom) {
-		super(STEAM_LOCOMOTIVE.get(), x, y, z, level, top, bottom, DATA_SIZE);
+		super(STEAM_LOCOMOTIVE.get(), x, y, z, level, LocomotiveType.STEAM, top, bottom, DATA_SIZE);
 	}
 
 	@Override

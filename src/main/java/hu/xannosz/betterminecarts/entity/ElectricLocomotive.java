@@ -38,11 +38,11 @@ public class ElectricLocomotive extends AbstractLocomotive {
 	private BlockPos lastBlockPos;
 
 	public ElectricLocomotive(EntityType<?> entityType, Level level) {
-		super(entityType, level, LocomotiveType.ELECTRIC.getTopColor(), LocomotiveType.ELECTRIC.getBottomColor(), DATA_SIZE);
+		super(entityType, level, LocomotiveType.ELECTRIC, LocomotiveType.ELECTRIC.getTopColor(), LocomotiveType.ELECTRIC.getBottomColor(), DATA_SIZE);
 	}
 
 	public ElectricLocomotive(Level level, double x, double y, double z, MinecartColor top, MinecartColor bottom) {
-		super(ELECTRIC_LOCOMOTIVE.get(), x, y, z, level, top, bottom, DATA_SIZE);
+		super(ELECTRIC_LOCOMOTIVE.get(), x, y, z, level, LocomotiveType.ELECTRIC, top, bottom, DATA_SIZE);
 	}
 
 	@Override
