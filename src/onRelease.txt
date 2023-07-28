@@ -96,6 +96,8 @@ manual test: (client and server)
     test connection with every minecart type
     newly spawned steam locomotive smoking place
     newly spawned diesel locomotive smoking place
+    diesel fuel with not existing item
+    diesel fuel with modded item
   crafting: (client)
     crowbar
     crafting minecart

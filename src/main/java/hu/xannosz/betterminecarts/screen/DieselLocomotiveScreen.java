@@ -33,7 +33,6 @@ public class DieselLocomotiveScreen extends AbstractContainerScreen<DieselLocomo
 	private GraphicalButton lamp;
 	private GraphicalButton whistle;
 	private GraphicalButton redstone;
-
 	private Gauge fuel;
 
 	public DieselLocomotiveScreen(DieselLocomotiveMenu menu, Inventory inventory, Component title) {
@@ -129,7 +128,14 @@ public class DieselLocomotiveScreen extends AbstractContainerScreen<DieselLocomo
 		lamp.setSelected(menu.isLampOn());
 		redstone.setSelected(menu.isSignalActive());
 
+		final int color = menu.getFuelColor();
+		float a = (color >> 24 & 0xff) / 255f;
+		float r = ((color & 0xff0000) >> 16) / 255f;
+		float g = ((color & 0xff00) >> 8) / 255f;
+		float b = (color & 0xff) / 255f;
+		RenderSystem.setShaderColor(a, r, g, b);
 		fuel.render(guiGraphics, menu.getFuelAmount(), DieselLocomotive.MAX_FUEL, partialTick);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		drawTexturedModalRect(guiGraphics, x + 11, y + 9, 178, 2, 15, 79, partialTick);
 
 		int power = menu.getPower();

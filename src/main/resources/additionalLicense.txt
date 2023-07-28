@@ -37,3 +37,8 @@ assets/betterminecarts/models/item/crossed_rail.json
 assets/betterminecarts/textures/block/crossed_rail.json
 assets/betterminecarts/textures/entity/chain.json
 assets/betterminecarts/lang/en_us.json
+
+
+
+diesel_whistle.ogg copied from wikipedia https://en.wikipedia.org/wiki/File:Makrofon_DB_Baureihe_628.ogg
+Wikimedia Commons, CC-BY-SA 3.0

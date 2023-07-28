@@ -38,11 +38,11 @@ public class FuelHolder {
 		if (!configPath.toFile().exists()) {
 			try {
 				final String content = "[\n" +
-						new Fuel(0xAFAFAFFF, 200, 3,
+						new Fuel(0xfaba1c5f, 200, 5,
 								"minecraft:honey_bottle", "minecraft:glass_bottle").toJson() +
 						",\n" +
-						new Fuel(0x0F0F0FFF, 400, 3,
-								"minecraft:apple", "minecraft:glass_bottle").toJson() +
+						new Fuel(0xb42a735f, 400, 25,
+								"minecraft:dragon_breath", "minecraft:glass_bottle").toJson() +
 						"]\n";
 				Files.writeString(configPath, content);
 			} catch (IOException e) {
