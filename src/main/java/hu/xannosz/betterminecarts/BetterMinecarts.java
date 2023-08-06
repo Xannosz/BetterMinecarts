@@ -13,12 +13,11 @@ import hu.xannosz.betterminecarts.screen.SteamLocomotiveScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
-import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -31,8 +30,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLConfig;
-import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -55,6 +52,8 @@ public class BetterMinecarts {
 			() -> SoundEvent.createFixedRangeEvent(new ResourceLocation(BetterMinecarts.MOD_ID, "diesel_whistle"),
 					16f));
 
+	public static final ResourceKey<DamageType> MINECART_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MOD_ID, "minecart"));
+
 	public BetterMinecarts() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -71,12 +70,6 @@ public class BetterMinecarts {
 		MinecraftForge.EVENT_BUS.register(this);
 
 		modEventBus.addListener(this::addCreative);
-	}
-
-	public static DamageSource minecart(Entity entity) {
-		return new DamageSource(
-				Holder.direct(new DamageType(MOD_ID + ".minecart", 0.5f))
-				, entity);
 	}
 
 	private void addCreative(BuildCreativeModeTabContentsEvent event) {

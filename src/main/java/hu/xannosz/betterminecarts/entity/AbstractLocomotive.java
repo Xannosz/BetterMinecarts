@@ -11,6 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -294,38 +295,42 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	}
 
 	private void whistle() {
-		if (BetterMinecartsConfig.WHISTLE_USE_STEAM_ON_STEAM_LOCOMOTIVE.get() &&
-				this instanceof SteamLocomotive steamLocomotive) {
-			if (!steamLocomotive.canWhistle()) {
-				return;
-			}
-		}
-
-		level().players().forEach(player -> {
-					if (player.distanceToSqr(this) < 7000) {
-						ModMessages.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-								new PlaySoundPacket(blockPosition(), locomotiveType));
-					}
+		try {
+			if (BetterMinecartsConfig.WHISTLE_USE_STEAM_ON_STEAM_LOCOMOTIVE.get() &&
+					this instanceof SteamLocomotive steamLocomotive) {
+				if (!steamLocomotive.canWhistle()) {
+					return;
 				}
-		);
+			}
 
-		if (BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE.get()) {
-			level().getEntities(this,
-					new AABB(this.getOnPos().offset(-BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), -10, -BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()),
-							this.getOnPos().offset(BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), 25, BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()))).forEach(
-					entity -> {
-						if (entity instanceof Mob cow) {
-							cow.goalSelector.getAvailableGoals().forEach(
-									wrappedGoal -> {
-										if (wrappedGoal.getGoal() instanceof PanicGoal) {
-											wrappedGoal.stop();
-											wrappedGoal.start();
-										}
-									}
-							);
+			level().players().forEach(player -> {
+						if (player.distanceToSqr(this) < 7000) {
+							ModMessages.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+									new PlaySoundPacket(blockPosition(), locomotiveType));
 						}
 					}
 			);
+
+			if (BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE.get()) {
+				level().getEntities(this,
+						new AABB(this.getOnPos().offset(-BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), -10, -BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()),
+								this.getOnPos().offset(BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), 25, BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()))).forEach(
+						entity -> {
+							if (entity instanceof Mob cow) {
+								cow.goalSelector.getAvailableGoals().forEach(
+										wrappedGoal -> {
+											if (wrappedGoal.getGoal() instanceof PanicGoal) {
+												wrappedGoal.stop();
+												wrappedGoal.start();
+											}
+										}
+								);
+							}
+						}
+				);
+			}
+		} catch (Exception ex) {
+			//
 		}
 	}
 
@@ -533,7 +538,9 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 		if (damage > 0 && !level().isClientSide() && other instanceof LivingEntity living &&
 				living.isAlive() && !living.isPassenger() && speed > 1) {
-			living.hurt(BetterMinecarts.minecart(this), damage);
+			living.hurt(new DamageSource(level().registryAccess()
+					.registryOrThrow(Registries.DAMAGE_TYPE)
+					.getHolderOrThrow(BetterMinecarts.MINECART_DAMAGE), this), damage);
 
 			Vec3 knockBack = living.getDeltaMovement().add(getDeltaMovement().x() * speed, getDeltaMovement().length() * 0.5 * speed, getDeltaMovement().z() * speed);
 			living.setDeltaMovement(knockBack);
