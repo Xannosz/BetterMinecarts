@@ -6,10 +6,11 @@
   "block.betterminecarts.dead_end": "Dead End",
 
   "item.betterminecarts.crowbar": "Crowbar",
-  "item.betterminecarts.steam_locomotive": "Steam locomotive",
-  "item.betterminecarts.electric_locomotive": "Electric locomotive",
-  "item.betterminecarts.diesel_locomotive": "Diesel locomotive",
+  "item.betterminecarts.steam_locomotive": "Steam Locomotive",
+  "item.betterminecarts.electric_locomotive": "Electric Locomotive",
+  "item.betterminecarts.diesel_locomotive": "Diesel Locomotive",
   "item.betterminecarts.crafting_minecart_item": "Crafting Minecart",
+  "item.betterminecarts.bio_diesel_fuel": "Bio Diesel Fuel",
 
   "entity.betterminecarts.crafting_minecart_item.json": "Crafting Minecart",
 

@@ -79,6 +79,7 @@ public class BetterMinecarts {
 			event.accept(ModItems.ELECTRIC_LOCOMOTIVE);
 			event.accept(ModItems.STEAM_LOCOMOTIVE);
 			event.accept(ModItems.DIESEL_LOCOMOTIVE);
+			event.accept(ModItems.BIO_DIESEL_FUEL);
 			ModItems.BLOCK_ITEMS.forEach(event::accept);
 		}
 	}

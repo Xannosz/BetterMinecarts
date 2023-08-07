@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "betterminecarts:item/bio_diesel_fuel"
+  }
+}

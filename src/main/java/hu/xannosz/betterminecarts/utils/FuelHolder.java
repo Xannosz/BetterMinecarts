@@ -38,11 +38,8 @@ public class FuelHolder {
 		if (!configPath.toFile().exists()) {
 			try {
 				final String content = "[\n" +
-						new Fuel(0xfaba1c5f, 200, 5,
-								"minecraft:honey_bottle", "minecraft:glass_bottle").toJson() +
-						",\n" +
-						new Fuel(0xb42a735f, 400, 25,
-								"minecraft:dragon_breath", "minecraft:glass_bottle").toJson() +
+						new Fuel(0x9491467F, 200, 10,
+								"betterminecarts:bio_diesel_fuel", "minecraft:glass_bottle").toJson() +
 						"]\n";
 				Files.writeString(configPath, content);
 			} catch (IOException e) {
@@ -53,7 +50,7 @@ public class FuelHolder {
 			for (JsonObject value : Json.createReader(new FileInputStream(configPath.toFile()))
 					.readArray().getValuesAs(JsonObject.class)) {
 				fuels.add(new Fuel(
-						value.getInt(FUEL_COLOR),
+						getFuelColorValue(value),
 						value.getInt(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS),
 						value.getInt(ENERGY_IN_ONE_MILLI_BUCKET),
 						value.getString(ITEM_QUALIFIED_NAME),
@@ -123,5 +120,13 @@ public class FuelHolder {
 
 	private Item getItemFromQualifiedName(String name) {
 		return BuiltInRegistries.ITEM.get(new ResourceLocation(name));
+	}
+
+	private int getFuelColorValue(JsonObject value){
+		int a = value.getInt(FUEL_COLOR_A);
+		int r = value.getInt(FUEL_COLOR_R);
+		int g = value.getInt(FUEL_COLOR_G);
+		int b = value.getInt(FUEL_COLOR_B);
+		return r << 24 | g << 16 | b << 8 | a;
 	}
 }

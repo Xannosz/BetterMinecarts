@@ -1,7 +1,7 @@
 - furnace minecart - override furnace cart
 
-- sunflower oil as fuel
-+ diesel locomotive (ethanol powered)
++ sunflower oil as fuel
++ diesel locomotive (bio diesel powered)
 + destroy minecart on ground with 1% chance
 + disable solo minecart sliding
 + fix minecart damage source

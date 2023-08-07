@@ -33,5 +33,9 @@ public class ModItems {
 			() -> new AbstractLocomotiveItem(LocomotiveType.DIESEL));
 
 	@SuppressWarnings("unused")
+	public static final RegistryObject<Item> BIO_DIESEL_FUEL = ITEMS.register("bio_diesel_fuel",
+			() -> new Item(new Item.Properties().stacksTo(16)));
+
+	@SuppressWarnings("unused")
 	public static final RegistryObject<Item> CRAFTING_MINECART_ITEM = ITEMS.register("crafting_minecart_item", CraftingMinecartItem::new);
 }
