@@ -47,6 +47,9 @@ manual test: (client and server)
     test automatic switch with electric locomotive
     test automatic switch with diesel locomotive
     on the fly colorization
+    diesel locomotive fuel load
+    diesel locomotive add fuel in json
+    craft sunflower oil
   additional functions:
     pick up steam locomotives with name
     pick up steam locomotives without it

@@ -1,5 +1,10 @@
 package hu.xannosz.betterminecarts.utils;
 
+import com.google.common.base.Charsets;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -8,17 +13,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.fml.loading.FMLPaths;
+import org.apache.commons.io.FileUtils;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-
-import static hu.xannosz.betterminecarts.utils.Fuel.*;
 
 @Slf4j
 public class FuelHolder {
@@ -32,33 +31,26 @@ public class FuelHolder {
 
 	private final List<Fuel> fuels = new ArrayList<>();
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private FuelHolder() {
-		Path configPath = FMLPaths.GAMEDIR.get().resolve("config/betterminecartsfuel.json");
+		final Path configPath = FMLPaths.GAMEDIR.get().resolve("config/betterminecartsfuel.json");
 
 		if (!configPath.toFile().exists()) {
+			fuels.add(new Fuel(0x94, 0x91, 0x46, 0x7F, 200, 10,
+					"betterminecarts:bio_diesel_fuel", "minecraft:glass_bottle"));
 			try {
-				final String content = "[\n" +
-						new Fuel(0x9491467F, 200, 10,
-								"betterminecarts:bio_diesel_fuel", "minecraft:glass_bottle").toJson() +
-						"]\n";
-				Files.writeString(configPath, content);
-			} catch (IOException e) {
-				log.error("Problem with fuel json parsing", e);
+				configPath.toFile().createNewFile();
+				FileUtils.writeStringToFile(configPath.toFile(), new GsonBuilder().setPrettyPrinting().create().toJson(this), Charsets.UTF_8);
+			} catch (Exception ex) {
+				log.error("Problem with fuel json parsing", ex);
 			}
-		}
-		try {
-			for (JsonObject value : Json.createReader(new FileInputStream(configPath.toFile()))
-					.readArray().getValuesAs(JsonObject.class)) {
-				fuels.add(new Fuel(
-						getFuelColorValue(value),
-						value.getInt(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS),
-						value.getInt(ENERGY_IN_ONE_MILLI_BUCKET),
-						value.getString(ITEM_QUALIFIED_NAME),
-						value.getString(LEFTOVER_ITEM_QUALIFIED_NAME)
-				));
+		} else {
+			try {
+				JsonElement dataObject = JsonParser.parseString(FileUtils.readFileToString(configPath.toFile(), Charsets.UTF_8));
+				fuels.addAll(new Gson().fromJson(dataObject, FuelHolder.class).fuels);
+			} catch (Exception ex) {
+				log.error("Problem with fuel json parsing", ex);
 			}
-		} catch (IOException e) {
-			log.error("Problem with fuel json parsing", e);
 		}
 	}
 
@@ -69,6 +61,7 @@ public class FuelHolder {
 		return getFuelFromList(item) != null;
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public Item getLeftover(ItemStack item) {
 		if (item.getOrCreateTag().contains(LEFTOVER_ITEM_KEY)) {
 			return getItemFromQualifiedName(item.getOrCreateTag().getString(LEFTOVER_ITEM_KEY));
@@ -79,6 +72,7 @@ public class FuelHolder {
 		return getItemFromQualifiedName(getFuelFromList(item).getLeftoverItemQualifiedName());
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public int getFuelAmount(ItemStack item) {
 		if (item.getOrCreateTag().contains(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS_KEY)) {
 			return item.getOrCreateTag().getInt(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS_KEY);
@@ -89,6 +83,7 @@ public class FuelHolder {
 		return getFuelFromList(item).getAmountInOneItemInMilliBuckets();
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public int getFuelPower(ItemStack item) {
 		if (item.getOrCreateTag().contains(ENERGY_IN_ONE_MILLI_BUCKET_KEY)) {
 			return item.getOrCreateTag().getInt(ENERGY_IN_ONE_MILLI_BUCKET_KEY);
@@ -99,6 +94,7 @@ public class FuelHolder {
 		return getFuelFromList(item).getEnergyInOneMilliBucket();
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public int getFuelColor(ItemStack item) {
 		if (item.getOrCreateTag().contains(FUEL_COLOR_KEY)) {
 			return item.getOrCreateTag().getInt(FUEL_COLOR_KEY);
@@ -106,7 +102,8 @@ public class FuelHolder {
 		if (!isFuel(item)) {
 			return 0xFFFFFFFF;
 		}
-		return getFuelFromList(item).getFuelColor();
+		Fuel fuel =  getFuelFromList(item);
+		return fuel.getFuelColorRed() << 24 | fuel.getFuelColorGreen() << 16 | fuel.getFuelColoBlue() << 8 | fuel.getFuelColorAlpha();
 	}
 
 	private Fuel getFuelFromList(ItemStack item) {
@@ -118,15 +115,8 @@ public class FuelHolder {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	private Item getItemFromQualifiedName(String name) {
 		return BuiltInRegistries.ITEM.get(new ResourceLocation(name));
-	}
-
-	private int getFuelColorValue(JsonObject value){
-		int a = value.getInt(FUEL_COLOR_A);
-		int r = value.getInt(FUEL_COLOR_R);
-		int g = value.getInt(FUEL_COLOR_G);
-		int b = value.getInt(FUEL_COLOR_B);
-		return r << 24 | g << 16 | b << 8 | a;
 	}
 }
