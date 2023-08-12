@@ -150,8 +150,9 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		compoundTag.putInt("Power", power);
 		ListTag nbtTagList = new ListTag();
 		for (var entry : fuels.entrySet()) {
-			entry.getKey().putInt("Amount", entry.getValue());
-			nbtTagList.add(entry.getKey());
+			CompoundTag com = entry.getKey().copy();
+			com.putInt("Amount", entry.getValue());
+			nbtTagList.add(com);
 		}
 		compoundTag.put("FuelItems", nbtTagList);
 		compoundTag.put("Inventory", itemHandler.serializeNBT());
@@ -166,7 +167,7 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		for (int i = 0; i < tagList.size(); i++) {
 			CompoundTag itemTag = tagList.getCompound(i);
 			int amount = itemTag.getInt("Amount");
-			itemTag.remove("Amount");
+			itemTag.putInt("Amount",1);
 			itemTag.putByte("Count",(byte) 1);
 			fuels.put(itemTag, amount);
 		}
@@ -212,9 +213,10 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 			if (activeButton == ButtonId.FF_FORWARD) {
 				power -= 2;
 			}
-			if (power < 0) {
-				power = 0;
-			}
+		}
+
+		if (power < 0) {
+			power = 0;
 		}
 
 		if (power == 0) {
@@ -415,6 +417,7 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		CompoundTag itemTag = new CompoundTag();
 		itemStack.save(itemTag);
 		itemTag.putByte("Count",(byte) 1);
+		itemTag.putInt("Amount",1);
 		return itemTag;
 	}
 

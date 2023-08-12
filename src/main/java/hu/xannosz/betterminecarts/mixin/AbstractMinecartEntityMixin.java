@@ -35,13 +35,13 @@ import hu.xannosz.betterminecarts.utils.Linkable;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import hu.xannosz.betterminecarts.utils.TrainUtil;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -113,9 +113,10 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 			} else {
 				this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
 			}
-			if (new Random().nextInt(100) < 5 && this.getDeltaMovement().length()>0.04f) {
-				hurt(new DamageSource(Holder.direct(
-						new DamageType("generic", 0.5f))), 1.5f);
+			if (new Random().nextInt(100) < 9 && this.getDeltaMovement().length() > 0.04f) {
+				hurt(new DamageSource(level().registryAccess()
+						.registryOrThrow(Registries.DAMAGE_TYPE)
+						.getHolderOrThrow(DamageTypes.GENERIC), this), 1.5f);
 			}
 		}
 

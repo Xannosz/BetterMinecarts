@@ -110,6 +110,7 @@ manual test: (client and server)
     signal rail
     crossed rail
     dead end
+    bio diesel
   looting: (client)
     signal rail
     crossed rail

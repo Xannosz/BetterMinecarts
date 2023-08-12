@@ -430,8 +430,12 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	@Override
 	public ItemStack getPickResult() {
-		ItemStack result = new ItemStack(
-				(this instanceof SteamLocomotive ? STEAM_LOCOMOTIVE : ELECTRIC_LOCOMOTIVE).get(), 1);
+		ItemStack result = null;
+		switch (locomotiveType) {
+			case ELECTRIC -> result = new ItemStack(ELECTRIC_LOCOMOTIVE.get(), 1);
+			case STEAM -> result = new ItemStack(STEAM_LOCOMOTIVE.get(), 1);
+			case DIESEL -> result = new ItemStack(DIESEL_LOCOMOTIVE.get(), 1);
+		}
 
 		result.getOrCreateTag().putString(AbstractLocomotiveItem.TOP_COLOR_TAG, getTopFilter().getLabel());
 		result.getOrCreateTag().putString(AbstractLocomotiveItem.BOTTOM_COLOR_TAG, getBottomFilter().getLabel());

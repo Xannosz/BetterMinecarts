@@ -17,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -40,14 +41,14 @@ public class FuelHolder {
 					"betterminecarts:bio_diesel_fuel", "minecraft:glass_bottle"));
 			try {
 				configPath.toFile().createNewFile();
-				FileUtils.writeStringToFile(configPath.toFile(), new GsonBuilder().setPrettyPrinting().create().toJson(this), Charsets.UTF_8);
+				FileUtils.writeStringToFile(configPath.toFile(), new GsonBuilder().setPrettyPrinting().create().toJson(this.fuels), Charsets.UTF_8);
 			} catch (Exception ex) {
 				log.error("Problem with fuel json parsing", ex);
 			}
 		} else {
 			try {
 				JsonElement dataObject = JsonParser.parseString(FileUtils.readFileToString(configPath.toFile(), Charsets.UTF_8));
-				fuels.addAll(new Gson().fromJson(dataObject, FuelHolder.class).fuels);
+				fuels.addAll(Arrays.asList(new Gson().fromJson(dataObject, Fuel[].class)));
 			} catch (Exception ex) {
 				log.error("Problem with fuel json parsing", ex);
 			}
