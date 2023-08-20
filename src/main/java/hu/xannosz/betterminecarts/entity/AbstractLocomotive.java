@@ -336,7 +336,11 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	@Override
 	public void tick() {
-		super.tick();
+		try {
+			super.tick();
+		} catch (Exception ex) {
+			//
+		}
 
 		loadChunk();
 		checkRedstoneUnderLocomotive();
