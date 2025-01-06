@@ -3,19 +3,19 @@ package hu.xannosz.betterminecarts.network;
 import hu.xannosz.betterminecarts.BetterMinecarts;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.network.SimpleChannel;
 
 public class ModMessages {
 	public static SimpleChannel INSTANCE;
 
 	public static void setupMessages(final FMLCommonSetupEvent event) {
-		INSTANCE = NetworkRegistry.ChannelBuilder
-				.named(new ResourceLocation(BetterMinecarts.MOD_ID, "messages"))
-				.networkProtocolVersion(() -> "1.0")
-				.clientAcceptedVersions(s -> true)
-				.serverAcceptedVersions(s -> true)
+		INSTANCE = ChannelBuilder
+				.named(ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "messages"))
+				.networkProtocolVersion(1)
+				.clientAcceptedVersions((s, v) -> true)
+				.serverAcceptedVersions((s, v) -> true)
 				.simpleChannel();
 		INSTANCE.messageBuilder(ButtonClickedPacket.class, 0, NetworkDirection.PLAY_TO_SERVER)
 				.decoder(ButtonClickedPacket::new)

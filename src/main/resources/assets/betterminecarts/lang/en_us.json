@@ -65,5 +65,7 @@
   "text.betterminecarts.data.water": "Water:   ",
   "text.betterminecarts.data.steam": "Steam:   ",
   "text.betterminecarts.data.bucket": "Bucket:  ",
-  "text.betterminecarts.data.coal": "Fuel:     "
+  "text.betterminecarts.data.coal": "Fuel:     ",
+  "text.betterminecarts.data.fuel": "Fuel:     ",
+  "text.betterminecarts.data.power": "Power: "
 }

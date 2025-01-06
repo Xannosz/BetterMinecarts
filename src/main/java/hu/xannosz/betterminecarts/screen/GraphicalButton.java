@@ -7,11 +7,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
-
-import static net.minecraftforge.client.gui.ScreenUtils.drawTexturedModalRect;
 
 @OnlyIn(Dist.CLIENT)
 public class GraphicalButton extends AbstractButton {
@@ -19,6 +19,8 @@ public class GraphicalButton extends AbstractButton {
 	private final ButtonConfig config;
 	@Setter
 	private boolean selected = false;
+	@Setter
+	private ResourceLocation resourceLocation;
 	@Setter
 	private int entityId = 0;
 
@@ -32,16 +34,16 @@ public class GraphicalButton extends AbstractButton {
 	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		if (visible) {
 			if (isHovered || selected) {
-				drawTexturedModalRect(guiGraphics, config.getHitBoxX(), config.getHitBoxY(),
+				guiGraphics.blit(resourceLocation, config.getHitBoxX(), config.getHitBoxY(),
 						config.getHoveredX(), config.getHoveredY(),
-						config.getHitBoxW(), config.getHitBoxH(), partialTicks);
+						config.getHitBoxW(), config.getHitBoxH());
 			}
 		}
 	}
 
 	@Override
 	public void onPress() {
-		ModMessages.INSTANCE.sendToServer(new ButtonClickedPacket(config.getButtonId(), entityId));
+		ModMessages.INSTANCE.send(new ButtonClickedPacket(config.getButtonId(), entityId), PacketDistributor.SERVER.noArg());
 	}
 
 	@Override

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class SteamLocomotiveScreen extends AbstractContainerScreen<SteamLocomotiveMenu> {
 
 	private static final ResourceLocation TEXTURE =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/gui/steam_locomotive.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/gui/steam_locomotive.png");
 
 	private int x;
 	private int y;
@@ -139,16 +139,16 @@ public class SteamLocomotiveScreen extends AbstractContainerScreen<SteamLocomoti
 		lamp.setSelected(menu.isLampOn());
 		redstone.setSelected(menu.isSignalActive());
 
-		steam.render(guiGraphics, menu.getSteam(), SteamLocomotive.MAX_STEAM, partialTick);
-		water.render(guiGraphics, menu.getWater(), SteamLocomotive.MAX_WATER, partialTick);
-		heat.render(guiGraphics, menu.getHeat(), 125, partialTick);
-		burn.render(guiGraphics, menu.getBurn(), menu.getMaxBurn(), partialTick);
+		steam.render(TEXTURE,guiGraphics, menu.getSteam(), SteamLocomotive.MAX_STEAM);
+		water.render(TEXTURE,guiGraphics, menu.getWater(), SteamLocomotive.MAX_WATER);
+		heat.render(TEXTURE,guiGraphics, menu.getHeat(), 125);
+		burn.render(TEXTURE,guiGraphics, menu.getBurn(), menu.getMaxBurn());
 	}
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		//call built-in functions
-		renderBackground(guiGraphics);
+		renderTransparentBackground(guiGraphics);
 		super.render(guiGraphics, mouseX, mouseY, delta);
 
 		//call built-in function

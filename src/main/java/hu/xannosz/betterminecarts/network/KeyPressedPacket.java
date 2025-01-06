@@ -7,10 +7,9 @@ import hu.xannosz.betterminecarts.utils.Linkable;
 import hu.xannosz.betterminecarts.utils.TrainUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class KeyPressedPacket {
 	private final KeyId keyId;
@@ -31,11 +30,10 @@ public class KeyPressedPacket {
 		buf.writeInt(entityId);
 	}
 
-	public void handler(Supplier<NetworkEvent.Context> supplier) {
-		NetworkEvent.Context context = supplier.get();
+	public static void handler(KeyPressedPacket packet, CustomPayloadEvent.Context context) {
 		context.enqueueWork(() -> {
 			// SERVER SITE
-			Entity entity = Objects.requireNonNull(context.getSender()).level().getEntity(entityId);
+			Entity entity = Objects.requireNonNull(context.getSender()).level().getEntity(packet.entityId);
 			if (entity instanceof Linkable linkable) {
 				Linkable head;
 				if (BetterMinecartsConfig.KEY_CONTROL_FROM_THE_WHOLE_TRAIN.get()) {
@@ -46,7 +44,7 @@ public class KeyPressedPacket {
 					head = (Linkable) linkable.getLinkedParent();
 				}
 				if (head instanceof KeyUser) {
-					((KeyUser) head).executeKeyPress(keyId, context.getSender());
+					((KeyUser) head).executeKeyPress(packet.keyId, context.getSender());
 				}
 			}
 		});

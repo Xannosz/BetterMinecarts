@@ -2,6 +2,8 @@ package hu.xannosz.betterminecarts.item;
 
 import hu.xannosz.betterminecarts.utils.CrowbarMode;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
@@ -15,11 +17,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.FIRST_CART_ID_TAG;
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.MODE_TAG;
+
 public class Crowbar extends Item {
-
-	public static final String MODE_TAG = "mode";
-	public static final String FIRST_CART_ID_TAG = "firstCartId";
-
 	public Crowbar(Properties properties) {
 		super(properties);
 	}
@@ -35,14 +36,14 @@ public class Crowbar extends Item {
 		}
 
 		final ItemStack itemStack = useOnContext.getItemInHand();
-		final CrowbarMode mode = CrowbarMode.getFromLabel(itemStack.getOrCreateTag().getString(MODE_TAG));
-		final int firstCartIdTag = itemStack.getOrCreateTag().getInt(FIRST_CART_ID_TAG);
+		final CrowbarMode mode = CrowbarMode.getFromLabel(itemStack.get(MODE_TAG.get()));
+		final int firstCartIdTag = itemStack.get(FIRST_CART_ID_TAG.get());
 
 		if (firstCartIdTag == 0) {
-			itemStack.getOrCreateTag().putString(MODE_TAG, Objects.requireNonNull(mode.next()).getLabel());
+			itemStack.set(MODE_TAG.get(), Objects.requireNonNull(mode.next()).getLabel());
 			useOnContext.getPlayer().displayClientMessage(Component.translatable("text.betterminecarts.crowbar.mode." + mode.next().getLabel()).withStyle(ChatFormatting.AQUA), true);
 		} else {
-			itemStack.getOrCreateTag().putInt(FIRST_CART_ID_TAG, 0);
+			itemStack.set(FIRST_CART_ID_TAG.get(), 0);
 			useOnContext.getPlayer().displayClientMessage(Component.translatable("text.betterminecarts.crowbar.deleteFirstCartId").withStyle(ChatFormatting.BLUE), true);
 		}
 
@@ -50,15 +51,15 @@ public class Crowbar extends Item {
 	}
 
 	@Override
-	public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag tooltipFlag) {
-		final CrowbarMode mode = CrowbarMode.getFromLabel(itemStack.getOrCreateTag().getString(MODE_TAG));
-		final int firstCartIdTag = itemStack.getOrCreateTag().getInt(FIRST_CART_ID_TAG);
+	public void appendHoverText(@NotNull ItemStack itemStack, @Nullable TooltipContext tooltip, @NotNull List<Component> components, @NotNull TooltipFlag tooltipFlag) {
+		final CrowbarMode mode = CrowbarMode.getFromLabel(itemStack.get(MODE_TAG.get()));
+		final int firstCartIdTag = itemStack.get(FIRST_CART_ID_TAG.get());
 		if (mode != null) {
 			components.add(Component.translatable("text.betterminecarts.crowbar.mode." + mode.getLabel()).withStyle(ChatFormatting.AQUA));
 		}
 		if (firstCartIdTag != 0) {
 			components.add(Component.translatable("text.betterminecarts.crowbar.firstCartIdTag", firstCartIdTag).withStyle(ChatFormatting.BLUE));
 		}
-		super.appendHoverText(itemStack, level, components, tooltipFlag);
+		super.appendHoverText(itemStack, tooltip, components, tooltipFlag);
 	}
 }

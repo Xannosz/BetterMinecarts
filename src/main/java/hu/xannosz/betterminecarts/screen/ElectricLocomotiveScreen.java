@@ -14,13 +14,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-import static net.minecraftforge.client.gui.ScreenUtils.drawTexturedModalRect;
-
 @OnlyIn(Dist.CLIENT)
 public class ElectricLocomotiveScreen extends AbstractContainerScreen<ElectricLocomotiveMenu> {
 
 	private static final ResourceLocation TEXTURE =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/gui/electric_locomotive.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/gui/electric_locomotive.png");
 
 	private int x;
 	private int y;
@@ -128,13 +126,13 @@ public class ElectricLocomotiveScreen extends AbstractContainerScreen<ElectricLo
 			power = ElectricLocomotive.MAX_POWER;
 		}
 		int t = (power * 140) / ElectricLocomotive.MAX_POWER;
-		drawTexturedModalRect(guiGraphics, x + 6, y + 6, 0, 43, t, 12, partialTick);
+		guiGraphics.blit(TEXTURE, x + 6, y + 6, 0, 43, t, 12);
 	}
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		//call built-in functions
-		renderBackground(guiGraphics);
+		renderTransparentBackground(guiGraphics);
 		super.render(guiGraphics, mouseX, mouseY, delta);
 
 		//call built-in function

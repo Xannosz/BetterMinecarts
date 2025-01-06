@@ -12,6 +12,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 public class ClientEvents {
 	@Mod.EventBusSubscriber(modid = BetterMinecarts.MOD_ID, value = Dist.CLIENT)
@@ -21,22 +22,22 @@ public class ClientEvents {
 			if (Minecraft.getInstance().player != null && Minecraft.getInstance().player.isPassenger() &&
 					Minecraft.getInstance().player.getRootVehicle() instanceof AbstractMinecart minecart) {
 				if (KeyBinding.INCREASE_KEY.consumeClick()) {
-					ModMessages.INSTANCE.sendToServer(new KeyPressedPacket(KeyId.INCREASE, minecart.getId()));
+					ModMessages.INSTANCE.send(new KeyPressedPacket(KeyId.INCREASE, minecart.getId()), PacketDistributor.SERVER.noArg());
 				}
 				if (KeyBinding.DECREASE_KEY.consumeClick()) {
-					ModMessages.INSTANCE.sendToServer(new KeyPressedPacket(KeyId.DECREASE, minecart.getId()));
+					ModMessages.INSTANCE.send(new KeyPressedPacket(KeyId.DECREASE, minecart.getId()), PacketDistributor.SERVER.noArg());
 				}
 				if (KeyBinding.LAMP_KEY.consumeClick()) {
-					ModMessages.INSTANCE.sendToServer(new KeyPressedPacket(KeyId.LAMP, minecart.getId()));
+					ModMessages.INSTANCE.send(new KeyPressedPacket(KeyId.LAMP, minecart.getId()), PacketDistributor.SERVER.noArg());
 				}
 				if (KeyBinding.WHISTLE_KEY.consumeClick()) {
-					ModMessages.INSTANCE.sendToServer(new KeyPressedPacket(KeyId.WHISTLE, minecart.getId()));
+					ModMessages.INSTANCE.send(new KeyPressedPacket(KeyId.WHISTLE, minecart.getId()), PacketDistributor.SERVER.noArg());
 				}
 				if (KeyBinding.REDSTONE_KEY.consumeClick()) {
-					ModMessages.INSTANCE.sendToServer(new KeyPressedPacket(KeyId.REDSTONE, minecart.getId()));
+					ModMessages.INSTANCE.send(new KeyPressedPacket(KeyId.REDSTONE, minecart.getId()), PacketDistributor.SERVER.noArg());
 				}
 				if (KeyBinding.DATA_KEY.consumeClick()) {
-					ModMessages.INSTANCE.sendToServer(new KeyPressedPacket(KeyId.DATA, minecart.getId()));
+					ModMessages.INSTANCE.send(new KeyPressedPacket(KeyId.DATA, minecart.getId()), PacketDistributor.SERVER.noArg());
 				}
 				return;
 			}

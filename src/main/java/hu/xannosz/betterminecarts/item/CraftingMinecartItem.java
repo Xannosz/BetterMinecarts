@@ -2,8 +2,9 @@ package hu.xannosz.betterminecarts.item;
 
 import hu.xannosz.betterminecarts.entity.CraftingMinecart;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.tags.BlockTags;
@@ -29,12 +30,12 @@ public class CraftingMinecartItem extends Item {
 		private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
 
 		public @NotNull ItemStack execute(BlockSource blockSource, @NotNull ItemStack itemStack) {
-			Direction direction = blockSource.getBlockState().getValue(DispenserBlock.FACING);
-			Level level = blockSource.getLevel();
-			double d0 = blockSource.x() + (double) direction.getStepX() * 1.125D;
-			double d1 = Math.floor(blockSource.y()) + (double) direction.getStepY();
-			double d2 = blockSource.z() + (double) direction.getStepZ() * 1.125D;
-			BlockPos blockpos = blockSource.getPos().relative(direction);
+			Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
+			Level level = blockSource.level();
+			double d0 = blockSource.pos().getX() + (double) direction.getStepX() * 1.125D;
+			double d1 = Math.floor(blockSource.pos().getY()) + (double) direction.getStepY();
+			double d2 = blockSource.pos().getZ() + (double) direction.getStepZ() * 1.125D;
+			BlockPos blockpos = blockSource.pos().relative(direction);
 			BlockState blockstate = level.getBlockState(blockpos);
 			RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock ? ((BaseRailBlock) blockstate.getBlock()).getRailDirection(blockstate, level, blockpos, null) : RailShape.NORTH_SOUTH;
 			double d3;
@@ -59,7 +60,7 @@ public class CraftingMinecartItem extends Item {
 			}
 
 			CraftingMinecart minecart = new CraftingMinecart(d0, d1 + d3, d2, level);
-			if (itemStack.hasCustomHoverName()) {
+			if (itemStack.has(DataComponents.CUSTOM_NAME)) {
 				minecart.setCustomName(itemStack.getHoverName());
 			}
 
@@ -69,7 +70,7 @@ public class CraftingMinecartItem extends Item {
 		}
 
 		protected void playSound(BlockSource p_42947_) {
-			p_42947_.getLevel().levelEvent(1000, p_42947_.getPos(), 0);
+			p_42947_.level().levelEvent(1000, p_42947_.pos(), 0);
 		}
 	};
 
@@ -93,7 +94,7 @@ public class CraftingMinecartItem extends Item {
 						(double) blockpos.getY() + 0.0625D + d0,
 						(double) blockpos.getZ() + 0.5D,
 						level);
-				if (itemstack.hasCustomHoverName()) {
+				if (itemstack.has(DataComponents.CUSTOM_NAME)) {
 					minecart.setCustomName(itemstack.getHoverName());
 				}
 

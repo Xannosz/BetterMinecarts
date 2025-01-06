@@ -1,12 +1,12 @@
 package hu.xannosz.betterminecarts.entity;
 
-import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
 import hu.xannosz.betterminecarts.item.ModItems;
 import hu.xannosz.betterminecarts.screen.ElectricLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
@@ -26,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.BOTTOM_COLOR_TAG;
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.TOP_COLOR_TAG;
 import static hu.xannosz.betterminecarts.entity.ModEntities.ELECTRIC_LOCOMOTIVE;
 
 public class ElectricLocomotive extends AbstractLocomotive {
@@ -45,14 +47,13 @@ public class ElectricLocomotive extends AbstractLocomotive {
 		super(ELECTRIC_LOCOMOTIVE.get(), x, y, z, level, LocomotiveType.ELECTRIC, top, bottom, DATA_SIZE);
 	}
 
-	@Override
-	protected @NotNull Item getDropItem() {
+	public Item getDropItem() {
 		SimpleContainer inventory = new SimpleContainer(1);
 		ItemStack locomotive = new ItemStack(ModItems.ELECTRIC_LOCOMOTIVE.get());
-		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.TOP_COLOR_TAG, getTopFilter().getLabel());
-		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.BOTTOM_COLOR_TAG, getBottomFilter().getLabel());
+		locomotive.set(TOP_COLOR_TAG.get(), getTopFilter().getLabel());
+		locomotive.set(BOTTOM_COLOR_TAG.get(), getBottomFilter().getLabel());
 		if (hasCustomName()) {
-			locomotive.setHoverName(getCustomName());
+			locomotive.set(DataComponents.CUSTOM_NAME,getCustomName());
 		}
 		inventory.setItem(0, locomotive);
 		Containers.dropContents(level(), blockPosition(), inventory);

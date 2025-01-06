@@ -1,6 +1,7 @@
 package hu.xannosz.betterminecarts.entity;
 
 import hu.xannosz.betterminecarts.screen.CraftingMinecartMenu;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.EntityType;
@@ -29,8 +30,7 @@ public class CraftingMinecart extends AbstractMinecart implements MenuProvider {
 		super(CRAFTING_MINECART.get(), level, x, y, z);
 	}
 
-	@Override
-	protected @NotNull Item getDropItem() {
+	public Item getDropItem() {
 		Containers.dropItemStack(level(), blockPosition().getX(), blockPosition().getY(), blockPosition().getZ(),
 				new ItemStack(Blocks.CRAFTING_TABLE, 1));
 
@@ -47,7 +47,7 @@ public class CraftingMinecart extends AbstractMinecart implements MenuProvider {
 		ItemStack result = new ItemStack(CRAFTING_MINECART_ITEM.get(), 1);
 
 		if (hasCustomName()) {
-			result.setHoverName(getCustomName());
+			result.set(DataComponents.CUSTOM_NAME,getCustomName());
 		}
 
 		return result;

@@ -32,6 +32,7 @@ package hu.xannosz.betterminecarts.mixin;
 
 import hu.xannosz.betterminecarts.entity.CraftingMinecart;
 import hu.xannosz.betterminecarts.utils.Linkable;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -75,7 +76,7 @@ public abstract class AllMinecartEntityMixin extends net.minecraft.world.entity.
 			if (type != net.minecraft.world.entity.vehicle.AbstractMinecart.Type.RIDEABLE) {
 				net.minecraft.world.entity.vehicle.AbstractMinecart minecart;
 				if (type != null) {
-					minecart = AbstractMinecart.createMinecart(level(), getX(), getY(), getZ(), type);
+					minecart = AbstractMinecart.createMinecart((ServerLevel) level(), getX(), getY(), getZ(), type, player.getItemInHand(hand), player);
 				} else {
 					minecart = new CraftingMinecart(getX(), getY(), getZ(), level());
 				}

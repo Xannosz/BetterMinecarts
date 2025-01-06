@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import hu.xannosz.betterminecarts.entity.AbstractLocomotive;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,9 +25,9 @@ public abstract class AbstractLocomotiveModel extends EntityModel<AbstractLocomo
 	}
 
 	@Override
-	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		body.getChild("bottom").render(poseStack, vertexConsumer, packedLight, packedOverlay, (float) bottomFilter.x, (float) bottomFilter.y, (float) bottomFilter.z, alpha);
-		body.getChild("top").render(poseStack, vertexConsumer, packedLight, packedOverlay, (float) topFilter.x, (float) topFilter.y, (float) topFilter.z, alpha);
-		body.getChild("main").render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+	public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+		body.getChild("bottom").render(poseStack, vertexConsumer, packedLight, packedOverlay, FastColor.ARGB32.colorFromFloat((float) bottomFilter.x, (float) bottomFilter.y, (float) bottomFilter.z, color));
+		body.getChild("top").render(poseStack, vertexConsumer, packedLight, packedOverlay, FastColor.ARGB32.colorFromFloat((float) topFilter.x, (float) topFilter.y, (float) topFilter.z, color));
+		body.getChild("main").render(poseStack, vertexConsumer, packedLight, packedOverlay, color);
 	}
 }

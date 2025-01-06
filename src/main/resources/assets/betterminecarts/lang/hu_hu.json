@@ -65,5 +65,7 @@
   "text.betterminecarts.data.water": "Víz:         ",
   "text.betterminecarts.data.steam": "Gőz:        ",
   "text.betterminecarts.data.bucket": "Vödrök:    ",
-  "text.betterminecarts.data.coal": "Tüzelő:    "
+  "text.betterminecarts.data.coal": "Tüzelő:    ",
+  "text.betterminecarts.data.fuel": "Üzemanyag: ",
+  "text.betterminecarts.data.power": "Energia:   "
 }

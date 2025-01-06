@@ -7,9 +7,9 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 
-public class DieselLocomotiveModel extends AbstractLocomotiveModel{
+public class DieselLocomotiveModel extends AbstractLocomotiveModel {
 	public static final ModelLayerLocation LAYER_LOCATION =
-			new ModelLayerLocation(new ResourceLocation(BetterMinecarts.MOD_ID, "diesel_locomotive"),
+			new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "diesel_locomotive"),
 					"main");
 
 	public DieselLocomotiveModel(ModelPart root) {

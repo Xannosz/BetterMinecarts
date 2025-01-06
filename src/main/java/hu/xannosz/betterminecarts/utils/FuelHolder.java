@@ -20,13 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.*;
+
 @Slf4j
 public class FuelHolder {
-	public static final String FUEL_COLOR_KEY = "BETTER_MINECARTS_FUEL_COLOR";
-	public static final String AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS_KEY = "BETTER_MINECARTS_AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS";
-	public static final String ENERGY_IN_ONE_MILLI_BUCKET_KEY = "BETTER_MINECARTS_ENERGY_IN_ONE_MILLI_BUCKET";
-	public static final String LEFTOVER_ITEM_KEY = "BETTER_MINECARTS_LEFTOVER_ITEM";
-
 	@Getter
 	private static final FuelHolder INSTANCE = new FuelHolder();
 
@@ -56,7 +53,7 @@ public class FuelHolder {
 	}
 
 	public boolean isFuel(ItemStack item) {
-		if (item.getOrCreateTag().contains(ENERGY_IN_ONE_MILLI_BUCKET_KEY)) {
+		if (item.has(ENERGY_IN_ONE_MILLI_BUCKET_KEY.get())) {
 			return true;
 		}
 		return getFuelFromList(item) != null;
@@ -64,8 +61,8 @@ public class FuelHolder {
 
 	@SuppressWarnings("ConstantConditions")
 	public Item getLeftover(ItemStack item) {
-		if (item.getOrCreateTag().contains(LEFTOVER_ITEM_KEY)) {
-			return getItemFromQualifiedName(item.getOrCreateTag().getString(LEFTOVER_ITEM_KEY));
+		if (item.has(LEFTOVER_ITEM_KEY.get())) {
+			return getItemFromQualifiedName(item.get(LEFTOVER_ITEM_KEY.get()));
 		}
 		if (!isFuel(item)) {
 			return Items.AIR;
@@ -75,8 +72,8 @@ public class FuelHolder {
 
 	@SuppressWarnings("ConstantConditions")
 	public int getFuelAmount(ItemStack item) {
-		if (item.getOrCreateTag().contains(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS_KEY)) {
-			return item.getOrCreateTag().getInt(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS_KEY);
+		if (item.has(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS_KEY.get())) {
+			return item.get(AMOUNT_IN_ONE_ITEM_IN_MILLI_BUCKETS_KEY.get());
 		}
 		if (!isFuel(item)) {
 			return 0;
@@ -86,8 +83,8 @@ public class FuelHolder {
 
 	@SuppressWarnings("ConstantConditions")
 	public int getFuelPower(ItemStack item) {
-		if (item.getOrCreateTag().contains(ENERGY_IN_ONE_MILLI_BUCKET_KEY)) {
-			return item.getOrCreateTag().getInt(ENERGY_IN_ONE_MILLI_BUCKET_KEY);
+		if (item.has(ENERGY_IN_ONE_MILLI_BUCKET_KEY.get())) {
+			return item.get(ENERGY_IN_ONE_MILLI_BUCKET_KEY.get());
 		}
 		if (!isFuel(item)) {
 			return 0;
@@ -97,13 +94,13 @@ public class FuelHolder {
 
 	@SuppressWarnings("ConstantConditions")
 	public int getFuelColor(ItemStack item) {
-		if (item.getOrCreateTag().contains(FUEL_COLOR_KEY)) {
-			return item.getOrCreateTag().getInt(FUEL_COLOR_KEY);
+		if (item.has(FUEL_COLOR_KEY.get())) {
+			return item.get(FUEL_COLOR_KEY.get());
 		}
 		if (!isFuel(item)) {
 			return 0xFFFFFFFF;
 		}
-		Fuel fuel =  getFuelFromList(item);
+		Fuel fuel = getFuelFromList(item);
 		return fuel.getFuelColorRed() << 24 | fuel.getFuelColorGreen() << 16 | fuel.getFuelColoBlue() << 8 | fuel.getFuelColorAlpha();
 	}
 
@@ -116,8 +113,7 @@ public class FuelHolder {
 		return null;
 	}
 
-	@SuppressWarnings("deprecation")
 	private Item getItemFromQualifiedName(String name) {
-		return BuiltInRegistries.ITEM.get(new ResourceLocation(name));
+		return BuiltInRegistries.ITEM.get(ResourceLocation.parse(name));
 	}
 }

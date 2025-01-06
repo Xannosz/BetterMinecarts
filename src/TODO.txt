@@ -1,1 +1,4 @@
 - furnace minecart - override furnace cart
+- colored minecart
+- train station in villages
+- nether gate rail

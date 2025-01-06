@@ -18,7 +18,7 @@ import static hu.xannosz.betterminecarts.blockentity.ModBlockEntities.GLOWING_RA
 
 public class GlowingRailBlock extends RailBlock implements EntityBlock {
 	public GlowingRailBlock() {
-		super(BlockBehaviour.Properties.copy(Blocks.RAIL).lightLevel(bs -> 15));
+		super(BlockBehaviour.Properties.ofFullCopy(Blocks.RAIL).lightLevel(bs -> 15));
 	}
 
 	@Nullable

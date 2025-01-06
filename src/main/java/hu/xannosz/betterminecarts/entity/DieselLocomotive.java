@@ -1,6 +1,5 @@
 package hu.xannosz.betterminecarts.entity;
 
-import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
 import hu.xannosz.betterminecarts.item.ModItems;
 import hu.xannosz.betterminecarts.screen.DieselLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.ButtonId;
@@ -9,11 +8,13 @@ import hu.xannosz.betterminecarts.utils.MinecartColor;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
@@ -35,6 +36,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.BOTTOM_COLOR_TAG;
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.TOP_COLOR_TAG;
 import static hu.xannosz.betterminecarts.entity.ModEntities.DIESEL_LOCOMOTIVE;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.IS_BURN;
 
@@ -82,17 +85,16 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		super(DIESEL_LOCOMOTIVE.get(), x, y, z, level, LocomotiveType.DIESEL, topFilter, bottomFilter, DATA_SIZE);
 	}
 
-	@Override
-	protected @NotNull Item getDropItem() {
+	public Item getDropItem() {
 		SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots() + 1);
 		for (int i = 0; i < itemHandler.getSlots(); i++) {
 			inventory.setItem(i, itemHandler.getStackInSlot(i));
 		}
 		ItemStack locomotive = new ItemStack(ModItems.DIESEL_LOCOMOTIVE.get());
-		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.TOP_COLOR_TAG, getTopFilter().getLabel());
-		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.BOTTOM_COLOR_TAG, getBottomFilter().getLabel());
+		locomotive.set(TOP_COLOR_TAG.get(), getTopFilter().getLabel());
+		locomotive.set(BOTTOM_COLOR_TAG.get(), getBottomFilter().getLabel());
 		if (hasCustomName()) {
-			locomotive.setHoverName(getCustomName());
+			locomotive.set(DataComponents.CUSTOM_NAME, getCustomName());
 		}
 		inventory.setItem(itemHandler.getSlots(), locomotive);
 		Containers.dropContents(level(), blockPosition(), inventory);
@@ -155,7 +157,7 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 			nbtTagList.add(com);
 		}
 		compoundTag.put("FuelItems", nbtTagList);
-		compoundTag.put("Inventory", itemHandler.serializeNBT());
+		compoundTag.put("Inventory", itemHandler.serializeNBT(this.registryAccess()));
 	}
 
 	@Override
@@ -167,11 +169,11 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		for (int i = 0; i < tagList.size(); i++) {
 			CompoundTag itemTag = tagList.getCompound(i);
 			int amount = itemTag.getInt("Amount");
-			itemTag.putInt("Amount",1);
-			itemTag.putByte("Count",(byte) 1);
+			itemTag.putInt("Amount", 1);
+			itemTag.putByte("Count", (byte) 1);
 			fuels.put(itemTag, amount);
 		}
-		itemHandler.deserializeNBT(compoundTag.getCompound("Inventory"));
+		itemHandler.deserializeNBT(this.registryAccess(), compoundTag.getCompound("Inventory"));
 		updateData();
 	}
 
@@ -229,7 +231,7 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		if (keys.size() > 0) {
 			CompoundTag key = keys.get(new Random().nextInt(keys.size()));
 			for (; ; ) {
-				int energy = FuelHolder.getINSTANCE().getFuelPower(ItemStack.of(key));
+				int energy = FuelHolder.getINSTANCE().getFuelPower(ItemStack.parseOptional(this.registryAccess(), key));
 				if (power + energy <= MAX_POWER) {
 					power += energy;
 					fuels.put(key, getFromFuels(key) - 1);
@@ -312,9 +314,9 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		entityData.define(IS_BURN, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		builder.define(IS_BURN, false);
+		super.defineSynchedData(builder);
 	}
 
 	private int getFuelAmount() {
@@ -339,7 +341,7 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 		double b = 0;
 
 		for (CompoundTag stack : fuels.keySet()) {
-			int color = FuelHolder.getINSTANCE().getFuelColor(ItemStack.of(stack));
+			int color = FuelHolder.getINSTANCE().getFuelColor(ItemStack.parseOptional(this.registryAccess(), stack));
 			a += (color >> 24 & 0xff) * getFromFuels(stack) / maxFuel;
 			r += ((color & 0xff0000) >> 16) * getFromFuels(stack) / maxFuel;
 			g += ((color & 0xff00) >> 8) * getFromFuels(stack) / maxFuel;
@@ -415,9 +417,9 @@ public class DieselLocomotive extends AbstractLocomotive implements Container {
 			return null;
 		}
 		CompoundTag itemTag = new CompoundTag();
-		itemStack.save(itemTag);
-		itemTag.putByte("Count",(byte) 1);
-		itemTag.putInt("Amount",1);
+		itemStack.save(this.registryAccess());
+		itemTag.putByte("Count", (byte) 1);
+		itemTag.putInt("Amount", 1);
 		return itemTag;
 	}
 

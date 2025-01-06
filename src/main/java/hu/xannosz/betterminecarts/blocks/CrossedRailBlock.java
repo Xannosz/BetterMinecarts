@@ -30,9 +30,11 @@ Modified by Xannosz 2022-2023
 ############################################################*/
 package hu.xannosz.betterminecarts.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DetectorRailBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -42,11 +44,22 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 import org.jetbrains.annotations.NotNull;
 
 public class CrossedRailBlock extends BaseRailBlock {
+	public static final MapCodec<CrossedRailBlock> CODEC = simpleCodec(CrossedRailBlock::new);
 	public static final EnumProperty<RailShape> SHAPE = EnumProperty.create("shape", RailShape.class, shape -> shape != RailShape.ASCENDING_NORTH && shape != RailShape.ASCENDING_EAST && shape != RailShape.ASCENDING_SOUTH && shape != RailShape.ASCENDING_WEST && shape != RailShape.NORTH_EAST && shape != RailShape.NORTH_WEST && shape != RailShape.SOUTH_EAST && shape != RailShape.SOUTH_WEST);
 
 	public CrossedRailBlock() {
-		super(true, BlockBehaviour.Properties.copy(Blocks.RAIL));
+		super(true, BlockBehaviour.Properties.ofFullCopy(Blocks.RAIL));
 		registerDefaultState(stateDefinition.any().setValue(SHAPE, RailShape.NORTH_SOUTH).setValue(WATERLOGGED, false));
+	}
+
+	public CrossedRailBlock(BlockBehaviour.Properties properties) {
+		super(true, properties);
+		registerDefaultState(stateDefinition.any().setValue(SHAPE, RailShape.NORTH_SOUTH).setValue(WATERLOGGED, false));
+	}
+
+	@Override
+	protected @NotNull MapCodec<CrossedRailBlock> codec() {
+		return CODEC;
 	}
 
 	@Override

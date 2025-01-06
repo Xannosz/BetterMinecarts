@@ -36,6 +36,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import static hu.xannosz.betterminecarts.blockentity.ModBlockEntities.BLOCK_ENTITIES;
 import static hu.xannosz.betterminecarts.blocks.ModBlocks.BLOCKS;
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.DATA_COMPONENT_TYPES;
 import static hu.xannosz.betterminecarts.entity.ModEntities.*;
 import static hu.xannosz.betterminecarts.item.ModItems.ITEMS;
 import static hu.xannosz.betterminecarts.screen.ModMenus.*;
@@ -46,13 +47,13 @@ public class BetterMinecarts {
 
 	public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, BetterMinecarts.MOD_ID);
 	public static RegistryObject<SoundEvent> STEAM_WHISTLE = SOUND_EVENTS.register("steam_whistle",
-			() -> SoundEvent.createFixedRangeEvent(new ResourceLocation(BetterMinecarts.MOD_ID, "steam_whistle"),
+			() -> SoundEvent.createFixedRangeEvent(ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "steam_whistle"),
 					16f));
 	public static RegistryObject<SoundEvent> DIESEL_WHISTLE = SOUND_EVENTS.register("diesel_whistle",
-			() -> SoundEvent.createFixedRangeEvent(new ResourceLocation(BetterMinecarts.MOD_ID, "diesel_whistle"),
+			() -> SoundEvent.createFixedRangeEvent(ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "diesel_whistle"),
 					16f));
 
-	public static final ResourceKey<DamageType> MINECART_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(MOD_ID, "minecart"));
+	public static final ResourceKey<DamageType> MINECART_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(MOD_ID, "minecart"));
 
 	public BetterMinecarts() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -64,6 +65,7 @@ public class BetterMinecarts {
 		ENTITIES.register(modEventBus);
 		MENUS.register(modEventBus);
 		SOUND_EVENTS.register(modEventBus);
+		DATA_COMPONENT_TYPES.register(modEventBus);
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, BetterMinecartsConfig.SPEC, MOD_ID + ".toml");
 

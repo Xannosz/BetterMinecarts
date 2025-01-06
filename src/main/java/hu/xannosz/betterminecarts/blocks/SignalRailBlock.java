@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 
 public class SignalRailBlock extends DetectorRailBlock {
 	public SignalRailBlock() {
-		super(BlockBehaviour.Properties.copy(Blocks.DETECTOR_RAIL));
+		super(BlockBehaviour.Properties.ofFullCopy(Blocks.DETECTOR_RAIL));
 	}
 
 	@Override

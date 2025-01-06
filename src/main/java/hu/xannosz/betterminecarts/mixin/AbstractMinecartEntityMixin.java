@@ -214,7 +214,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 
 	@Inject(method = "defineSynchedData", at = @At("HEAD"))
 	protected void defineSynchedDataAdditional(CallbackInfo info) {
-		entityData.define(LINKED_PARENT, -1);
+		entityData.set(LINKED_PARENT, -1);
 	}
 
 	@Override

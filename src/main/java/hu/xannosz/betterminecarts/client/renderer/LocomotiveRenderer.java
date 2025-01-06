@@ -28,21 +28,21 @@ import org.spongepowered.asm.mixin.Unique;
 
 public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 	private static final ResourceLocation ELECTRIC_LOCOMOTIVE =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/electric_locomotive.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/entity/electric_locomotive.png");
 	private static final ResourceLocation ELECTRIC_LOCOMOTIVE_ON =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/electric_locomotive_on.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/entity/electric_locomotive_on.png");
 	private static final ResourceLocation STEAM_LOCOMOTIVE =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive.png");
 	private static final ResourceLocation STEAM_LOCOMOTIVE_ON =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_on.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_on.png");
 	private static final ResourceLocation STEAM_LOCOMOTIVE_BURN =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_burn.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_burn.png");
 	private static final ResourceLocation STEAM_LOCOMOTIVE_ON_BURN =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_on_burn.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/entity/steam_locomotive_on_burn.png");
 	private static final ResourceLocation DIESEL_LOCOMOTIVE =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/diesel_locomotive.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/entity/diesel_locomotive.png");
 	private static final ResourceLocation DIESEL_LOCOMOTIVE_ON =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/diesel_locomotive_on.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/entity/diesel_locomotive_on.png");
 
 	protected final EntityModel<AbstractLocomotive> model;
 
@@ -119,7 +119,7 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 		VertexConsumer vertexconsumer = multiBufferSource.getBuffer(
 				this.model.renderType(this.getTextureLocation(locomotive)));
 		this.model.renderToBuffer(poseStack, vertexconsumer, packedLight,
-				OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+				OverlayTexture.NO_OVERLAY, 1);
 		poseStack.popPose();
 
 		//copy of mixin
@@ -182,7 +182,7 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 	}
 
 	//copy mixin
-	private static final ResourceLocation CHAIN_TEXTURE = new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/chain.png");
+	private static final ResourceLocation CHAIN_TEXTURE = ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/entity/chain.png");
 	private static final RenderType CHAIN_LAYER = RenderType.entityCutoutNoCull(CHAIN_TEXTURE);
 
 	@Unique
@@ -209,10 +209,10 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 		Matrix4f matrix4f = entry.pose();
 		Matrix3f matrix3f = entry.normal();
 
-		vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(0, 0, 0, 255).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(0, 0, 0, 255).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.addVertex(matrix4f, vertX1, vertY1, 0F).setColor(0, 0, 0, 255).setUv(minU, minV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal( 0.0F, -1.0F, 0.0F);
+		vertexConsumer.addVertex(matrix4f, vertX1, vertY1, length).setColor(255, 255, 255, 255).setUv(minU, maxV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal( 0.0F, -1.0F, 0.0F);
+		vertexConsumer.addVertex(matrix4f, vertX2, vertY2, length).setColor(255, 255, 255, 255).setUv(maxU, maxV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal( 0.0F, -1.0F, 0.0F);
+		vertexConsumer.addVertex(matrix4f, vertX2, vertY2, 0F).setColor(0, 0, 0, 255).setUv(maxU, minV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal( 0.0F, -1.0F, 0.0F);
 
 		stack.popPose();
 		stack.translate(0.19, 0.19, 0);
@@ -222,10 +222,10 @@ public class LocomotiveRenderer extends EntityRenderer<AbstractLocomotive> {
 		matrix4f = entry.pose();
 		matrix3f = entry.normal();
 
-		vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(0, 0, 0, 255).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-		vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(0, 0, 0, 255).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+		vertexConsumer.addVertex(matrix4f, vertX1, vertY1, 0F).setColor(0, 0, 0, 255).setUv(minU, minV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal( 0.0F, -1.0F, 0.0F);
+		vertexConsumer.addVertex(matrix4f, vertX1, vertY1, length).setColor(255, 255, 255, 255).setUv(minU, maxV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal( 0.0F, -1.0F, 0.0F);
+		vertexConsumer.addVertex(matrix4f, vertX2, vertY2, length).setColor(255, 255, 255, 255).setUv(maxU, maxV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal( 0.0F, -1.0F, 0.0F);
+		vertexConsumer.addVertex(matrix4f, vertX2, vertY2, 0F).setColor(0, 0, 0, 255).setUv(maxU, minV).setOverlay(OverlayTexture.NO_OVERLAY).setLight(light).setNormal( 0.0F, -1.0F, 0.0F);
 
 		stack.popPose();
 	}

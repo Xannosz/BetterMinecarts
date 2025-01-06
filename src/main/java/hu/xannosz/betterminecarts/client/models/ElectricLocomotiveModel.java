@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ElectricLocomotiveModel extends AbstractLocomotiveModel {
 	public static final ModelLayerLocation LAYER_LOCATION =
-			new ModelLayerLocation(new ResourceLocation(BetterMinecarts.MOD_ID, "electric_locomotive"),
+			new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "electric_locomotive"),
 					"main");
 
 	public ElectricLocomotiveModel(ModelPart root) {

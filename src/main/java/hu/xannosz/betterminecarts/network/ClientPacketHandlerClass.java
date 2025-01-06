@@ -1,21 +1,18 @@
 package hu.xannosz.betterminecarts.network;
 
-import hu.xannosz.betterminecarts.BetterMinecarts;
 import net.minecraft.client.Minecraft;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class ClientPacketHandlerClass {
-	public static void handlePlaySoundPacket(PlaySoundPacket msg, Supplier<NetworkEvent.Context> ctx) {
+	public static void handlePlaySoundPacket(PlaySoundPacket packet, CustomPayloadEvent.Context context) {
 		Objects.requireNonNull(Minecraft.getInstance().level).playLocalSound(
-				(double) msg.getPosition().getX() + 0.5D,
-				(double) msg.getPosition().getY() + 0.5D,
-				(double) msg.getPosition().getZ() + 0.5D,
-				msg.getType().getWhistle(),
+				(double) packet.getPosition().getX() + 0.5D,
+				(double) packet.getPosition().getY() + 0.5D,
+				(double) packet.getPosition().getZ() + 0.5D,
+				packet.getType().getWhistle(),
 				SoundSource.BLOCKS, 5F, 5F, true);
 	}
 }

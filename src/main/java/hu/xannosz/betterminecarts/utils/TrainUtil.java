@@ -14,8 +14,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
-import static hu.xannosz.betterminecarts.item.Crowbar.FIRST_CART_ID_TAG;
-import static hu.xannosz.betterminecarts.item.Crowbar.MODE_TAG;
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.FIRST_CART_ID_TAG;
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.MODE_TAG;
 
 @UtilityClass
 public class TrainUtil {
@@ -29,8 +29,8 @@ public class TrainUtil {
 	}
 
 	public static void clickedByCrowbar(ItemStack itemStack, Entity minecart, ServerLevel server) {
-		final CrowbarMode mode = CrowbarMode.getFromLabel(itemStack.getOrCreateTag().getString(MODE_TAG));
-		final int firstCartIdTag = itemStack.getOrCreateTag().getInt(FIRST_CART_ID_TAG);
+		final CrowbarMode mode = CrowbarMode.getFromLabel(itemStack.get(MODE_TAG.get()));
+		final int firstCartIdTag = itemStack.get(FIRST_CART_ID_TAG.get());
 
 		if (firstCartIdTag == minecart.getId()) {
 			return;
@@ -38,12 +38,12 @@ public class TrainUtil {
 
 		if (mode.equals(CrowbarMode.LABEL)) {
 			minecart.setCustomNameVisible(!minecart.isCustomNameVisible());
-			itemStack.getOrCreateTag().putInt(FIRST_CART_ID_TAG, minecart.getId());
+			itemStack.set(FIRST_CART_ID_TAG.get(), minecart.getId());
 			return;
 		}
 
 		if (firstCartIdTag == 0) {
-			itemStack.getOrCreateTag().putInt(FIRST_CART_ID_TAG, minecart.getId());
+			itemStack.set(FIRST_CART_ID_TAG.get(), minecart.getId());
 			return;
 		}
 
@@ -100,6 +100,6 @@ public class TrainUtil {
 			}
 		}
 
-		itemStack.getOrCreateTag().putInt(FIRST_CART_ID_TAG, minecart.getId());
+		itemStack.set(FIRST_CART_ID_TAG.get(), minecart.getId());
 	}
 }

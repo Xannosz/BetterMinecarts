@@ -1,15 +1,16 @@
 package hu.xannosz.betterminecarts.entity;
 
-import hu.xannosz.betterminecarts.item.AbstractLocomotiveItem;
 import hu.xannosz.betterminecarts.item.ModItems;
 import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
@@ -31,6 +32,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.BOTTOM_COLOR_TAG;
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.TOP_COLOR_TAG;
 import static hu.xannosz.betterminecarts.entity.ModEntities.STEAM_LOCOMOTIVE;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.IS_BURN;
 import static net.minecraft.world.item.crafting.RecipeType.SMELTING;
@@ -87,17 +90,16 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 		super(STEAM_LOCOMOTIVE.get(), x, y, z, level, LocomotiveType.STEAM, top, bottom, DATA_SIZE);
 	}
 
-	@Override
-	protected @NotNull Item getDropItem() {
+	public Item getDropItem() {
 		SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots() + 1);
 		for (int i = 0; i < itemHandler.getSlots(); i++) {
 			inventory.setItem(i, itemHandler.getStackInSlot(i));
 		}
 		ItemStack locomotive = new ItemStack(ModItems.STEAM_LOCOMOTIVE.get());
-		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.TOP_COLOR_TAG, getTopFilter().getLabel());
-		locomotive.getOrCreateTag().putString(AbstractLocomotiveItem.BOTTOM_COLOR_TAG, getBottomFilter().getLabel());
+		locomotive.set(TOP_COLOR_TAG.get(), getTopFilter().getLabel());
+		locomotive.set(BOTTOM_COLOR_TAG.get(), getBottomFilter().getLabel());
 		if (hasCustomName()) {
-			locomotive.setHoverName(getCustomName());
+			locomotive.set(DataComponents.CUSTOM_NAME, getCustomName());
 		}
 		inventory.setItem(itemHandler.getSlots(), locomotive);
 		Containers.dropContents(level(), blockPosition(), inventory);
@@ -169,7 +171,7 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 		compoundTag.putInt("Heat", heat);
 		compoundTag.putInt("Burn", burn);
 		compoundTag.putInt("MaxBurn", maxBurn);
-		compoundTag.put("Inventory", itemHandler.serializeNBT());
+		compoundTag.put("Inventory", itemHandler.serializeNBT(this.registryAccess()));
 	}
 
 	@Override
@@ -180,7 +182,7 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 		heat = compoundTag.getInt("Heat");
 		burn = compoundTag.getInt("Burn");
 		maxBurn = compoundTag.getInt("MaxBurn");
-		itemHandler.deserializeNBT(compoundTag.getCompound("Inventory"));
+		itemHandler.deserializeNBT(this.registryAccess(),compoundTag.getCompound("Inventory"));
 		updateData();
 	}
 
@@ -335,9 +337,9 @@ public class SteamLocomotive extends AbstractLocomotive implements Container {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		entityData.define(IS_BURN, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		builder.define(IS_BURN, false);
+		super.defineSynchedData(builder);
 	}
 
 	public boolean isBurn() {

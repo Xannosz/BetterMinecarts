@@ -4,11 +4,13 @@ import hu.xannosz.betterminecarts.screen.SteamLocomotiveMenu;
 import hu.xannosz.betterminecarts.utils.MinecartHelper;
 import lombok.Getter;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
@@ -70,8 +72,7 @@ public class MeltingMinecart extends AbstractMinecart implements MenuProvider, C
 		super(CRAFTING_MINECART.get(), level, x, y, z);//TODO
 	}
 
-	@Override
-	protected @NotNull Item getDropItem() {
+	public Item getDropItem() {
 		SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
 		for (int i = 0; i < itemHandler.getSlots(); i++) {
 			inventory.setItem(i, itemHandler.getStackInSlot(i));
@@ -133,9 +134,9 @@ public class MeltingMinecart extends AbstractMinecart implements MenuProvider, C
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		entityData.define(IS_BURN, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		builder.define(IS_BURN, false);
+		super.defineSynchedData(builder);
 	}
 
 	public void updateData() {
@@ -159,7 +160,7 @@ public class MeltingMinecart extends AbstractMinecart implements MenuProvider, C
 		compoundTag.putInt("MaxCooking", maxCooking);
 		compoundTag.putInt("Burn", burn);
 		compoundTag.putInt("MaxBurn", maxBurn);
-		compoundTag.put("Inventory", itemHandler.serializeNBT());
+		compoundTag.put("Inventory", itemHandler.serializeNBT(this.registryAccess()));
 	}
 
 	@Override
@@ -169,7 +170,7 @@ public class MeltingMinecart extends AbstractMinecart implements MenuProvider, C
 		maxCooking = compoundTag.getInt("MaxCooking");
 		burn = compoundTag.getInt("Burn");
 		maxBurn = compoundTag.getInt("MaxBurn");
-		itemHandler.deserializeNBT(compoundTag.getCompound("Inventory"));
+		itemHandler.deserializeNBT(this.registryAccess(),compoundTag.getCompound("Inventory"));
 		updateData();
 	}
 

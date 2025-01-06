@@ -2,8 +2,7 @@ package hu.xannosz.betterminecarts.screen;
 
 import lombok.AllArgsConstructor;
 import net.minecraft.client.gui.GuiGraphics;
-
-import static net.minecraftforge.client.gui.ScreenUtils.drawTexturedModalRect;
+import net.minecraft.resources.ResourceLocation;
 
 @AllArgsConstructor
 public class Gauge {
@@ -14,7 +13,7 @@ public class Gauge {
 	private final int w;
 	private final int h;
 
-	public void render(GuiGraphics guiGraphics, int value, int max, float partialTick) {
+	public void render(ResourceLocation resourceLocation, GuiGraphics guiGraphics, int value, int max) {
 		if (max == 0) {
 			return;
 		}
@@ -22,6 +21,6 @@ public class Gauge {
 			value = max;
 		}
 		int t = (value * h) / max;
-		drawTexturedModalRect(guiGraphics, x, y + h - t, u, v + h - t, w, t, partialTick);
+		guiGraphics.blit(resourceLocation, x, y + h - t, u, v + h - t, w, t);
 	}
 }

@@ -4,10 +4,9 @@ import hu.xannosz.betterminecarts.utils.ButtonId;
 import hu.xannosz.betterminecarts.utils.ButtonUser;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class ButtonClickedPacket {
 
@@ -29,13 +28,12 @@ public class ButtonClickedPacket {
 		buf.writeInt(entityId);
 	}
 
-	public void handler(Supplier<NetworkEvent.Context> supplier) {
-		NetworkEvent.Context context = supplier.get();
+	public static void handler(ButtonClickedPacket packet, CustomPayloadEvent.Context context) {
 		context.enqueueWork(() -> {
 			// SERVER SITE
-			Entity entity = Objects.requireNonNull(context.getSender()).level().getEntity(entityId);
+			Entity entity = Objects.requireNonNull(context.getSender()).level().getEntity(packet.entityId);
 			if (entity instanceof ButtonUser) {
-				((ButtonUser) entity).executeButtonClick(buttonId);
+				((ButtonUser) entity).executeButtonClick(packet.buttonId);
 			}
 		});
 	}

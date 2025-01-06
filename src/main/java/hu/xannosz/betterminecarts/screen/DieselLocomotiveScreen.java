@@ -14,13 +14,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
-import static net.minecraftforge.client.gui.ScreenUtils.drawTexturedModalRect;
-
 @OnlyIn(Dist.CLIENT)
 public class DieselLocomotiveScreen extends AbstractContainerScreen<DieselLocomotiveMenu> {
 
 	private static final ResourceLocation TEXTURE =
-			new ResourceLocation(BetterMinecarts.MOD_ID, "textures/gui/diesel_locomotive.png");
+			ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "textures/gui/diesel_locomotive.png");
 
 	private int x;
 	private int y;
@@ -134,25 +132,25 @@ public class DieselLocomotiveScreen extends AbstractContainerScreen<DieselLocomo
 		float g = ((color & 0xff00) >> 8) / 255f;
 		float b = (color & 0xff) / 255f;
 		RenderSystem.setShaderColor(a, r, g, b);
-		fuel.render(guiGraphics, menu.getFuelAmount(), DieselLocomotive.MAX_FUEL, partialTick);
+		fuel.render(TEXTURE, guiGraphics, menu.getFuelAmount(), DieselLocomotive.MAX_FUEL);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		drawTexturedModalRect(guiGraphics, x + 11, y + 9, 178, 2, 15, 79, partialTick);
+		guiGraphics.blit(TEXTURE, x + 11, y + 9, 178, 2, 15, 79);
 
 		int power = menu.getPower();
 		if (power > DieselLocomotive.MAX_POWER) {
 			power = DieselLocomotive.MAX_POWER;
 		}
 		int t = (power * 59) / DieselLocomotive.MAX_POWER;
-		drawTexturedModalRect(guiGraphics, x + 45, y + 37, 112, 178, t, 2, partialTick);
+		guiGraphics.blit(TEXTURE, x + 45, y + 37, 112, 178, t, 2);
 
 		int v = 178 + menu.getClock() / 6 * 8;
-		drawTexturedModalRect(guiGraphics, x + 42, y + 28, 45, v, 65, 8, partialTick);
+		guiGraphics.blit(TEXTURE, x + 42, y + 28, 45, v, 65, 8);
 	}
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
 		//call built-in functions
-		renderBackground(guiGraphics);
+		renderTransparentBackground(guiGraphics);
 		super.render(guiGraphics, mouseX, mouseY, delta);
 
 		//call built-in function

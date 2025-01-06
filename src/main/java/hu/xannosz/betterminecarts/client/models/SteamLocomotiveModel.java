@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class SteamLocomotiveModel extends AbstractLocomotiveModel {
 	public static final ModelLayerLocation LAYER_LOCATION =
-			new ModelLayerLocation(new ResourceLocation(BetterMinecarts.MOD_ID, "steam_locomotive"),
+			new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(BetterMinecarts.MOD_ID, "steam_locomotive"),
 					"main");
 
 	public SteamLocomotiveModel(ModelPart root) {

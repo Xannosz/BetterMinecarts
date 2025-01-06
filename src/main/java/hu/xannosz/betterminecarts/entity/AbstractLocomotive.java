@@ -11,9 +11,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.TicketType;
@@ -31,6 +33,7 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -47,6 +50,8 @@ import java.util.List;
 import java.util.Set;
 
 import static hu.xannosz.betterminecarts.blocks.ModBlocks.GLOWING_RAIL;
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.BOTTOM_COLOR_TAG;
+import static hu.xannosz.betterminecarts.component.ModComponentTypes.TOP_COLOR_TAG;
 import static hu.xannosz.betterminecarts.item.ModItems.*;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.*;
 import static net.minecraft.world.level.block.BaseRailBlock.WATERLOGGED;
@@ -95,7 +100,6 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	}
 
 	// common functions
-
 	protected abstract boolean canPush();
 
 	public void setStartDirection(Direction direction) {
@@ -305,16 +309,16 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 			level().players().forEach(player -> {
 						if (player.distanceToSqr(this) < 7000) {
-							ModMessages.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-									new PlaySoundPacket(blockPosition(), locomotiveType));
+							ModMessages.INSTANCE.send(new PlaySoundPacket(blockPosition(), locomotiveType),
+									PacketDistributor.PLAYER.with((ServerPlayer) player));
 						}
 					}
 			);
 
 			if (BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE.get()) {
 				level().getEntities(this,
-						new AABB(this.getOnPos().offset(-BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), -10, -BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()),
-								this.getOnPos().offset(BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), 25, BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()))).forEach(
+						new AABB(this.getOnPos().offset(-BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), -10, -BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()).getCenter(),
+								this.getOnPos().offset(BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get(), 25, BetterMinecartsConfig.MOBS_PANIC_AFTER_WHISTLE_RANGE.get()).getCenter())).forEach(
 						entity -> {
 							if (entity instanceof Mob cow) {
 								cow.goalSelector.getAvailableGoals().forEach(
@@ -441,11 +445,11 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 			case DIESEL -> result = new ItemStack(DIESEL_LOCOMOTIVE.get(), 1);
 		}
 
-		result.getOrCreateTag().putString(AbstractLocomotiveItem.TOP_COLOR_TAG, getTopFilter().getLabel());
-		result.getOrCreateTag().putString(AbstractLocomotiveItem.BOTTOM_COLOR_TAG, getBottomFilter().getLabel());
+		result.set(TOP_COLOR_TAG.get(), getTopFilter().getLabel());
+		result.set(BOTTOM_COLOR_TAG.get(), getBottomFilter().getLabel());
 
 		if (hasCustomName()) {
-			result.setHoverName(getCustomName());
+			result.set(DataComponents.CUSTOM_NAME,getCustomName());
 		}
 
 		return result;
@@ -560,11 +564,11 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 
 	// entity functions
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		entityData.define(TOP_FILTER, MinecartColor.MAGENTA.getLabel());
-		entityData.define(BOTTOM_FILTER, MinecartColor.BLACK.getLabel());
-		entityData.define(IS_LAMP_ON, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		builder.define(TOP_FILTER, MinecartColor.MAGENTA.getLabel());
+		builder.define(BOTTOM_FILTER, MinecartColor.BLACK.getLabel());
+		builder.define(IS_LAMP_ON, false);
+		super.defineSynchedData(builder);
 	}
 
 	public MinecartColor getTopFilter() {
