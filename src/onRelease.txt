@@ -101,6 +101,9 @@ manual test: (client and server)
     newly spawned diesel locomotive smoking place
     diesel fuel with not existing item
     diesel fuel with modded item
+    use crowbar as a weapon (creative and survival)
+    passenger turn with minecart (not on speed-1, but on speed-2)
+    test railway stations
   crafting: (client)
     crowbar
     crafting minecart
