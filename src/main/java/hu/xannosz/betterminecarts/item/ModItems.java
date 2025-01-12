@@ -4,6 +4,7 @@ import hu.xannosz.betterminecarts.BetterMinecarts;
 import hu.xannosz.betterminecarts.entity.LocomotiveType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tiers;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -18,7 +19,7 @@ public class ModItems {
 
 	@SuppressWarnings("unused")
 	public static final RegistryObject<Item> CROWBAR = ITEMS.register("crowbar",
-			() -> new Crowbar(new Item.Properties().stacksTo(1)));
+			() -> new Crowbar(Tiers.IRON, 2, -2.4F, new Item.Properties().stacksTo(1)));
 
 	@SuppressWarnings("unused")
 	public static final RegistryObject<Item> ELECTRIC_LOCOMOTIVE = ITEMS.register("electric_locomotive",

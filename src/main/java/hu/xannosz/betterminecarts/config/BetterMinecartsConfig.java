@@ -13,6 +13,7 @@ public class BetterMinecartsConfig {
 	public static final ForgeConfigSpec.ConfigValue<Boolean> KEY_CONTROL_FROM_THE_WHOLE_TRAIN;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> WHISTLE_USE_STEAM_ON_STEAM_LOCOMOTIVE;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> LOCOMOTIVE_EXPLODE_AFTER_FALL_DAMAGE;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> PASSENGER_TURN_WHEN_MINECART_TURN;
 
 	static {
 		BUILDER.push("Configs for Better Minecarts Mod");
@@ -31,6 +32,8 @@ public class BetterMinecartsConfig {
 				.define("whistleUseSteamOnSteamLocomotive", true);
 		LOCOMOTIVE_EXPLODE_AFTER_FALL_DAMAGE = BUILDER.comment("Should Locomotives explode after fall damage?")
 				.define("locomotiveExplodeAfterFallDamage", true);
+		PASSENGER_TURN_WHEN_MINECART_TURN = BUILDER.comment("Should passenger turn when minecart turn?")
+				.define("passengerTurnWhenMinecartTurn", false);
 
 		BUILDER.pop();
 		SPEC = BUILDER.build();

@@ -1,1 +1,9 @@
 - furnace minecart - override furnace cart
+- colored minecarts - override the other colors
+
+- railway station building in villages
+
+- compatibility?
+
++ use crowbar as a weapon
++ passenger turn together with the minecart

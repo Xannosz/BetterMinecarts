@@ -117,22 +117,13 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 			case EAST -> expectedAngle = 180;
 		}
 
-		if (!isInRange(yRotation, expectedAngle)) {
+		if (!isInRange(yRotation, expectedAngle,80)) {
 			yRotation += 180;
 		}
 		return yRotation;
 	}
 
-	private boolean isInRange(float yRotation, float expectedAngle) {
-		final int border = 80;
-		float plusYRotation = yRotation < 0 ? yRotation + 360 : yRotation;
-		if (expectedAngle == 0) {
-			return expectedAngle - border < plusYRotation && (plusYRotation < expectedAngle + border ||
-					360 - border < plusYRotation);
-		} else {
-			return expectedAngle - border < plusYRotation && plusYRotation < expectedAngle + border;
-		}
-	}
+
 
 	public float normalizePitch(float pitch) {
 		switch (getMotionDirection()) {

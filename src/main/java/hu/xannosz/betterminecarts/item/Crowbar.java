@@ -4,9 +4,7 @@ import hu.xannosz.betterminecarts.utils.CrowbarMode;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -15,13 +13,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class Crowbar extends Item {
+public class Crowbar extends SwordItem {
 
 	public static final String MODE_TAG = "mode";
 	public static final String FIRST_CART_ID_TAG = "firstCartId";
 
-	public Crowbar(Properties properties) {
-		super(properties);
+	public Crowbar(Tier tier, int damage, float modifier, Item.Properties properties) {
+		super(tier, damage, modifier, properties);
 	}
 
 	@Override

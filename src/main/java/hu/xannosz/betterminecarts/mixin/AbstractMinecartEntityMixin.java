@@ -72,6 +72,9 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	@Shadow
 	public abstract Direction getMotionDirection();
 
+	@Shadow
+	private boolean flipped;
+
 	@Unique
 	private AbstractMinecart linkedParent;
 	@Unique
@@ -82,6 +85,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	private UUID childUuid;
 	@Unique
 	private boolean isUpdated = false;
+	@Unique
+	private float previousYaw = -6000;
 
 	@Shadow
 	public abstract float getMaxSpeedAirVertical();
@@ -177,6 +182,23 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 				setLinkedChild(null);
 			}
 			updateChains();
+		} else {
+			if (BetterMinecartsConfig.PASSENGER_TURN_WHEN_MINECART_TURN.get()) {
+				Vec3 directionVec = getDeltaMovement().normalize();
+				float yaw = (float) Math.toDegrees(Math.atan2(directionVec.z(), directionVec.x())) - 90f;
+				float rotate = 0;
+
+				if (previousYaw != -6000) {
+					rotate = previousYaw - yaw;
+				}
+				previousYaw = yaw;
+
+				if (getDeltaMovement().length() > 0.17 && rotate != 0) {
+					for (Entity passenger : getPassengers()) {
+						passenger.setYRot(passenger.getYRot() - rotate);
+					}
+				}
+			}
 		}
 	}
 

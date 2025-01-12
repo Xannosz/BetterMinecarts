@@ -207,4 +207,14 @@ public class MinecartHelper {
 		}
 		return convertBitArrayToInt(arr);
 	}
+
+	public static boolean isInRange(float yRotation, float expectedAngle,int border) {
+		float plusYRotation = yRotation < 0 ? yRotation + 360 : yRotation;
+		if (expectedAngle == 0) {
+			return expectedAngle - border < plusYRotation && (plusYRotation < expectedAngle + border ||
+					360 - border < plusYRotation);
+		} else {
+			return expectedAngle - border < plusYRotation && plusYRotation < expectedAngle + border;
+		}
+	}
 }
