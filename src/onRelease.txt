@@ -104,6 +104,7 @@ manual test: (client and server)
     use crowbar as a weapon (creative and survival)
     passenger turn with minecart (not on speed-1, but on speed-2)
     test railway stations
+    coloring every cart type (survival and creative) (command carts)
   crafting: (client)
     crowbar
     crafting minecart

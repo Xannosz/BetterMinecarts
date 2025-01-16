@@ -31,6 +31,7 @@ Modified by Xannosz 2022-2023
 package hu.xannosz.betterminecarts.mixin;
 
 import hu.xannosz.betterminecarts.entity.CraftingMinecart;
+import hu.xannosz.betterminecarts.utils.Colorable;
 import hu.xannosz.betterminecarts.utils.Linkable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -79,6 +80,7 @@ public abstract class AllMinecartEntityMixin extends net.minecraft.world.entity.
 				} else {
 					minecart = new CraftingMinecart(getX(), getY(), getZ(), level());
 				}
+				((Colorable) minecart).setColor(((Colorable) this).getColor().getLabel());
 				level().addFreshEntity(minecart);
 
 				if (parent != null) {

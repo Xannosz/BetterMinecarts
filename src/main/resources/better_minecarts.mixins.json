@@ -8,10 +8,12 @@
     "ChestMinecartMixin",
     "FurnaceMinecartEntityMixin",
     "AllMinecartEntityMixin",
-    "StructureTemplatePoolMixin"
+    "StructureTemplatePoolMixin",
+    "MinecartItemMixin"
   ],
   "client": [
-    "client.MinecartEntityRendererMixin"
+    "client.MinecartEntityRendererMixin",
+    "client.MinecartModelMixin"
   ],
   "minVersion": "0.8"
 }

@@ -1,9 +1,15 @@
 - furnace minecart - override furnace cart
-- colored minecarts - override the other colors
+- dispenser with colored minecart
+- multiple color dye using on chest and empty cart
+- crafting minecart disentrigtity when destroy, crafting minecart coloring
+- computer interface
+- fix buildings
 
 - compatibility?
 
 + use crowbar as a weapon
 + passenger turn together with the minecart
 + railway station building in villages
-12 -107
++ colored minecarts
+
+test area: 12 -107

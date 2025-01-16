@@ -554,7 +554,6 @@ public abstract class AbstractLocomotive extends AbstractMinecart implements But
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		entityData.define(TOP_FILTER, MinecartColor.MAGENTA.getLabel());
-		entityData.define(BOTTOM_FILTER, MinecartColor.BLACK.getLabel());
 		entityData.define(IS_LAMP_ON, false);
 	}
 

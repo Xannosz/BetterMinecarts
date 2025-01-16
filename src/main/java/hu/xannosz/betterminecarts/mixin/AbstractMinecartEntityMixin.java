@@ -31,9 +31,7 @@ Modified by Xannosz 2022-2023
 package hu.xannosz.betterminecarts.mixin;
 
 import hu.xannosz.betterminecarts.config.BetterMinecartsConfig;
-import hu.xannosz.betterminecarts.utils.Linkable;
-import hu.xannosz.betterminecarts.utils.MinecartHelper;
-import hu.xannosz.betterminecarts.utils.TrainUtil;
+import hu.xannosz.betterminecarts.utils.*;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -46,6 +44,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
@@ -64,11 +63,13 @@ import java.lang.reflect.Method;
 import java.util.Random;
 import java.util.UUID;
 
+import static hu.xannosz.betterminecarts.item.AbstractLocomotiveItem.BOTTOM_COLOR_TAG;
 import static hu.xannosz.betterminecarts.item.ModItems.CROWBAR;
+import static hu.xannosz.betterminecarts.utils.MinecartHelper.BOTTOM_FILTER;
 import static hu.xannosz.betterminecarts.utils.MinecartHelper.LINKED_PARENT;
 
 @Mixin(AbstractMinecart.class)
-public abstract class AbstractMinecartEntityMixin extends Entity implements Linkable {
+public abstract class AbstractMinecartEntityMixin extends Entity implements Linkable, Colorable {
 	@Shadow
 	public abstract Direction getMotionDirection();
 
@@ -87,6 +88,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 	private boolean isUpdated = false;
 	@Unique
 	private float previousYaw = -6000;
+	@Unique
+	private MinecartColor filter = MinecartColor.LIGHT_GRAY;
 
 	@Shadow
 	public abstract float getMaxSpeedAirVertical();
@@ -223,6 +226,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 			parentUuid = nbt.getUUID("ParentUuid");
 		if (nbt.contains("ChildUuid"))
 			childUuid = nbt.getUUID("ChildUuid");
+		if (nbt.contains("filter"))
+			filter = MinecartColor.getFromLabel(nbt.getString("filter"));
 		updateChains();
 	}
 
@@ -232,11 +237,19 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 			nbt.putUUID("ParentUuid", getLinkedParent().getUUID());
 		if (getLinkedChild() != null)
 			nbt.putUUID("ChildUuid", getLinkedChild().getUUID());
+		nbt.putString("filter", filter.getLabel());
 	}
 
 	@Inject(method = "defineSynchedData", at = @At("HEAD"))
 	protected void defineSynchedDataAdditional(CallbackInfo info) {
 		entityData.define(LINKED_PARENT, -1);
+		entityData.define(BOTTOM_FILTER, MinecartColor.LIGHT_GRAY.getLabel());
+	}
+
+	@Override
+	public ItemEntity spawnAtLocation(ItemStack itemStack) {
+		itemStack.getOrCreateTag().putString(BOTTOM_COLOR_TAG, filter.getLabel());
+		return super.spawnAtLocation(itemStack);
 	}
 
 	@Override
@@ -249,6 +262,17 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 				updateChains();
 			}
 			return InteractionResult.SUCCESS;
+		}
+		if (!level().isClientSide()) {
+			if (MinecartColor.getFromItem(stack.getItem()) != null) {
+				if (player.isShiftKeyDown()) {
+					filter = MinecartColor.getFromItem(stack.getItem());
+				}
+				if (!player.isCreative())
+					stack.shrink(1);
+				updateChains();
+				return InteractionResult.SUCCESS;
+			}
 		}
 
 		return super.interact(player, hand);
@@ -295,6 +319,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 			} else {
 				entityData.set(LINKED_PARENT, linkedParent.getId());
 			}
+			entityData.set(BOTTOM_FILTER, filter.getLabel());
 		}
 	}
 
@@ -306,5 +331,16 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 		} else {
 			return (AbstractMinecart) level().getEntity(id);
 		}
+	}
+
+	@Override
+	public MinecartColor getColor() {
+		return MinecartColor.getFromLabel(entityData.get(BOTTOM_FILTER));
+	}
+
+	@Override
+	public void setColor(String label) {
+		filter = MinecartColor.getFromLabel(label);
+		updateChains();
 	}
 }
