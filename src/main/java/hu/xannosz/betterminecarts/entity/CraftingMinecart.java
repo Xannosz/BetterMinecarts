@@ -1,6 +1,7 @@
 package hu.xannosz.betterminecarts.entity;
 
 import hu.xannosz.betterminecarts.screen.CraftingMinecartMenu;
+import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -56,12 +57,13 @@ public class CraftingMinecart extends AbstractMinecart implements MenuProvider {
 	public @NotNull InteractionResult interact(Player player, @NotNull InteractionHand hand) {
 		ItemStack stack = player.getItemInHand(hand);
 
-		if (stack.is(CROWBAR.get())) {
+		if (stack.is(CROWBAR.get())||MinecartColor.getFromItem(stack.getItem()) != null) {
 			return super.interact(player, hand);
 		}
 		if (player.isShiftKeyDown()) {
 			return InteractionResult.PASS;
 		}
+
 		player.openMenu(this);
 		return InteractionResult.SUCCESS;
 	}

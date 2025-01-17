@@ -26,6 +26,10 @@ public abstract class MinecartModelMixin<T extends Entity> extends HierarchicalM
 
 	@Override
 	public void renderToBuffer(PoseStack p_170625_, VertexConsumer p_170626_, int p_170627_, int p_170628_, float p_170629_, float p_170630_, float p_170631_, float p_170632_) {
-		this.root().render(p_170625_, p_170626_, p_170627_, p_170628_, (float) filter.x, (float) filter.y, (float) filter.z, p_170632_);
+		if (filter.equals(MinecartColor.LIGHT_GRAY.getFormattedFilter())) { // if light gray use the original
+			this.root().render(p_170625_, p_170626_, p_170627_, p_170628_, p_170629_, p_170630_, p_170631_, p_170632_);
+		} else {
+			this.root().render(p_170625_, p_170626_, p_170627_, p_170628_, (float) filter.x, (float) filter.y, (float) filter.z, p_170632_);
+		}
 	}
 }

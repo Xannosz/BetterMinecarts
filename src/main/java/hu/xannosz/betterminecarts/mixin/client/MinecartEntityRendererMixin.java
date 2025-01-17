@@ -34,7 +34,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import hu.xannosz.betterminecarts.BetterMinecarts;
+import hu.xannosz.betterminecarts.utils.Colorable;
 import hu.xannosz.betterminecarts.utils.Linkable;
+import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -44,6 +46,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -61,6 +64,15 @@ public abstract class MinecartEntityRendererMixin<T extends AbstractMinecart> ex
 
 	protected MinecartEntityRendererMixin(EntityRendererProvider.Context ctx) {
 		super(ctx);
+	}
+
+	@Override
+	public @NotNull ResourceLocation getTextureLocation(@NotNull T entity) {
+		if (((Colorable) entity).getColor().equals(MinecartColor.LIGHT_GRAY)) { // if light gray use the original
+			return new ResourceLocation("textures/entity/minecart.png");
+		} else {
+			return new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/minecart.png");
+		}
 	}
 
 	@Inject(method = "render", at = @At("TAIL"))

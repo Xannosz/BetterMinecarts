@@ -1,15 +1,19 @@
 package hu.xannosz.betterminecarts.item;
 
 import hu.xannosz.betterminecarts.entity.CraftingMinecart;
+import hu.xannosz.betterminecarts.utils.Colorable;
+import hu.xannosz.betterminecarts.utils.MinecartColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseRailBlock;
@@ -18,6 +22,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
+import static hu.xannosz.betterminecarts.item.AbstractLocomotiveItem.BOTTOM_COLOR_TAG;
 
 public class CraftingMinecartItem extends Item {
 	public CraftingMinecartItem() {
@@ -63,6 +72,13 @@ public class CraftingMinecartItem extends Item {
 				minecart.setCustomName(itemStack.getHoverName());
 			}
 
+			String colorName;
+			if (itemStack.getOrCreateTag().contains(BOTTOM_COLOR_TAG)) {
+				colorName = itemStack.getOrCreateTag().getString(BOTTOM_COLOR_TAG);
+			} else {
+				colorName = MinecartColor.LIGHT_GRAY.getLabel();
+			}
+			((Colorable) minecart).setColor(colorName);
 			level.addFreshEntity(minecart);
 			itemStack.shrink(1);
 			return itemStack;
@@ -97,6 +113,13 @@ public class CraftingMinecartItem extends Item {
 					minecart.setCustomName(itemstack.getHoverName());
 				}
 
+				String colorName;
+				if (itemstack.getOrCreateTag().contains(BOTTOM_COLOR_TAG)) {
+					colorName = itemstack.getOrCreateTag().getString(BOTTOM_COLOR_TAG);
+				} else {
+					colorName = MinecartColor.LIGHT_GRAY.getLabel();
+				}
+				((Colorable) minecart).setColor(colorName);
 				level.addFreshEntity(minecart);
 				level.gameEvent(GameEvent.ENTITY_PLACE, blockpos, GameEvent.Context.of(useOnContext.getPlayer(), level.getBlockState(blockpos.below())));
 			}
@@ -104,5 +127,18 @@ public class CraftingMinecartItem extends Item {
 			itemstack.shrink(1);
 			return InteractionResult.sidedSuccess(level.isClientSide);
 		}
+	}
+
+	@Override
+	public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag tooltipFlag) {
+		MinecartColor bottomColor = MinecartColor.getFromLabel(itemStack.getOrCreateTag().getString(BOTTOM_COLOR_TAG));
+
+		if (bottomColor == null) {
+			bottomColor = MinecartColor.LIGHT_GRAY;
+		}
+
+		components.add(Component.translatable("text.betterminecarts.locomotive.color." + bottomColor.getLabel()).withStyle(bottomColor.getLabelColor()));
+
+		super.appendHoverText(itemStack, level, components, tooltipFlag);
 	}
 }

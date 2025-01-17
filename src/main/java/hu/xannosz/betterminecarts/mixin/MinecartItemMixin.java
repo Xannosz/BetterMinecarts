@@ -2,7 +2,6 @@ package hu.xannosz.betterminecarts.mixin;
 
 import hu.xannosz.betterminecarts.utils.Colorable;
 import hu.xannosz.betterminecarts.utils.MinecartColor;
-import net.minecraft.core.BlockSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.Item;
@@ -15,9 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
@@ -52,25 +49,6 @@ public abstract class MinecartItemMixin extends Item {
 			ordinal = 0
 	)
 	public AbstractMinecart modifyMinecart1(AbstractMinecart abstractMinecart) {
-		((Colorable) abstractMinecart).setColor(colorName);
-		return abstractMinecart;
-	}
-
-	@Inject(method = "execute", at = @At("HEAD"))
-	public void catchItemStack2(BlockSource p_42949_, ItemStack itemstack, CallbackInfo info) {
-		if (itemstack.getOrCreateTag().contains(BOTTOM_COLOR_TAG)) {
-			colorName = itemstack.getOrCreateTag().getString(BOTTOM_COLOR_TAG);
-		} else {
-			colorName = MinecartColor.LIGHT_GRAY.getLabel();
-		}
-	}
-
-	@ModifyVariable(
-			method = "execute",
-			at = @At(value = "STORE"),
-			ordinal = 0
-	)
-	public AbstractMinecart modifyMinecart2(AbstractMinecart abstractMinecart) {
 		((Colorable) abstractMinecart).setColor(colorName);
 		return abstractMinecart;
 	}

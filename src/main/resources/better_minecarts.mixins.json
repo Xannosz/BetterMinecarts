@@ -9,7 +9,8 @@
     "FurnaceMinecartEntityMixin",
     "AllMinecartEntityMixin",
     "StructureTemplatePoolMixin",
-    "MinecartItemMixin"
+    "MinecartItemMixin",
+    "MinecartItemDispenseMixin"
   ],
   "client": [
     "client.MinecartEntityRendererMixin",

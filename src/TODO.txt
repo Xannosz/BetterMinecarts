@@ -1,11 +1,11 @@
 - furnace minecart - override furnace cart
-- dispenser with colored minecart
-- multiple color dye using on chest and empty cart
-- crafting minecart disentrigtity when destroy, crafting minecart coloring
-- computer interface
+- compatibility?
+
+-B multiple color dye using on chest and empty cart
 - fix buildings
 
-- compatibility?
+- update wiki
+- retest again
 
 + use crowbar as a weapon
 + passenger turn together with the minecart
