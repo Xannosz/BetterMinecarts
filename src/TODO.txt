@@ -1,12 +1,5 @@
 - furnace minecart - override furnace cart
-- compatibility?
-
-- update wiki
-- retest again
-
-+ use crowbar as a weapon
-+ passenger turn together with the minecart
-+ railway station building in villages
-+ colored minecarts
+- compatibility with more minecarts
+- example fuels on wiki
 
 test area: 12 -107

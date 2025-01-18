@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2022-2023 Kiss András Zoltán
+Copyright (c) 2022-2025 Kiss András Zoltán
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -46,7 +46,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -54,6 +53,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecartRenderer.class)
 public abstract class MinecartEntityRendererMixin<T extends AbstractMinecart> extends EntityRenderer<T> {
@@ -66,12 +66,11 @@ public abstract class MinecartEntityRendererMixin<T extends AbstractMinecart> ex
 		super(ctx);
 	}
 
-	@Override
-	public @NotNull ResourceLocation getTextureLocation(@NotNull T entity) {
-		if (((Colorable) entity).getColor().equals(MinecartColor.LIGHT_GRAY)) { // if light gray use the original
-			return new ResourceLocation("textures/entity/minecart.png");
-		} else {
-			return new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/minecart.png");
+	@Inject(method = "getTextureLocation", at = @At("HEAD"), cancellable = true)
+	public void betterminecarts$getTextureLocation(T entity, CallbackInfoReturnable<ResourceLocation> info) {
+		if (!((Colorable) entity).getColor().equals(MinecartColor.LIGHT_GRAY)) { // if light gray use the original
+			info.setReturnValue(new ResourceLocation(BetterMinecarts.MOD_ID, "textures/entity/minecart.png"));
+			info.cancel();
 		}
 	}
 
