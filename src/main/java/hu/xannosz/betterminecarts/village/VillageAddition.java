@@ -78,15 +78,15 @@ public class VillageAddition {
 		// Note, the resourcelocation is getting the pool files from the data folder. Not assets folder.
 		addBuildingToPool(templatePoolRegistry, processorListRegistry,
 				new ResourceLocation("minecraft:village/plains/houses"),
-				BetterMinecarts.MOD_ID + ":plains_train_station", 50);
+				BetterMinecarts.MOD_ID + ":plains_train_station", 35);
 		addBuildingToPool(templatePoolRegistry, processorListRegistry,
 				new ResourceLocation("minecraft:village/savanna/houses"),
-				BetterMinecarts.MOD_ID + ":savanna_train_station", 50);
+				BetterMinecarts.MOD_ID + ":savanna_train_station", 100);
 		addBuildingToPool(templatePoolRegistry, processorListRegistry,
 				new ResourceLocation("minecraft:village/snowy/houses"),
-				BetterMinecarts.MOD_ID + ":snowy_train_station", 50);
+				BetterMinecarts.MOD_ID + ":snowy_train_station", 10);
 		addBuildingToPool(templatePoolRegistry, processorListRegistry,
 				new ResourceLocation("minecraft:village/taiga/houses"),
-				BetterMinecarts.MOD_ID + ":taiga_train_station", 50);
+				BetterMinecarts.MOD_ID + ":taiga_train_station", 15);
 	}
 }

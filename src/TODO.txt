@@ -1,9 +1,6 @@
 - furnace minecart - override furnace cart
 - compatibility?
 
--B multiple color dye using on chest and empty cart
-- fix buildings
-
 - update wiki
 - retest again
 

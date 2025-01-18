@@ -47,7 +47,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = {MinecartFurnace.class, Minecart.class, AbstractMinecartContainer.class, MinecartCommandBlock.class}, priority = 0)
+@Mixin(value = {MinecartFurnace.class, Minecart.class, MinecartCommandBlock.class}, priority = 0)
 public abstract class AllMinecartEntityMixin extends net.minecraft.world.entity.vehicle.AbstractMinecart implements Linkable {
 	protected AllMinecartEntityMixin(EntityType<?> entityType, Level world) {
 		super(entityType, world);
@@ -101,8 +101,8 @@ public abstract class AllMinecartEntityMixin extends net.minecraft.world.entity.
 
 				info.setReturnValue(InteractionResult.sidedSuccess(level().isClientSide()));
 			}
+		} else {
+			super.interact(player, hand);
 		}
-
-		super.interact(player, hand);
 	}
 }

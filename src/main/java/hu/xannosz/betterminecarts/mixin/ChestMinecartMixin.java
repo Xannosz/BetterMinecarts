@@ -21,6 +21,7 @@ public abstract class ChestMinecartMixin extends net.minecraft.world.entity.vehi
 	public void betterminecarts$heckUMojang(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> info) {
 		if (super.interact(player, hand).equals(InteractionResult.SUCCESS)) {
 			info.setReturnValue(InteractionResult.SUCCESS);
+			info.cancel();
 		}
 	}
 }

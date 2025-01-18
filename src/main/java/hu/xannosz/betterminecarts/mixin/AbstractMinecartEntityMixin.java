@@ -263,16 +263,15 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Link
 			}
 			return InteractionResult.SUCCESS;
 		}
-		if (!level().isClientSide()) {
-			if (MinecartColor.getFromItem(stack.getItem()) != null) {
-				if (player.isShiftKeyDown()) {
-					filter = MinecartColor.getFromItem(stack.getItem());
-				}
+
+		if (MinecartColor.getFromItem(stack.getItem()) != null) {
+			if (player.isShiftKeyDown()) {
+				filter = MinecartColor.getFromItem(stack.getItem());
 				if (!player.isCreative())
 					stack.shrink(1);
 				updateChains();
-				return InteractionResult.SUCCESS;
 			}
+			return InteractionResult.SUCCESS;
 		}
 
 		return super.interact(player, hand);
